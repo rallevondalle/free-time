@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel">Teller</string>
+    <string name="notif_in_use">Telefoon in gebruik. Vergrendel hem om punten te verdienen.</string>
+    <string name="notif_counting">Telt punten: %1$s</string>
+    <string name="notif_screen_on">, scherm aan</string>
+    <string name="notif_moving">, in beweging</string>
+    <string name="mode_normal">geluid</string>
+    <string name="mode_vibrate">trillen</string>
+    <string name="mode_silent">stil</string>
+    <string name="mode_dnd">niet storen</string>
+    <string name="mode_airplane">vliegtuigmodus</string>
+    <string name="mode_powered_off">uit</string>
+</resources>

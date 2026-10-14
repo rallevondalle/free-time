@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel">Zähler</string>
+    <string name="notif_in_use">Handy in Benutzung. Sperre es, um Punkte zu sammeln.</string>
+    <string name="notif_counting">Zählt Punkte: %1$s</string>
+    <string name="notif_screen_on">, Bildschirm an</string>
+    <string name="notif_moving">, in Bewegung</string>
+    <string name="mode_normal">Ton</string>
+    <string name="mode_vibrate">Vibration</string>
+    <string name="mode_silent">lautlos</string>
+    <string name="mode_dnd">Nicht stören</string>
+    <string name="mode_airplane">Flugmodus</string>
+    <string name="mode_powered_off">aus</string>
+</resources>

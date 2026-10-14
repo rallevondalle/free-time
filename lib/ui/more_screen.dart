@@ -111,16 +111,23 @@ class _LanguageCard extends StatelessWidget {
         final current = settings.locale?.languageCode;
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: SegmentedButton<String?>(
-              showSelectedIcon: false,
-              segments: [
-                ButtonSegment(value: null, label: Text(t.languageSystem)),
-                const ButtonSegment(value: 'da', label: Text('Dansk')),
-                const ButtonSegment(value: 'en', label: Text('English')),
+            padding: const EdgeInsets.all(14),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ChoiceChip(
+                  label: Text(t.languageSystem),
+                  selected: current == null,
+                  onSelected: (_) => settings.setLocale(null),
+                ),
+                for (final e in Settings.localeNames.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: current == e.key,
+                    onSelected: (_) => settings.setLocale(Locale(e.key)),
+                  ),
               ],
-              selected: {current},
-              onSelectionChanged: (s) => settings.setLocale(s.first == null ? null : Locale(s.first!)),
             ),
           ),
         );

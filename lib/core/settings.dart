@@ -8,7 +8,8 @@ class Settings extends ChangeNotifier {
 
   static const defaultGoal = 600;
   static const goalPresets = [300, 600, 900, 1200, 1800];
-  static const supportedLocales = [Locale('en'), Locale('da')];
+  static const supportedLocales = [Locale('en'), Locale('da'), Locale('de'), Locale('fr'), Locale('nl')];
+  static const localeNames = {'da': 'Dansk', 'en': 'English', 'de': 'Deutsch', 'fr': 'Français', 'nl': 'Nederlands'};
 
   int get dailyGoal => _prefs.getInt('daily_goal') ?? defaultGoal;
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel">Compteur</string>
+    <string name="notif_in_use">Téléphone en cours d\'utilisation. Verrouillez-le pour gagner des points.</string>
+    <string name="notif_counting">Points en cours : %1$s</string>
+    <string name="notif_screen_on">, écran allumé</string>
+    <string name="notif_moving">, en mouvement</string>
+    <string name="mode_normal">sonnerie</string>
+    <string name="mode_vibrate">vibreur</string>
+    <string name="mode_silent">silencieux</string>
+    <string name="mode_dnd">ne pas déranger</string>
+    <string name="mode_airplane">mode avion</string>
+    <string name="mode_powered_off">éteint</string>
+</resources>
