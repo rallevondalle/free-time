@@ -1,7 +1,7 @@
 {
   "@@locale": "da",
   "appName": "Free Time",
-  "tagline": "Point for at lade telefonen ligge.",
+  "tagline": "Appen, der belønner dig for ikke at bruge den.",
   "offline": "offline",
   "navToday": "I dag",
   "navWeek": "Ugen",
@@ -74,7 +74,7 @@
   "emailCopied": "E-mail kopieret",
   "signOut": "Log ud",
   "footer": "Free Time · ingen reklamer, ingen datasalg",
-  "authSubtitle": "Point for at lade telefonen ligge.\nJo mere væk, jo flere point.",
+  "authSubtitle": "Appen, der belønner dig for ikke at bruge den.\nPoint for at lade telefonen ligge.",
   "emailHint": "din@mail.dk",
   "sendLoginLink": "Send login-link",
   "noPasswordHint": "Ingen adgangskode. Du får et link på mail.",

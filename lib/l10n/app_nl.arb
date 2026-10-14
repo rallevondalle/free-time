@@ -1,7 +1,7 @@
 {
   "@@locale": "nl",
   "appName": "Free Time",
-  "tagline": "Punten voor je telefoon laten liggen.",
+  "tagline": "De app die je beloont als je hem niet gebruikt.",
   "offline": "offline",
   "navToday": "Vandaag",
   "navWeek": "Week",
@@ -74,7 +74,7 @@
   "emailCopied": "E-mail gekopieerd",
   "signOut": "Uitloggen",
   "footer": "Free Time · geen advertenties, geen dataverkoop",
-  "authSubtitle": "Punten voor je telefoon laten liggen.\nHoe verder weg, hoe meer punten.",
+  "authSubtitle": "De app die je beloont als je hem niet gebruikt.\nPunten voor je telefoon laten liggen.",
   "emailHint": "jij@voorbeeld.nl",
   "sendLoginLink": "Inloglink versturen",
   "noPasswordHint": "Geen wachtwoord. Je krijgt een link per e-mail.",

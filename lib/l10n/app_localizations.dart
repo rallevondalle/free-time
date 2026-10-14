@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @tagline.
   ///
   /// In en, this message translates to:
-  /// **'Points for leaving your phone alone.'**
+  /// **'The app that rewards you for not using it.'**
   String get tagline;
 
   /// No description provided for @offline.
@@ -551,7 +551,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Points for leaving your phone alone.\nThe further away, the more points.'**
+  /// **'The app that rewards you for not using it.\nPoints for leaving your phone alone.'**
   String get authSubtitle;
 
   /// No description provided for @emailHint.

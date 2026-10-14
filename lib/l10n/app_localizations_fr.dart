@@ -13,7 +13,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appName => 'Free Time';
 
   @override
-  String get tagline => 'Des points pour laisser votre téléphone tranquille.';
+  String get tagline => 'L\'appli qui vous récompense de ne pas l\'utiliser.';
 
   @override
   String get offline => 'hors ligne';
@@ -265,7 +265,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authSubtitle =>
-      'Des points pour laisser votre téléphone tranquille.\nPlus il est loin, plus vous gagnez.';
+      'L\'appli qui vous récompense de ne pas l\'utiliser.\nDes points pour laisser votre téléphone tranquille.';
 
   @override
   String get emailHint => 'vous@exemple.fr';

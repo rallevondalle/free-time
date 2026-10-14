@@ -6,9 +6,9 @@
 
 ### The app that rewards you for *not* using it.
 
-Free Time counts the minutes your phone lies untouched and turns them into points.<br/>
+Points for leaving your phone alone.<br/>
 Silent beats sound. Airplane mode beats silent. Off beats everything.<br/>
-Compete with friends over who leaves their phone alone the most.
+An anti-screen-time game for you and your friends.
 
 <br/>
 
@@ -36,6 +36,8 @@ Compete with friends over who leaves their phone alone the most.
 The phone has become a guest that never goes home. It sits on the table at dinner, it comes to bed, it interrupts conversations, and it eats the small pauses where your mind would otherwise wander.
 
 Free Time turns that around. Instead of measuring how much you use your phone, it rewards the time you don't. No blocking, no nagging, no streak-shaming. Just a small, friendly score for being present, and a leaderboard to make it a game with the people you care about.
+
+Put it down. Score.
 
 ## How it works
 
@@ -128,6 +130,6 @@ Free Time is a Flutter app with native measurement layers and a Supabase backend
 
 **Release:** push a tag like `v0.2.0`. GitHub Actions builds a signed APK and attaches it to a release.
 
-More: [scope and design decisions](docs/scope.md).
+More: [scope and design decisions](docs/scope.md), [brand](docs/brand.md).
 
 </details>

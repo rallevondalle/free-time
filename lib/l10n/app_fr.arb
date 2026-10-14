@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "appName": "Free Time",
-  "tagline": "Des points pour laisser votre téléphone tranquille.",
+  "tagline": "L'appli qui vous récompense de ne pas l'utiliser.",
   "offline": "hors ligne",
   "navToday": "Aujourd'hui",
   "navWeek": "Semaine",
@@ -74,7 +74,7 @@
   "emailCopied": "E-mail copié",
   "signOut": "Se déconnecter",
   "footer": "Free Time · sans pub, sans vente de données",
-  "authSubtitle": "Des points pour laisser votre téléphone tranquille.\nPlus il est loin, plus vous gagnez.",
+  "authSubtitle": "L'appli qui vous récompense de ne pas l'utiliser.\nDes points pour laisser votre téléphone tranquille.",
   "emailHint": "vous@exemple.fr",
   "sendLoginLink": "Envoyer le lien de connexion",
   "noPasswordHint": "Pas de mot de passe. Vous recevez un lien par e-mail.",

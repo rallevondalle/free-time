@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "appName": "Free Time",
-  "tagline": "Points for leaving your phone alone.",
+  "tagline": "The app that rewards you for not using it.",
   "offline": "offline",
   "navToday": "Today",
   "navWeek": "Week",
@@ -150,7 +150,7 @@
   "emailCopied": "Email copied",
   "signOut": "Sign out",
   "footer": "Free Time · no ads, no data sales",
-  "authSubtitle": "Points for leaving your phone alone.\nThe further away, the more points.",
+  "authSubtitle": "The app that rewards you for not using it.\nPoints for leaving your phone alone.",
   "emailHint": "you@example.com",
   "sendLoginLink": "Send login link",
   "noPasswordHint": "No password. You get a link by email.",

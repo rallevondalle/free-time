@@ -1,7 +1,7 @@
 {
   "@@locale": "de",
   "appName": "Free Time",
-  "tagline": "Punkte dafür, das Handy liegen zu lassen.",
+  "tagline": "Die App, die dich dafür belohnt, sie nicht zu benutzen.",
   "offline": "offline",
   "navToday": "Heute",
   "navWeek": "Woche",
@@ -74,7 +74,7 @@
   "emailCopied": "E-Mail kopiert",
   "signOut": "Abmelden",
   "footer": "Free Time · keine Werbung, kein Datenverkauf",
-  "authSubtitle": "Punkte dafür, das Handy liegen zu lassen.\nJe weiter weg, desto mehr Punkte.",
+  "authSubtitle": "Die App, die dich dafür belohnt, sie nicht zu benutzen.\nPunkte dafür, das Handy liegen zu lassen.",
   "emailHint": "du@beispiel.de",
   "sendLoginLink": "Login-Link senden",
   "noPasswordHint": "Kein Passwort. Du bekommst einen Link per E-Mail.",
