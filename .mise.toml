@@ -1,0 +1,6 @@
+[tools]
+flutter = "3.47.7"
+java = "temurin-17"
+
+[env]
+ANDROID_HOME = "{{env.HOME}}/Android/Sdk"
