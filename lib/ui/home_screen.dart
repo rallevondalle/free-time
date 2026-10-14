@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   static String _dateLabel(Locale locale) =>
-      DateFormat('EEEE d. MMM', locale.toString()).format(DateTime.now());
+      DateFormat.MMMMEEEEd(locale.toString()).format(DateTime.now());
 
   String _fmt(Duration d) {
     final hu = Localizations.localeOf(context).languageCode == 'da' ? 't' : 'h';
