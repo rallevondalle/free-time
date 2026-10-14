@@ -51,3 +51,5 @@ app.*.map.json
 *.env
 .env.*
 supabase/.temp/
+.env
+dart_defines.json
