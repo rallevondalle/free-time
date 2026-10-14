@@ -53,3 +53,7 @@ app.*.map.json
 supabase/.temp/
 .env
 dart_defines.json
+
+# Android signing
+android/release.jks
+android/key.properties
