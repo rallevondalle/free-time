@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../data/friends_repo.dart';
 
@@ -149,13 +148,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                 const SizedBox(height: 28),
               ],
 
-              // ---- sign out ----
-              TextButton.icon(
-                onPressed: () => Supabase.instance.client.auth.signOut(),
-                icon: const Icon(Icons.logout_rounded, size: 18),
-                label: const Text('Log ud'),
-                style: TextButton.styleFrom(foregroundColor: scheme.onSurfaceVariant),
-              ),
             ],
           ],
         ),

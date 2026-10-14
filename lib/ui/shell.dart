@@ -2,16 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../core/settings.dart';
 import '../data/friends_repo.dart';
 import '../data/session_repo.dart';
 import 'friends_screen.dart';
 import 'home_screen.dart';
 import 'leaderboard_screen.dart';
+import 'more_screen.dart';
 
 /// Bottom navigation + first-run profile creation.
 class Shell extends StatefulWidget {
-  const Shell({super.key, required this.sessions, required this.friends});
+  const Shell({super.key, required this.sessions, required this.friends, required this.settings});
   final SessionRepo sessions;
+  final Settings settings;
   final FriendsRepo? friends; // null in offline mode
 
   @override
@@ -45,9 +48,10 @@ class _ShellState extends State<Shell> {
       );
     }
     final pages = [
-      HomeScreen(repo: widget.sessions),
+      HomeScreen(repo: widget.sessions, settings: widget.settings),
       LeaderboardScreen(repo: widget.sessions),
       FriendsScreen(repo: widget.friends),
+      MoreScreen(settings: widget.settings, signedIn: widget.friends != null),
     ];
     return Scaffold(
       body: pages[_tab],
@@ -58,6 +62,7 @@ class _ShellState extends State<Shell> {
           NavigationDestination(icon: Icon(Icons.spa_outlined), selectedIcon: Icon(Icons.spa_rounded), label: 'I dag'),
           NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Ugen'),
           NavigationDestination(icon: Icon(Icons.people_outline_rounded), selectedIcon: Icon(Icons.people_rounded), label: 'Venner'),
+          NavigationDestination(icon: Icon(Icons.more_horiz_rounded), selectedIcon: Icon(Icons.more_horiz_rounded), label: 'Mere'),
         ],
       ),
     );

@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../core/session.dart';
+import '../core/settings.dart';
 import '../data/session_repo.dart';
 import '../native/free_time_platform.dart';
 import 'points_ring.dart';
 import 'theme.dart';
 
-const _dailyGoal = 600;
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.repo});
+  const HomeScreen({super.key, required this.repo, required this.settings});
   final SessionRepo repo;
+  final Settings settings;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -37,12 +37,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (_running) setState(() {});
     });
     _platform.requestPermissions();
+    widget.settings.addListener(_onSettings);
     _refresh();
   }
+
+  void _onSettings() => setState(() {});
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    widget.settings.removeListener(_onSettings);
     _sub?.cancel();
     _tick?.cancel();
     super.dispose();
@@ -91,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final elapsed = _startedAt == null ? Duration.zero : DateTime.now().difference(_startedAt!);
+    final goal = widget.settings.dailyGoal;
 
     return Scaffold(
       body: SafeArea(
@@ -120,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               Center(
                 child: PointsRing(
                   points: _todayPoints,
-                  goal: _dailyGoal,
+                  goal: goal,
                   subtitle: '${_fmt(_todayTime)} uden telefon',
                 ),
               ),
               const SizedBox(height: 10),
               Center(
                 child: Text(
-                  _todayPoints >= _dailyGoal ? 'Dagens mål nået' : 'Mål: $_dailyGoal point',
+                  _todayPoints >= goal ? 'Dagens mål nået' : 'Mål: $goal point',
                   style: theme.textTheme.labelLarge?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ),

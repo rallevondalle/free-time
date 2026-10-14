@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'config.dart';
+import 'core/settings.dart';
 import 'data/friends_repo.dart';
 import 'data/session_repo.dart';
 import 'ui/auth_screen.dart';
@@ -35,7 +36,7 @@ class FreeTimeApp extends StatelessWidget {
     );
   }
 
-  Widget _offline() => Shell(sessions: LocalSessionRepo(prefs), friends: null);
+  Widget _offline() => Shell(sessions: LocalSessionRepo(prefs), friends: null, settings: Settings(prefs));
 
   Widget _online() {
     final client = Supabase.instance.client;
@@ -46,6 +47,7 @@ class FreeTimeApp extends StatelessWidget {
         return Shell(
           sessions: SupabaseSessionRepo(client, prefs),
           friends: FriendsRepo(client),
+          settings: Settings(prefs),
         );
       },
     );

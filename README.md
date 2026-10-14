@@ -4,7 +4,7 @@ Point for at lade telefonen ligge. Jo mere "væk" den er, jo flere point.
 Lydløs > vibrer > lyd. Flytilstand giver meget. Slukket giver mest. Genstart
 giver bonus. Konkurrer med venner uge for uge.
 
-Scope og pointmodel: [docs/scope.md](docs/scope.md).
+Scope og pointmodel: [docs/scope.md](docs/scope.md). Spørgsmål og svar: [docs/FAQ.md](docs/FAQ.md).
 
 ## Stack
 
