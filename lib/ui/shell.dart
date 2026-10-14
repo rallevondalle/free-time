@@ -55,9 +55,9 @@ class _ShellState extends State<Shell> {
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.timer_outlined), label: 'I dag'),
-          NavigationDestination(icon: Icon(Icons.leaderboard_outlined), label: 'Ugen'),
-          NavigationDestination(icon: Icon(Icons.people_outline), label: 'Venner'),
+          NavigationDestination(icon: Icon(Icons.spa_outlined), selectedIcon: Icon(Icons.spa_rounded), label: 'I dag'),
+          NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Ugen'),
+          NavigationDestination(icon: Icon(Icons.people_outline_rounded), selectedIcon: Icon(Icons.people_rounded), label: 'Venner'),
         ],
       ),
     );
@@ -90,17 +90,26 @@ class _CreateProfileState extends State<_CreateProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Vælg brugernavn')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
+      body: SafeArea(
+        child: Padding(
+        padding: const EdgeInsets.all(28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Vælg brugernavn', style: theme.textTheme.headlineMedium),
+            const SizedBox(height: 6),
+            Text('Det er sådan, dine venner finder dig.',
+                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 24),
             TextField(
               controller: _name,
               autocorrect: false,
-              decoration: const InputDecoration(labelText: 'Brugernavn'),
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _save(),
+              decoration: const InputDecoration(hintText: 'brugernavn', prefixText: '@'),
             ),
             const SizedBox(height: 16),
             FilledButton(onPressed: _save, child: const Text('Gem')),
@@ -109,6 +118,7 @@ class _CreateProfileState extends State<_CreateProfile> {
               Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ],
           ],
+        ),
         ),
       ),
     );

@@ -7,6 +7,7 @@ import 'data/friends_repo.dart';
 import 'data/session_repo.dart';
 import 'ui/auth_screen.dart';
 import 'ui/shell.dart';
+import 'ui/theme.dart';
 
 /// Built without a Supabase key → offline mode, no login, local storage only.
 final bool offlineMode = supabaseKey.isEmpty;
@@ -28,16 +29,8 @@ class FreeTimeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Free Time',
-      theme: ThemeData(
-        colorSchemeSeed: const Color(0xFF2E7D5B),
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: const Color(0xFF2E7D5B),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      theme: buildTheme(Brightness.light),
+      darkTheme: buildTheme(Brightness.dark),
       home: offlineMode ? _offline() : _online(),
     );
   }
