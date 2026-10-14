@@ -1,108 +1,112 @@
-# Free Time – spørgsmål og svar
+# Free Time – questions and answers
 
-Kontakt: **freetime@rassta.dk**
+Contact: **freetime@rassta.dk** · [Dansk version](FAQ.da.md)
 
-## Hvad er Free Time?
+## What is Free Time?
 
-Free Time er det modsatte af en app, der vil have din opmærksomhed. Den giver
-dig point for den tid, din telefon ligger uberørt. Jo mere "væk" telefonen er,
-jo flere point. Og du kan konkurrere med venner om, hvem der lægger den mest.
+Free Time is the opposite of an app that wants your attention. It gives you
+points for the time your phone lies untouched. The further away the phone is,
+the more points. And you can compete with friends over who leaves it alone the
+most.
 
-## Hvorfor findes den?
+## Why does it exist?
 
-Fordi telefonen er blevet en gæst, der aldrig går hjem. Den ligger på bordet til
-middagen, den er med i sengen, den afbryder samtaler, og den tager de små
-pauser, hvor tankerne ellers ville vandre.
+Because the phone has become a guest that never goes home. It sits on the table
+at dinner, it comes to bed, it interrupts conversations, and it takes the small
+pauses where your mind would otherwise wander.
 
-Free Time er et forsøg på at vende det om: at gøre tilstedeværelse til det, der
-belønnes, og gøre skærmen lidt mindre invaderende i hverdagen. Ikke med forbud,
-men med et lille, venligt regnskab.
+Free Time is an attempt to turn that around: to make presence the thing that
+gets rewarded, and to make the screen a little less invasive in everyday life.
+Not with bans, but with a small, friendly score.
 
-## Hvordan tæller den?
+## How does it count?
 
-**Android:** en lille tæller kører i baggrunden hele tiden. Når skærmen låses
-eller slukkes, starter en session. Når du låser op, slutter den. Det kræver
-ingen tryk.
+**Android:** a small counter runs in the background all the time. When the
+screen locks or turns off, a session starts. When you unlock, it ends. No
+tapping required.
 
-**iPhone:** Apple tillader ikke den slags baggrundsmåling. Der trykker du "Læg
-telefonen fra dig", når du lægger den, og "Stop", når du tager den igen. Appen
-tjekker bagefter, om telefonen faktisk lå stille, og om den blev brugt imens.
+**iPhone:** Apple does not allow that kind of background measurement. There you
+tap "Put the phone down" when you put it down and "Stop" when you pick it up.
+The app then checks whether the phone actually lay still and whether it was
+used in the meantime.
 
-## Hvordan fordeles pointene?
+## How are points awarded?
 
-Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor
-"væk" den er:
+You get 1 point per minute the phone lies there, multiplied by how "gone" it is:
 
-| Tilstand              | Faktor      |
-|-----------------------|-------------|
-| Lyd på                | 1×          |
-| Vibrer                | 1,5×        |
-| Lydløs                | 2×          |
-| Forstyr ikke / Fokus  | 2,5×        |
-| Flytilstand           | 4×          |
-| Slukket               | 6×          |
-| Genstart              | +50 point   |
-| Skærm tændt, men låst | ×0,5        |
-| I lommen / i bevægelse| ×0,5        |
+| State                      | Multiplier |
+|----------------------------|------------|
+| Sound on                   | 1×         |
+| Vibrate                    | 1.5×       |
+| Silent                     | 2×         |
+| Do Not Disturb / Focus     | 2.5×       |
+| Airplane mode              | 4×         |
+| Turned off                 | 6×         |
+| Restart                    | +50 points |
+| Screen on, but locked      | ×0.5       |
+| In a pocket / moving       | ×0.5       |
 
-Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.
+Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.
 
-Eksempler: en time lydløs på bordet giver 120 point. En time i flytilstand giver
-240. En nat slukket giver omkring 2.900.
+Examples: an hour on silent on the table is 120 points. An hour in airplane
+mode is 240. A night turned off is about 2,900.
 
-## Hvad er dagsmålet?
+## What is the daily goal?
 
-Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer
-lydløs eller to en halv time i flytilstand. Du kan ændre det under "Mere" i
-appen. Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.
+The daily goal is yours. The default is 600 points, which equals five hours on
+silent or two and a half hours in airplane mode. You can change it under "More"
+in the app. The goal only affects the ring on the front page, not the standings
+among friends.
 
-## Kan man snyde?
+## Can you cheat?
 
-Ja, hvis man vil. Man kan lægge telefonen hjemme og gå på arbejde. Men så har
-man jo faktisk været uden telefon, og det er hele pointen.
+Yes, if you want to. You can leave the phone at home and go to work. But then
+you actually were without your phone, and that is the whole point.
 
-Appen bruger telefonens sensorer til at se, om den lå stille, og om skærmen blev
-brugt, og giver færre point, når den ikke kan bekræfte det. Men det er en app
-mellem venner, ikke en domstol.
+The app uses the phone's sensors to see whether it lay still and whether the
+screen was used, and gives fewer points when it cannot confirm it. But this is
+an app between friends, not a court.
 
-## Hvorfor er iPhone anderledes end Android?
+## Why is iPhone different from Android?
 
-Apple lader ikke apps læse lydløs-knappen, flytilstand eller om telefonen er
-låst, og apps må ikke køre i baggrunden i timevis. Derfor starter og stopper du
-sessioner selv på iPhone og fortæller selv, om den var på lydløs eller i
-flytilstand. Android giver adgang til det hele, så der måles det automatisk.
+Apple does not let apps read the silent switch, airplane mode, or whether the
+phone is locked, and apps may not run in the background for hours. So on iPhone
+you start and stop sessions yourself and tell the app whether it was on silent
+or in airplane mode. Android gives access to all of it, so there it is measured
+automatically.
 
-## Hvilke data gemmer appen?
+## What data does the app store?
 
-Kun det, der skal til: hvornår en session startede og sluttede, hvilken
-tilstand telefonen var i (lyd, lydløs, fly, slukket), om den lå stille, og om
-skærmen var tændt.
+Only what is needed: when a session started and ended, which state the phone
+was in (sound, silent, airplane, off), whether it lay still, and whether the
+screen was on.
 
-Appen ser ikke, hvilke apps du bruger, hvem du skriver med, eller hvor du er.
-Dine venner kan se dine ugepoint og din samlede tid uden telefon, ikke de
-enkelte sessioner.
+The app does not see which apps you use, who you message, or where you are.
+Your friends can see your weekly points and total time without phone, not the
+individual sessions.
 
-## Hvorfor beder appen om tilladelser?
+## Why does the app ask for permissions?
 
-**Android:** "Kør i baggrunden" så tælleren ikke bliver slået ihjel af
-batterioptimering, og "Notifikationer" fordi Android kræver en synlig
-notifikation for baggrundstjenester.
+**Android:** "Run in background" so the counter is not killed by battery
+optimisation, and "Notifications" because Android requires a visible
+notification for background services.
 
-**iPhone:** "Bevægelse" for at se om telefonen lå stille, "Fokus" for at give
-bonus for Forstyr ikke, og "Skærmtid" for at opdage om telefonen blev brugt
-under en session.
+**iPhone:** "Motion" to see whether the phone lay still, "Focus" to give a bonus
+for Do Not Disturb, and "Screen Time" to detect whether the phone was used
+during a session.
 
-## Bruger den meget batteri?
+## Does it use a lot of battery?
 
-Nej. Tælleren lytter kun efter systemhændelser (skærm, lydprofil, flytilstand)
-og bruger telefonens lavstrøms-bevægelsessensor. Den måler ikke løbende.
+No. The counter only listens for system events (screen, sound profile, airplane
+mode) and uses the phone's low-power motion sensor. It does not measure
+continuously.
 
-## Hvad er planen fremad?
+## What is the plan going forward?
 
-Grupper og udfordringer ("ingen skærm før kl. 9"), streaks, en widget til
-hjemmeskærmen, og en web-version af stillingen. Forslag er velkomne.
+Groups and challenges ("no screen before 9"), streaks, a home screen widget,
+and a web version of the standings. Suggestions are welcome.
 
-## Hvem står bag?
+## Who is behind it?
 
-Free Time er et lille, uafhængigt projekt uden reklamer og uden salg af data.
-Skriv til **freetime@rassta.dk** med spørgsmål, fejl eller idéer.
+Free Time is a small, independent project with no ads and no selling of data.
+Write to **freetime@rassta.dk** with questions, bugs or ideas.

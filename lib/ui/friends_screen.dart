@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/friends_repo.dart';
+import 'l10n_ext.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key, required this.repo});
@@ -33,12 +34,13 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Future<void> _add() async {
     final name = _username.text.trim().toLowerCase();
     if (name.isEmpty) return;
+    final t = context.l10n;
     try {
       await widget.repo!.sendRequest(name);
-      setState(() { _msg = 'Anmodning sendt til $name.'; _ok = true; });
+      setState(() { _msg = t.requestSent(name); _ok = true; });
       _username.clear();
     } catch (e) {
-      setState(() { _msg = 'Fandt ingen bruger med navnet "$name".'; _ok = false; });
+      setState(() { _msg = t.userNotFound(name); _ok = false; });
     }
   }
 
@@ -46,6 +48,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final t = context.l10n;
     final repo = widget.repo;
 
     return Scaffold(
@@ -53,9 +56,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           children: [
-            Text('Venner', style: theme.textTheme.headlineMedium),
+            Text(t.friendsTitle, style: theme.textTheme.headlineMedium),
             Text(
-              repo == null ? 'Offline-tilstand' : 'Inviter venner og se, hvem der lægger telefonen mest.',
+              repo == null ? t.friendsOfflineSubtitle : t.friendsSubtitle,
               style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
@@ -64,7 +67,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    'Appen er bygget uden backend. Venner og leaderboard kommer, når Supabase er koblet på.',
+                    t.friendsOfflineBody,
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
@@ -81,14 +84,14 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           style: TextStyle(color: scheme.onPrimaryContainer, fontWeight: FontWeight.w800)),
                     ),
                     title: Text('@${_me!['username']}', style: theme.textTheme.titleMedium),
-                    subtitle: Text('Dit brugernavn. Del det med venner.',
+                    subtitle: Text(t.yourUsernameHint,
                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
                   ),
                 ),
               const SizedBox(height: 20),
 
               // ---- add ----
-              Text('Tilføj ven', style: theme.textTheme.titleMedium),
+              Text(t.addFriend, style: theme.textTheme.titleMedium),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -98,7 +101,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       autocorrect: false,
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _add(),
-                      decoration: const InputDecoration(hintText: 'brugernavn', prefixText: '@'),
+                      decoration: InputDecoration(hintText: t.usernameHint, prefixText: '@'),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -121,7 +124,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
 
               // ---- incoming ----
               if (_incoming.isNotEmpty) ...[
-                Text('Anmodninger', style: theme.textTheme.titleMedium),
+                Text(t.requests, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 10),
                 Card(
                   child: Column(
@@ -137,7 +140,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                               await repo.accept(_incoming[i]['requester_id'] as String);
                               _load();
                             },
-                            child: const Text('Accepter'),
+                            child: Text(t.accept),
                           ),
                         ),
                         if (i < _incoming.length - 1) const Divider(indent: 16),

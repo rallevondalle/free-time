@@ -17,6 +17,7 @@ Compete with friends over who leaves their phone alone the most.
 [![iPhone](https://img.shields.io/badge/%20iPhone-coming%20soon-17201C?style=for-the-badge&logo=apple&logoColor=white)](#iphone)
 
 [![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-1F5F4A?style=flat-square&logo=android&logoColor=white)](#install-on-android)
+[![Languages](https://img.shields.io/badge/languages-English%20·%20Dansk-1F5F4A?style=flat-square)](#install-on-android)
 [![GrapheneOS](https://img.shields.io/badge/GrapheneOS-ready-17201C?style=flat-square)](#install-on-android)
 [![No ads](https://img.shields.io/badge/ads-none-E8A33D?style=flat-square)](#privacy)
 [![No tracking](https://img.shields.io/badge/tracking-none-E8A33D?style=flat-square)](#privacy)
@@ -101,7 +102,7 @@ The iOS version is in development. Apple does not let apps read the silent switc
 
 ## Questions
 
-Read the [FAQ](docs/FAQ.md) or write to **freetime@rassta.dk**.
+Read the [FAQ](docs/FAQ.md) (also [in Danish](docs/FAQ.da.md)) or write to **freetime@rassta.dk**.
 
 <br/>
 

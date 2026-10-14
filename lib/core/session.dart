@@ -13,15 +13,6 @@ extension SessionModeX on SessionMode {
         SessionMode.poweredOff => 'powered_off',
       };
 
-  String get label => switch (this) {
-        SessionMode.normal => 'Lyd',
-        SessionMode.vibrate => 'Vibrer',
-        SessionMode.silent => 'Lydløs',
-        SessionMode.dnd => 'Forstyr ikke',
-        SessionMode.airplane => 'Flytilstand',
-        SessionMode.poweredOff => 'Slukket',
-      };
-
   double get multiplier => switch (this) {
         SessionMode.normal => 1.0,
         SessionMode.vibrate => 1.5,

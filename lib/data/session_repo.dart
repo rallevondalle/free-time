@@ -118,7 +118,7 @@ class LocalSessionRepo implements SessionRepo {
     final week = await thisWeek();
     return [
       {
-        'username': 'dig (offline)',
+        'username': '__me_offline__',
         'display_name': null,
         'points': week.fold<int>(0, (a, s) => a + s.estimatedPoints),
         'minutes': week.fold<int>(0, (a, s) => a + s.duration.inMinutes),

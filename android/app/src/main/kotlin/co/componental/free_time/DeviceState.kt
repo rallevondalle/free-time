@@ -29,10 +29,10 @@ object DeviceState {
         }
     }
 
-    fun label(mode: String) = when (mode) {
-        "vibrate" -> "vibrer"; "silent" -> "lydløs"; "dnd" -> "forstyr ikke"
-        "airplane" -> "flytilstand"; "powered_off" -> "slukket"; else -> "lyd"
-    }
+    fun label(context: Context, mode: String): String = context.getString(when (mode) {
+        "vibrate" -> R.string.mode_vibrate; "silent" -> R.string.mode_silent; "dnd" -> R.string.mode_dnd
+        "airplane" -> R.string.mode_airplane; "powered_off" -> R.string.mode_powered_off; else -> R.string.mode_normal
+    })
 
     fun snapshot(context: Context, serviceRunning: Boolean): Map<String, Any> = mapOf(
         "mode" to mode(context),

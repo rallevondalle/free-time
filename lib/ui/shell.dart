@@ -7,6 +7,7 @@ import '../data/friends_repo.dart';
 import '../data/session_repo.dart';
 import 'friends_screen.dart';
 import 'home_screen.dart';
+import 'l10n_ext.dart';
 import 'leaderboard_screen.dart';
 import 'more_screen.dart';
 
@@ -14,8 +15,8 @@ import 'more_screen.dart';
 class Shell extends StatefulWidget {
   const Shell({super.key, required this.sessions, required this.friends, required this.settings});
   final SessionRepo sessions;
-  final Settings settings;
   final FriendsRepo? friends; // null in offline mode
+  final Settings settings;
 
   @override
   State<Shell> createState() => _ShellState();
@@ -38,6 +39,7 @@ class _ShellState extends State<Shell> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.l10n;
     if (_hasProfile == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -58,11 +60,11 @@ class _ShellState extends State<Shell> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.spa_outlined), selectedIcon: Icon(Icons.spa_rounded), label: 'I dag'),
-          NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Ugen'),
-          NavigationDestination(icon: Icon(Icons.people_outline_rounded), selectedIcon: Icon(Icons.people_rounded), label: 'Venner'),
-          NavigationDestination(icon: Icon(Icons.more_horiz_rounded), selectedIcon: Icon(Icons.more_horiz_rounded), label: 'Mere'),
+        destinations: [
+          NavigationDestination(icon: const Icon(Icons.spa_outlined), selectedIcon: const Icon(Icons.spa_rounded), label: t.navToday),
+          NavigationDestination(icon: const Icon(Icons.emoji_events_outlined), selectedIcon: const Icon(Icons.emoji_events_rounded), label: t.navWeek),
+          NavigationDestination(icon: const Icon(Icons.people_outline_rounded), selectedIcon: const Icon(Icons.people_rounded), label: t.navFriends),
+          NavigationDestination(icon: const Icon(Icons.more_horiz_rounded), selectedIcon: const Icon(Icons.more_horiz_rounded), label: t.navMore),
         ],
       ),
     );
@@ -79,7 +81,7 @@ class _CreateProfile extends StatefulWidget {
 
 class _CreateProfileState extends State<_CreateProfile> {
   final _name = TextEditingController();
-  String? _error;
+  bool _error = false;
 
   Future<void> _save() async {
     try {
@@ -89,41 +91,42 @@ class _CreateProfileState extends State<_CreateProfile> {
       );
       widget.onDone();
     } catch (e) {
-      setState(() => _error = 'Brugernavn er optaget eller ugyldigt (a-z, 0-9, _, 3-20 tegn).');
+      setState(() => _error = true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: Padding(
-        padding: const EdgeInsets.all(28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Vælg brugernavn', style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 6),
-            Text('Det er sådan, dine venner finder dig.',
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-            const SizedBox(height: 24),
-            TextField(
-              controller: _name,
-              autocorrect: false,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _save(),
-              decoration: const InputDecoration(hintText: 'brugernavn', prefixText: '@'),
-            ),
-            const SizedBox(height: 16),
-            FilledButton(onPressed: _save, child: const Text('Gem')),
-            if (_error != null) ...[
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(t.chooseUsername, style: theme.textTheme.headlineMedium),
+              const SizedBox(height: 6),
+              Text(t.chooseUsernameHint,
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              const SizedBox(height: 24),
+              TextField(
+                controller: _name,
+                autocorrect: false,
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => _save(),
+                decoration: InputDecoration(hintText: t.usernameHint, prefixText: '@'),
+              ),
               const SizedBox(height: 16),
-              Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              FilledButton(onPressed: _save, child: Text(t.save)),
+              if (_error) ...[
+                const SizedBox(height: 16),
+                Text(t.usernameTaken, style: TextStyle(color: theme.colorScheme.error)),
+              ],
             ],
-          ],
-        ),
+          ),
         ),
       ),
     );

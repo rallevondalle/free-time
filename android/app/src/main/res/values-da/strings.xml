@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel">Tæller</string>
+    <string name="notif_in_use">Telefonen er i brug. Lås den for at tjene point.</string>
+    <string name="notif_counting">Tæller point: %1$s</string>
+    <string name="notif_screen_on">, skærm tændt</string>
+    <string name="notif_moving">, i bevægelse</string>
+    <string name="mode_normal">lyd</string>
+    <string name="mode_vibrate">vibrer</string>
+    <string name="mode_silent">lydløs</string>
+    <string name="mode_dnd">forstyr ikke</string>
+    <string name="mode_airplane">flytilstand</string>
+    <string name="mode_powered_off">slukket</string>
+</resources>

@@ -9,11 +9,13 @@ class PointsRing extends StatelessWidget {
     required this.points,
     required this.goal,
     required this.subtitle,
+    required this.label,
   });
 
   final int points;
   final int goal;
   final String subtitle;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class PointsRing extends StatelessWidget {
             children: [
               Text('$points', style: theme.textTheme.displayLarge?.copyWith(fontSize: 64, height: 1)),
               const SizedBox(height: 4),
-              Text('point i dag', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              Text(label, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
               const SizedBox(height: 10),
               Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             ],

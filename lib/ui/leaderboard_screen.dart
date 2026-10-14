@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/session_repo.dart';
+import 'l10n_ext.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key, required this.repo});
@@ -21,6 +22,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final t = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
@@ -32,12 +34,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               return ListView(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
                 children: [
-                  Text('Denne uge', style: theme.textTheme.headlineMedium),
-                  Text('Ugens stilling blandt dine venner',
+                  Text(t.weekTitle, style: theme.textTheme.headlineMedium),
+                  Text(t.weekSubtitle,
                       style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
                   const SizedBox(height: 24),
                   if (snap.hasError)
-                    Text('Kunne ikke hente stillingen.', style: TextStyle(color: scheme.error))
+                    Text(t.weekError, style: TextStyle(color: scheme.error))
                   else if (!snap.hasData)
                     const Padding(padding: EdgeInsets.all(40), child: Center(child: CircularProgressIndicator()))
                   else ...[
@@ -57,7 +59,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: Text(
-                          'Tilføj venner under "Venner" for at konkurrere.',
+                          t.weekAddFriendsHint,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                         ),
@@ -73,7 +75,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 }
 
-String _name(Map<String, dynamic> r) => (r['display_name'] as String?) ?? (r['username'] as String);
+String _name(BuildContext context, Map<String, dynamic> r) {
+  final u = r['username'] as String;
+  if (u == '__me_offline__') return context.l10n.meOffline;
+  return (r['display_name'] as String?) ?? u;
+}
 
 class _Podium extends StatelessWidget {
   const _Podium({required this.rows});
@@ -120,7 +126,7 @@ class _PodiumSpot extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: Text(
-            _name(row).substring(0, 1).toUpperCase(),
+            _name(context, row).substring(0, 1).toUpperCase(),
             style: theme.textTheme.headlineMedium?.copyWith(
               color: gold ? scheme.onSecondaryContainer : scheme.onPrimaryContainer,
               fontSize: size * 0.42,
@@ -128,8 +134,8 @@ class _PodiumSpot extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(_name(row), style: theme.textTheme.labelLarge, overflow: TextOverflow.ellipsis),
-        Text('${row['points']} pt',
+        Text(_name(context, row), style: theme.textTheme.labelLarge, overflow: TextOverflow.ellipsis),
+        Text(context.l10n.pointsShort(row['points'] as int),
             style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant, fontWeight: FontWeight.w700)),
       ],
     );
@@ -157,7 +163,7 @@ class _Row extends StatelessWidget {
           CircleAvatar(
             radius: 18,
             backgroundColor: scheme.primaryContainer,
-            child: Text(_name(row).substring(0, 1).toUpperCase(),
+            child: Text(_name(context, row).substring(0, 1).toUpperCase(),
                 style: TextStyle(color: scheme.onPrimaryContainer, fontWeight: FontWeight.w800)),
           ),
           const SizedBox(width: 12),
@@ -165,8 +171,8 @@ class _Row extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_name(row), style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
-                Text('${mins ~/ 60}t ${mins % 60}m uden telefon',
+                Text(_name(context, row), style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                Text(context.l10n.hoursMinutesWithoutPhone(mins ~/ 60, mins % 60),
                     style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
               ],
             ),

@@ -6,6 +6,9 @@ import '../core/session.dart';
 import '../core/settings.dart';
 import '../data/session_repo.dart';
 import '../native/free_time_platform.dart';
+import 'l10n_ext.dart';
+import 'package:intl/intl.dart';
+
 import 'points_ring.dart';
 import 'theme.dart';
 
@@ -94,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final t = context.l10n;
     final elapsed = _startedAt == null ? Duration.zero : DateTime.now().difference(_startedAt!);
     final goal = widget.settings.dailyGoal;
 
@@ -111,12 +115,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(_greeting(), style: theme.textTheme.headlineMedium),
-                        Text(_dateLabel(), style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                        Text(_greeting(t), style: theme.textTheme.headlineMedium),
+                        Text(_dateLabel(Localizations.localeOf(context)), style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
                       ],
                     ),
                   ),
-                  if (widget.repo.isOffline) const Pill(label: 'offline', icon: Icons.cloud_off_rounded),
+                  if (widget.repo.isOffline) Pill(label: t.offline, icon: Icons.cloud_off_rounded),
                 ],
               ),
               const SizedBox(height: 28),
@@ -126,29 +130,30 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 child: PointsRing(
                   points: _todayPoints,
                   goal: goal,
-                  subtitle: '${_fmt(_todayTime)} uden telefon',
+                  subtitle: t.timeWithoutPhone(_fmt(_todayTime)),
+                  label: t.pointsToday,
                 ),
               ),
               const SizedBox(height: 10),
               Center(
                 child: Text(
-                  _todayPoints >= goal ? 'Dagens mål nået' : 'Mål: $goal point',
+                  _todayPoints >= goal ? t.goalReached : t.goalLabel(goal),
                   style: theme.textTheme.labelLarge?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ),
               const SizedBox(height: 28),
 
               // ---- status / control ----
-              if (_platform.isAndroid) _androidStatus(theme),
-              if (_platform.isIOS) _iosControls(theme, elapsed),
+              if (_platform.isAndroid) _androidStatus(theme, t),
+              if (_platform.isIOS) _iosControls(theme, t, elapsed),
               const SizedBox(height: 32),
 
               // ---- timeline ----
               Row(
                 children: [
-                  Text('I dag', style: theme.textTheme.titleLarge),
+                  Text(t.today, style: theme.textTheme.titleLarge),
                   const Spacer(),
-                  Text('${_today.length} ${_today.length == 1 ? 'session' : 'sessioner'}',
+                  Text(t.sessionCount(_today.length),
                       style: theme.textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant)),
                 ],
               ),
@@ -173,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _androidStatus(ThemeData theme) {
+  Widget _androidStatus(ThemeData theme, AppLocalizations t) {
     final scheme = theme.colorScheme;
     final running = _state?.serviceRunning ?? false;
     final mode = _state?.mode ?? SessionMode.normal;
@@ -197,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(running ? 'Tæller automatisk' : 'Tælleren kører ikke', style: theme.textTheme.titleMedium),
+                  Text(running ? t.trackingOn : t.trackingOff, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
-                  Text('Når skærmen er låst. Skærm tændt giver halve point.',
+                  Text(t.trackingHint,
                       style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
                 ],
               ),
@@ -212,19 +217,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _iosControls(ThemeData theme, Duration elapsed) {
+  Widget _iosControls(ThemeData theme, AppLocalizations t, Duration elapsed) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (!_running) ...[
-          Text('Hvordan ligger telefonen?', style: theme.textTheme.titleMedium),
+          Text(t.howIsPhoneLying, style: theme.textTheme.titleMedium),
           const SizedBox(height: 10),
           SegmentedButton<SessionMode>(
             showSelectedIcon: false,
             segments: [
-              ButtonSegment(value: SessionMode.normal, label: const Text('Lyd'), icon: Icon(modeIcon(SessionMode.normal))),
-              ButtonSegment(value: SessionMode.silent, label: const Text('Lydløs'), icon: Icon(modeIcon(SessionMode.silent))),
-              ButtonSegment(value: SessionMode.airplane, label: const Text('Fly'), icon: Icon(modeIcon(SessionMode.airplane))),
+              ButtonSegment(value: SessionMode.normal, label: Text(t.modeShortNormal), icon: Icon(modeIcon(SessionMode.normal))),
+              ButtonSegment(value: SessionMode.silent, label: Text(t.modeShortSilent), icon: Icon(modeIcon(SessionMode.silent))),
+              ButtonSegment(value: SessionMode.airplane, label: Text(t.modeShortAirplane), icon: Icon(modeIcon(SessionMode.airplane))),
             ],
             selected: {_claimed},
             onSelectionChanged: (s) => setState(() => _claimed = s.first),
@@ -232,30 +237,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           const SizedBox(height: 16),
         ],
         _running
-            ? FilledButton.tonal(onPressed: _stop, child: Text('Stop  ·  ${_fmt(elapsed)}'))
-            : FilledButton(onPressed: _start, child: const Text('Læg telefonen fra dig')),
+            ? FilledButton.tonal(onPressed: _stop, child: Text(t.stopWithTime(_fmt(elapsed))))
+            : FilledButton(onPressed: _start, child: Text(t.putPhoneDown)),
       ],
     );
   }
 
-  static String _greeting() {
+  static String _greeting(AppLocalizations t) {
     final h = DateTime.now().hour;
-    if (h < 5) return 'God nat';
-    if (h < 10) return 'God morgen';
-    if (h < 18) return 'God dag';
-    return 'God aften';
+    if (h < 5) return t.greetingNight;
+    if (h < 10) return t.greetingMorning;
+    if (h < 18) return t.greetingDay;
+    return t.greetingEvening;
   }
 
-  static String _dateLabel() {
-    const days = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'];
-    const months = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
-    final n = DateTime.now();
-    return '${days[n.weekday - 1]} ${n.day}. ${months[n.month - 1]}';
-  }
+  static String _dateLabel(Locale locale) =>
+      DateFormat('EEEE d. MMM', locale.toString()).format(DateTime.now());
 
-  static String _fmt(Duration d) {
+  String _fmt(Duration d) {
+    final hu = Localizations.localeOf(context).languageCode == 'da' ? 't' : 'h';
     final h = d.inHours, m = d.inMinutes % 60, s = d.inSeconds % 60;
-    return h > 0 ? '${h}t ${m}m' : '${m}m ${s.toString().padLeft(2, '0')}s';
+    return h > 0 ? '$h$hu ${m}m' : '${m}m ${s.toString().padLeft(2, '0')}s';
   }
 }
 
@@ -267,12 +269,13 @@ class _SessionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final t = context.l10n;
     final s = session;
     final c = modeColor(s.mode, theme.brightness);
     final flags = <String>[
-      if (s.screenOn) 'skærm tændt',
-      if (!s.verified) 'i bevægelse',
-      if (s.source == SessionSource.reboot) 'genstart',
+      if (s.screenOn) t.flagScreenOn,
+      if (!s.verified) t.flagMoving,
+      if (s.source == SessionSource.reboot) t.flagReboot,
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -289,7 +292,7 @@ class _SessionTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${s.mode.label} · ${_dur(s.duration)}', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                Text('${s.mode.label(t)} · ${_dur(context, s.duration)}', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
                 Text(
                   '${_hm(s.startedAt)}–${_hm(s.endedAt)}${flags.isEmpty ? '' : ' · ${flags.join(', ')}'}',
@@ -305,9 +308,10 @@ class _SessionTile extends StatelessWidget {
     );
   }
 
-  static String _dur(Duration d) {
+  static String _dur(BuildContext context, Duration d) {
+    final hu = Localizations.localeOf(context).languageCode == 'da' ? 't' : 'h';
     final h = d.inHours, m = d.inMinutes % 60;
-    return h > 0 ? '${h}t ${m}m' : '${m}m';
+    return h > 0 ? '$h$hu ${m}m' : '${m}m';
   }
 
   static String _hm(DateTime t) =>
@@ -321,6 +325,7 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -328,12 +333,10 @@ class _EmptyState extends StatelessWidget {
           children: [
             Icon(Icons.spa_rounded, size: 36, color: theme.colorScheme.primary),
             const SizedBox(height: 12),
-            Text('Ingen sessioner endnu', style: theme.textTheme.titleMedium),
+            Text(t.noSessionsTitle, style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              android
-                  ? 'Lås telefonen og læg den fra dig. Resten sker af sig selv.'
-                  : 'Tryk på knappen, og læg telefonen fra dig.',
+              android ? t.noSessionsAndroid : t.noSessionsIos,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Free Time</string>
+    <string name="notif_channel">Counter</string>
+    <string name="notif_in_use">Phone in use. Lock it to earn points.</string>
+    <string name="notif_counting">Counting points: %1$s</string>
+    <string name="notif_screen_on">, screen on</string>
+    <string name="notif_moving">, moving</string>
+    <string name="mode_normal">sound</string>
+    <string name="mode_vibrate">vibrate</string>
+    <string name="mode_silent">silent</string>
+    <string name="mode_dnd">do not disturb</string>
+    <string name="mode_airplane">airplane mode</string>
+    <string name="mode_powered_off">off</string>
+</resources>

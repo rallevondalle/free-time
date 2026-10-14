@@ -192,14 +192,14 @@ class SessionService : Service() {
             this, 0, packageManager.getLaunchIntentForPackage(packageName), PendingIntent.FLAG_IMMUTABLE
         )
         val text = when {
-            active == null -> "Telefonen er i brug. Lås den for at tjene point."
-            else -> "Tæller point: ${DeviceState.label(active!!.mode)}" +
-                (if (active!!.screenOn) ", skærm tændt" else "") +
-                (if (!active!!.verified) ", i bevægelse" else "")
+            active == null -> getString(R.string.notif_in_use)
+            else -> getString(R.string.notif_counting, DeviceState.label(this, active!!.mode)) +
+                (if (active!!.screenOn) getString(R.string.notif_screen_on) else "") +
+                (if (!active!!.verified) getString(R.string.notif_moving) else "")
         }
         return Notification.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_lock_idle_lock)
-            .setContentTitle("Free Time")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setContentIntent(open)
             .setOngoing(true)
@@ -210,7 +210,7 @@ class SessionService : Service() {
     private fun startForeground() {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            nm.createNotificationChannel(NotificationChannel(CHANNEL, "Tæller", NotificationManager.IMPORTANCE_MIN))
+            nm.createNotificationChannel(NotificationChannel(CHANNEL, getString(R.string.notif_channel), NotificationManager.IMPORTANCE_MIN))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(NOTIF_ID, notification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)

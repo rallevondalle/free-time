@@ -1,0 +1,200 @@
+{
+  "@@locale": "en",
+  "appName": "Free Time",
+  "tagline": "Points for leaving your phone alone.",
+  "offline": "offline",
+  "navToday": "Today",
+  "navWeek": "Week",
+  "navFriends": "Friends",
+  "navMore": "More",
+  "greetingNight": "Good night",
+  "greetingMorning": "Good morning",
+  "greetingDay": "Hello",
+  "greetingEvening": "Good evening",
+  "pointsToday": "points today",
+  "timeWithoutPhone": "{time} without phone",
+  "@timeWithoutPhone": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "goalReached": "Daily goal reached",
+  "goalLabel": "Goal: {goal} points",
+  "@goalLabel": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "trackingOn": "Counting automatically",
+  "trackingOff": "The counter is not running",
+  "trackingHint": "Whenever the screen is locked. Screen on gives half points.",
+  "howIsPhoneLying": "How is the phone lying?",
+  "stopWithTime": "Stop  ·  {time}",
+  "@stopWithTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "putPhoneDown": "Put the phone down",
+  "today": "Today",
+  "sessionCount": "{count, plural, =1{1 session} other{{count} sessions}}",
+  "@sessionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionsTitle": "No sessions yet",
+  "noSessionsAndroid": "Lock your phone and put it down. The rest happens by itself.",
+  "noSessionsIos": "Tap the button and put the phone down.",
+  "flagScreenOn": "screen on",
+  "flagMoving": "moving",
+  "flagReboot": "restart",
+  "modeNormal": "Sound",
+  "modeVibrate": "Vibrate",
+  "modeSilent": "Silent",
+  "modeDnd": "Do Not Disturb",
+  "modeAirplane": "Airplane mode",
+  "modePoweredOff": "Off",
+  "modeShortNormal": "Sound",
+  "modeShortSilent": "Silent",
+  "modeShortAirplane": "Airplane",
+  "weekTitle": "This week",
+  "weekSubtitle": "The week's standings among your friends",
+  "weekError": "Could not load the standings.",
+  "weekAddFriendsHint": "Add friends under \"Friends\" to compete.",
+  "pointsShort": "{points} pts",
+  "@pointsShort": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesWithoutPhone": "{hours}h {minutes}m without phone",
+  "@hoursMinutesWithoutPhone": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "meOffline": "you (offline)",
+  "friendsTitle": "Friends",
+  "friendsSubtitle": "Invite friends and see who leaves the phone alone the most.",
+  "friendsOfflineSubtitle": "Offline mode",
+  "friendsOfflineBody": "The app was built without a backend. Friends and standings arrive when Supabase is connected.",
+  "yourUsernameHint": "Your username. Share it with friends.",
+  "addFriend": "Add friend",
+  "usernameHint": "username",
+  "requestSent": "Request sent to {name}.",
+  "@requestSent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "userNotFound": "No user named \"{name}\".",
+  "@userNotFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "requests": "Requests",
+  "accept": "Accept",
+  "moreTitle": "More",
+  "moreSubtitle": "Settings, questions and contact",
+  "dailyGoal": "Daily goal",
+  "pointsPerDay": "points per day",
+  "goalEquivalent": "Equals {silent} on silent or {airplane} in airplane mode.",
+  "@goalEquivalent": {
+    "placeholders": {
+      "silent": {
+        "type": "String"
+      },
+      "airplane": {
+        "type": "String"
+      }
+    }
+  },
+  "hoursShort": "{hours} h",
+  "@hoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "other": "Other",
+  "cancel": "Cancel",
+  "save": "Save",
+  "pointsUnit": "points",
+  "language": "Language",
+  "languageSystem": "System",
+  "faqTitle": "Questions and answers",
+  "contact": "Contact",
+  "tapToCopy": "Tap to copy",
+  "emailCopied": "Email copied",
+  "signOut": "Sign out",
+  "footer": "Free Time · no ads, no data sales",
+  "authSubtitle": "Points for leaving your phone alone.\nThe further away, the more points.",
+  "emailHint": "you@example.com",
+  "sendLoginLink": "Send login link",
+  "noPasswordHint": "No password. You get a link by email.",
+  "linkSent": "We sent a link to {email}. Open it on your phone to sign in.",
+  "@linkSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "authError": "Could not send the link. Check the address and try again.",
+  "chooseUsername": "Choose a username",
+  "chooseUsernameHint": "This is how your friends find you.",
+  "usernameTaken": "Username taken or invalid (a-z, 0-9, _, 3-20 characters).",
+  "faq1Q": "What is Free Time?",
+  "faq1A": "Free Time is the opposite of an app that wants your attention. It gives you points for the time your phone lies untouched. The further away the phone is, the more points. And you can compete with friends over who leaves it alone the most.",
+  "faq2Q": "Why does it exist?",
+  "faq2A": "Because the phone has become a guest that never goes home. It sits on the table at dinner, it comes to bed, it interrupts conversations, and it takes the small pauses where your mind would otherwise wander. Free Time is an attempt to turn that around: to make presence the thing that gets rewarded, and to make the screen a little less invasive in everyday life. Not with bans, but with a small, friendly score.",
+  "faq3Q": "How does it count?",
+  "faq3A": "On Android a small counter runs in the background all the time. When the screen locks or turns off, a session starts. When you unlock, it ends. No tapping required.\n\nOn iPhone, Apple does not allow that kind of background measurement. There you tap \"Put the phone down\" when you put it down and \"Stop\" when you pick it up. The app then checks whether the phone actually lay still and whether it was used in the meantime.",
+  "faq4Q": "How are points awarded?",
+  "faq4A": "You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 4×\n•  Turned off: 6×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode is 240. A night turned off is about 2,900.",
+  "faq5Q": "What is the daily goal?",
+  "faq5A": "The daily goal is yours. The default is 600 points, which equals five hours on silent or two and a half hours in airplane mode. You can change it under \"More\". The goal only affects the ring on the front page, not the standings among friends.",
+  "faq6Q": "Can you cheat?",
+  "faq6A": "Yes, if you want to. You can leave the phone at home and go to work. But then you actually were without your phone, and that is the whole point. The app uses the phone's sensors to see whether it lay still and whether the screen was used, and gives fewer points when it cannot confirm it. But this is an app between friends, not a court.",
+  "faq7Q": "Why is iPhone different from Android?",
+  "faq7A": "Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you start and stop sessions yourself and tell the app whether it was on silent or in airplane mode. Android gives access to all of it, so there it is measured automatically.",
+  "faq8Q": "What data does the app store?",
+  "faq8A": "Only what is needed: when a session started and ended, which state the phone was in (sound, silent, airplane, off), whether it lay still, and whether the screen was on. The app does not see which apps you use, who you message, or where you are. Your friends can see your weekly points and total time without phone, not the individual sessions.",
+  "faq9Q": "Why does the app ask for permissions?",
+  "faq9A": "On Android: \"Run in background\" so the counter is not killed by battery optimisation, and \"Notifications\" because Android requires a visible notification for background services. On iPhone: \"Motion\" to see whether the phone lay still, \"Focus\" to give a bonus for Do Not Disturb, and \"Screen Time\" to detect whether the phone was used during a session.",
+  "faq10Q": "Does it use a lot of battery?",
+  "faq10A": "No. The counter only listens for system events (screen, sound profile, airplane mode) and uses the phone's low-power motion sensor. It does not measure continuously.",
+  "faq11Q": "What is the plan going forward?",
+  "faq11A": "Groups and challenges (\"no screen before 9\"), streaks, a home screen widget, and a web version of the standings. Suggestions are welcome.",
+  "faq12Q": "Who is behind it, and how do I get in touch?",
+  "faq12A": "Free Time is a small, independent project with no ads and no selling of data. Write to {email} with questions, bugs or ideas.",
+  "@faq12A": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
+}
