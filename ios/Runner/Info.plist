@@ -38,9 +38,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSFocusStatusUsageDescription</key>
-	<string>Free Time giver ekstra point, når Fokus/Forstyr ikke er slået til.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Free Time bruger bevægelsesdata til at bekræfte, at telefonen lå stille under din session.</string>
+	<string>Forstyr ikke giver 2,5× point. Appen får kun et ja/nej fra iOS om Fokus er slået til – ikke hvilken, og det sendes ikke videre.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

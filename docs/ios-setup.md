@@ -1,45 +1,72 @@
 # iOS-opsætning (Mac med Xcode)
 
-Projektet er oprettet på Linux, så iOS-delen er kun verificeret som kode, ikke
-bygget. Gør følgende på Mac'en første gang:
+Værktøjer er pinnet i `.mise.toml` (Flutter 3.47.7, Temurin 17). Homebrews
+Flutter-cask er ældre og kan ikke bygge projektet, så brug mise:
 
 ```sh
+brew install mise            # én gang
 git clone <repo> && cd free-time
-flutter pub get
-cd ios && pod install && cd ..
-open ios/Runner.xcworkspace
+mise trust && mise install
+mise exec -- flutter pub get
+ios/scripts/setup_targets.sh
+mise exec -- flutter build ios --simulator --debug
 ```
 
-## 1. App Group (deler state mellem app og Screen Time-extension)
+## Hvad `ios/scripts/setup_targets.sh` gør
 
-Runner-target → Signing & Capabilities → `+ Capability` → **App Groups** →
-tilføj `group.co.componental.freetime`.
+Projektet blev oprettet på Linux, så Swift-filerne lå i repoet uden at
+indgå i noget target. Scriptet (xcodeproj-gem'en fra Homebrews CocoaPods)
+retter `Runner.xcodeproj` og kan køres igen uden at lave dubletter:
 
-## 2. Family Controls (Screen Time-API)
+- `Runner/FreeTimeBridge.swift` kompileres med i Runner.
+- `Runner/Runner.entitlements` og `FreeTimeMonitor/FreeTimeMonitor.entitlements`
+  med App Group `group.co.componental.freetime` og Family Controls.
+- Target `FreeTimeMonitor` (Device Activity Monitor-extension, bundle id
+  `co.componental.freeTime.FreeTimeMonitor`) med samme Flutter-xcconfigs som
+  Runner, så version/build-nummer følger appen. Indlejres i Runner.app/PlugIns.
+- Team `XFQR9ZD5A3` og automatic signing på alle targets.
 
-Runner-target → `+ Capability` → **Family Controls**.
+Det der *ikke* er scriptet, er at Xcode skal registrere App Group og Family
+Controls på de to App ID'er i developer-portalen. Det sker automatisk første
+gang man bygger til enhed med automatic signing — men kun hvis kontoen er
+logget ind i Xcode og den nyeste Program License Agreement er accepteret på
+<https://developer.apple.com/account>. Ellers fejler signeringen med
+«Provisioning profile … doesn't include the App Groups capability».
 
-Til udvikling og TestFlight-intern test virker det med det samme.
-Til App Store skal entitlementet "Family Controls (Distribution)" ansøges:
+## Verificeret 14/10-2026
+
+- Simulator-build (iPhone 17, iOS 26.5, Xcode 26.6) bygger og starter; appen
+  beder om Fokus-tilladelse via den native bridge.
+- `FreeTimeMonitor.appex` ligger i `Runner.app/PlugIns` med version 0.1.0 (1).
+- Enheds-build (`flutter build ios --debug`) signerer; `codesign -d --entitlements`
+  viser Family Controls + App Group på både Runner.app og FreeTimeMonitor.appex.
+  Krævede først PLA-accept på developer-kontoen (se ovenfor).
+- Installeret på iPhone 14 Pro Max (iOS 26.6) via `xcrun devicectl device install app`
+  + `process launch`. **Profile-build, ikke Debug** — en Debug-build kan ikke
+  startes fra hjemmeskærmen («Flutter apps can only be launched from Flutter
+  tooling»). Profile/Debug giver desuden en «lokale netværk»-prompt fra Flutters
+  værktøj, som ikke findes i Release.
+- Skærmtid-prompten (Apples tekst) og Fokus-prompten kom frem og virkede.
+- `DeviceActivityEvent` i SDK'en har ikke `includesAllActivity:` som
+  init-argument (det er en read-only property). Tomme token-sæt betyder «al
+  aktivitet»; på iOS ≥ 17.4 bruges `includesPastActivity: false`. Ikke testet på
+  enhed endnu.
+
+## Family Controls i App Store
+
+Til udvikling og TestFlight-intern test virker entitlementet med det samme.
+Til App Store skal "Family Controls (Distribution)" ansøges:
 <https://developer.apple.com/contact/request/family-controls-distribution>.
 
-## 3. DeviceActivity Monitor-extension
+## Tilladelser
 
-File → New → Target → **Device Activity Monitor Extension**.
+Begge valgfri, og de bedes om én ad gangen fra «Sådan måler vi»-skærmen
+(`lib/ui/measure_intro_screen.dart`) før første session — aldrig ved start.
+Bevægelse & fitness blev droppet 14/10-2026. `Info.plist` har kun
+`NSFocusStatusUsageDescription`; Skærmtid-prompten er Apples egen tekst og kan
+ikke ændres.
 
-- Product name: `FreeTimeMonitor`
-- Bundle id: `co.componental.freeTime.FreeTimeMonitor`
-- Slet den genererede Swift-fil og træk `ios/FreeTimeMonitor/DeviceActivityMonitorExtension.swift`
-  ind i target'et i stedet.
-- Giv extension-target'et samme **App Groups**-capability som Runner.
-- Extension-target'et skal også have **Family Controls**.
-
-## 4. Tilladelser
-
-`Info.plist` har allerede `NSMotionUsageDescription` og
-`NSFocusStatusUsageDescription`. Appen beder om dem ved første åbning.
-
-## 5. Magic link
+## Magic link
 
 URL-scheme `co.componental.freetime://login` er sat i `Info.plist`.
 Tilføj samme URL under Supabase → Authentication → URL Configuration →
@@ -49,8 +76,7 @@ Redirect URLs.
 
 | Signal          | Kilde                                          |
 |-----------------|------------------------------------------------|
-| Lå stille       | `CMMotionActivityManager.queryActivityStarting` |
-| Blev brugt      | DeviceActivity-event (1 min brug af en hvilken som helst app) |
+| Blev brugt      | DeviceActivity-event (1 min brug af en hvilken som helst app) — valgfri; uden = uverificeret |
 | Fokus           | `INFocusStatusCenter`                          |
 | Genstart/slukket| `sysctl KERN_BOOTTIME` vs. sidste heartbeat    |
 | Lydløs / fly    | Selvrapporteret i appen (ikke muligt at måle)  |

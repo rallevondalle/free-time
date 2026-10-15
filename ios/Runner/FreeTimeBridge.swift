@@ -1,5 +1,4 @@
 import Flutter
-import CoreMotion
 import Intents
 import UIKit
 
@@ -12,17 +11,20 @@ import DeviceActivity
 ///
 /// iOS cannot read the ring/silent switch or airplane mode, so those are
 /// self-reported. What we *can* verify after the fact:
-/// - CoreMotion activity history: was the phone stationary the whole time?
 /// - DeviceActivity (Screen Time): did any app get used during the session?
 ///   The extension writes an "interrupted" flag to the shared App Group.
-/// - Focus status: counts as DND.
+///   Optional: without it a session is simply unverified.
+/// - Focus status: counts as DND. Optional.
 /// - Boot time (sysctl): reboot / powered-off detection via last heartbeat.
+///
+/// Motion & Fitness was dropped on purpose (14/10-2026): one more scary prompt
+/// for a weak signal. Every permission is asked for from the "how we measure"
+/// screen, never at launch.
 final class FreeTimeBridge: NSObject, FlutterStreamHandler {
 
   static let appGroup = "group.co.componental.freetime"
   static let activityName = "freetime.session"
 
-  private let motion = CMMotionActivityManager()
   private let defaults = UserDefaults(suiteName: FreeTimeBridge.appGroup) ?? .standard
   private var sink: FlutterEventSink?
 
@@ -55,12 +57,17 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
         "canMeasureAirplane": false,
         "canMeasureDnd": INFocusStatusCenter.default.authorizationStatus == .authorized,
         "serviceRunning": defaults.object(forKey: "active_started") != nil,
+        // So Flutter can show the live session after a relaunch.
+        "activeStartedAt": (defaults.object(forKey: "active_started") as? TimeInterval).map { Int($0 * 1000) } as Any,
+        "screenTime": screenTimeAuthorized(),
       ])
 
     case "startSession":
       let args = call.arguments as? [String: Any]
       let claimed = args?["selfReportedMode"] as? String ?? "normal"
-      startSession(claimedMode: claimed)
+      startSession(claimedMode: claimed,
+                   wifiOn: args?["wifiOn"] as? Bool ?? false,
+                   bluetoothOn: args?["bluetoothOn"] as? Bool ?? false)
       result(nil)
 
     case "stopSession":
@@ -72,9 +79,12 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
     case "drainPendingSessions":
       result(drainPending())
 
-    case "requestPermissions":
-      requestPermissions()
-      result(nil)
+    case "permissionStatus":
+      result(permissionStatus())
+
+    case "requestPermission":
+      let name = (call.arguments as? [String: Any])?["name"] as? String ?? ""
+      requestPermission(name) { result(self.permissionStatus()) }
 
     default:
       result(FlutterMethodNotImplemented)
@@ -83,10 +93,13 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
 
   // MARK: session lifecycle
 
-  private func startSession(claimedMode: String) {
+  private func startSession(claimedMode: String, wifiOn: Bool, bluetoothOn: Bool) {
     let now = Date()
     defaults.set(now.timeIntervalSince1970, forKey: "active_started")
     defaults.set(claimedMode, forKey: "active_claimed")
+    // Radios are self-reported too (iOS cannot read Wi-Fi; Bluetooth needs a prompt).
+    defaults.set(wifiOn, forKey: "active_wifi_on")
+    defaults.set(bluetoothOn, forKey: "active_bt_on")
     defaults.set(false, forKey: "active_interrupted")
     defaults.set(0, forKey: "active_pickups")
     startDeviceActivityMonitoring()
@@ -104,38 +117,29 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
     stopDeviceActivityMonitoring()
     defaults.removeObject(forKey: "active_started")
 
-    // Focus overrides a self-reported "normal"; self-reported airplane/silent win.
+    // Measured Focus (2.5×) beats a self-reported sound/vibrate/silent;
+    // self-reported airplane (4×) still wins.
     var mode = claimed
-    if mode == "normal", focusIsOn() { mode = "dnd" }
+    if focusIsOn(), ["normal", "vibrate", "silent"].contains(mode) { mode = "dnd" }
     let selfReported = claimed != "normal"
 
-    wasStationary(from: start, to: end) { stationary in
-      let verified = stationary && !interrupted
-      completion([[
-        "clientId": UUID().uuidString,
-        "startedAt": Int(start.timeIntervalSince1970 * 1000),
-        "endedAt": Int(end.timeIntervalSince1970 * 1000),
-        "mode": mode,
-        "source": "manual",
-        "verified": verified,
-        "selfReported": selfReported,
-        "pickups": pickups + (interrupted ? 1 : 0),
-      ]])
-    }
+    // Verified only means "Screen Time was watching and saw no use".
+    let verified = screenTimeAuthorized() && !interrupted
+    completion([[
+      "clientId": UUID().uuidString,
+      "startedAt": Int(start.timeIntervalSince1970 * 1000),
+      "endedAt": Int(end.timeIntervalSince1970 * 1000),
+      "mode": mode,
+      "source": "manual",
+      "verified": verified,
+      "selfReported": selfReported,
+      "pickups": pickups + (interrupted ? 1 : 0),
+      "wifiOn": defaults.bool(forKey: "active_wifi_on"),
+      "bluetoothOn": defaults.bool(forKey: "active_bt_on"),
+    ]])
   }
 
   // MARK: verification sources
-
-  private func wasStationary(from: Date, to: Date, _ cb: @escaping (Bool) -> Void) {
-    guard CMMotionActivityManager.isActivityAvailable() else { cb(false); return }
-    motion.queryActivityStarting(from: from, to: to, to: .main) { activities, error in
-      guard let activities = activities, error == nil else { cb(false); return }
-      let moved = activities.contains { a in
-        a.confidence != .low && (a.walking || a.running || a.cycling || a.automotive)
-      }
-      cb(!moved)
-    }
-  }
 
   private func focusIsOn() -> Bool {
     guard INFocusStatusCenter.default.authorizationStatus == .authorized else { return false }
@@ -145,7 +149,7 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
   private func startDeviceActivityMonitoring() {
     #if canImport(DeviceActivity)
     if #available(iOS 16.0, *) {
-      guard AuthorizationCenter.shared.authorizationStatus == .approved else { return }
+      guard screenTimeAuthorized() else { return }
       let center = DeviceActivityCenter()
       let now = Calendar.current.dateComponents([.hour, .minute, .second], from: Date())
       let schedule = DeviceActivitySchedule(
@@ -154,11 +158,16 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
         repeats: false
       )
       // Fire as soon as ANY app accumulates 1 minute of use during the session.
-      let event = DeviceActivityEvent(
-        applications: [], categories: [], webDomains: [],
-        threshold: DateComponents(minute: 1),
-        includesAllActivity: true
-      )
+      // No tokens = all activity (`includesAllActivity` is a read-only property,
+      // not an init argument). Unverified on device.
+      let threshold = DateComponents(minute: 1)
+      let event: DeviceActivityEvent
+      if #available(iOS 17.4, *) {
+        // Don't count usage from earlier in the day toward the threshold.
+        event = DeviceActivityEvent(threshold: threshold, includesPastActivity: false)
+      } else {
+        event = DeviceActivityEvent(threshold: threshold)
+      }
       try? center.startMonitoring(
         DeviceActivityName(FreeTimeBridge.activityName),
         during: schedule,
@@ -235,18 +244,41 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
 
   // MARK: permissions
 
-  private func requestPermissions() {
-    INFocusStatusCenter.default.requestAuthorization { _ in }
-    // Motion permission is prompted on first query; warm it up with a no-op query.
-    if CMMotionActivityManager.isActivityAvailable() {
-      motion.queryActivityStarting(from: Date(), to: Date(), to: .main) { _, _ in }
-    }
+  private func screenTimeAuthorized() -> Bool {
     #if canImport(FamilyControls)
     if #available(iOS 16.0, *) {
-      Task {
-        try? await AuthorizationCenter.shared.requestAuthorization(for: .individual)
-      }
+      return AuthorizationCenter.shared.authorizationStatus == .approved
     }
     #endif
+    return false
+  }
+
+  private func permissionStatus() -> [String: Any] {
+    [
+      "focus": INFocusStatusCenter.default.authorizationStatus == .authorized,
+      "screenTime": screenTimeAuthorized(),
+    ]
+  }
+
+  /// `name` is "focus" or "screenTime". Each is asked for on its own, from the
+  /// intro screen, with the app's own explanation shown first.
+  private func requestPermission(_ name: String, _ done: @escaping () -> Void) {
+    switch name {
+    case "focus":
+      INFocusStatusCenter.default.requestAuthorization { _ in DispatchQueue.main.async(execute: done) }
+    case "screenTime":
+      #if canImport(FamilyControls)
+      if #available(iOS 16.0, *) {
+        Task {
+          try? await AuthorizationCenter.shared.requestAuthorization(for: .individual)
+          await MainActor.run(body: done)
+        }
+        return
+      }
+      #endif
+      done()
+    default:
+      done()
+    }
   }
 }
