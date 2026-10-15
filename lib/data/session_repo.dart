@@ -130,6 +130,7 @@ class SupabaseSessionRepo extends LocalSessionRepo {
   /// Airplane mode is the normal case here: bounded, and silent on failure.
   @override
   Future<void> flush() async {
+    await _pullOnce();
     final unsynced = _all().where((s) => !s.synced).toList();
     if (unsynced.isEmpty) return;
     try {
@@ -146,6 +147,28 @@ class SupabaseSessionRepo extends LocalSessionRepo {
       await update(unsynced.map((s) => s.copyWith(synced: true, points: scored[s.clientId] ?? s.points)));
     } catch (_) {
       // Keep them unsynced; next flush retries.
+    }
+  }
+
+  /// The cloud copy is the backup. Once per account on this phone, take it
+  /// back: a reinstall or a new phone otherwise starts at zero even though
+  /// everything is on the server (Rasmus reinstalled via Obtainium 15/10).
+  /// Local unsynced sessions with the same clientId win; they upload next.
+  Future<void> _pullOnce() async {
+    final key = 'pulled_$_uid';
+    if (prefs.getBool(key) == true) return;
+    try {
+      final rows = await _client
+          .from('sessions')
+          .select()
+          .eq('user_id', _uid)
+          .order('started_at')
+          .limit(5000)
+          .timeout(const Duration(seconds: 10));
+      await enqueue(rows.map((r) => Session.fromRow(r).copyWith(synced: true)));
+      await prefs.setBool(key, true);
+    } catch (_) {
+      // No network: try again on the next flush.
     }
   }
 
