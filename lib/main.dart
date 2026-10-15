@@ -13,6 +13,7 @@ import 'ui/theme.dart';
 import 'l10n/app_localizations.dart';
 
 /// Built without a Supabase key → offline mode, no login, local storage only.
+/// The same mode is available by choice in an online build (Settings.localOnly).
 final bool offlineMode = supabaseKey.isEmpty;
 
 Future<void> main() async {
@@ -45,7 +46,7 @@ class FreeTimeApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: offlineMode ? _offline(settings) : _online(settings),
+        home: offlineMode || settings.localOnly ? _offline(settings) : _online(settings),
       ),
     );
   }
@@ -58,7 +59,7 @@ class FreeTimeApp extends StatelessWidget {
     return StreamBuilder<AuthState>(
       stream: client.auth.onAuthStateChange,
       builder: (context, _) {
-        if (client.auth.currentSession == null) return const AuthScreen();
+        if (client.auth.currentSession == null) return AuthScreen(settings: settings);
         return Shell(
           sessions: SupabaseSessionRepo(client, prefs),
           friends: FriendsRepo(client),

@@ -13,6 +13,27 @@ class Settings extends ChangeNotifier {
 
   int get dailyGoal => _prefs.getInt('daily_goal') ?? defaultGoal;
 
+  /// A profile exists for the signed-in account. Cached so the app opens
+  /// without a network round-trip (airplane mode is the normal case here).
+  bool get hasProfileCached => _prefs.getBool('has_profile') ?? false;
+  Future<void> setHasProfileCached(bool v) => _prefs.setBool('has_profile', v);
+
+  /// User chose to use the app without an account (online build only).
+  bool get localOnly => _prefs.getBool('local_only') ?? false;
+
+  Future<void> setLocalOnly(bool v) async {
+    await _prefs.setBool('local_only', v);
+    notifyListeners();
+  }
+
+  /// iOS: the "how we measure" screen has been shown before the first session.
+  bool get measureIntroSeen => _prefs.getBool('measure_intro_seen') ?? false;
+
+  Future<void> setMeasureIntroSeen() async {
+    await _prefs.setBool('measure_intro_seen', true);
+    notifyListeners();
+  }
+
   Future<void> setDailyGoal(int v) async {
     await _prefs.setInt('daily_goal', v.clamp(60, 10000));
     notifyListeners();

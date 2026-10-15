@@ -269,15 +269,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailHint => 'you@example.com';
 
   @override
-  String get sendLoginLink => 'Send login link';
+  String get sendLoginLink => 'Send code';
 
   @override
-  String get noPasswordHint => 'No password. You get a link by email.';
+  String get noPasswordHint =>
+      'No password. You get a 6-digit code by email – read it anywhere, type it here.';
 
   @override
   String linkSent(String email) {
-    return 'We sent a link to $email. Open it on your phone to sign in.';
+    return 'We sent a code to $email.';
   }
+
+  @override
+  String get codeHint => '6-digit code';
+
+  @override
+  String get verifyCode => 'Sign in';
+
+  @override
+  String get codeError =>
+      'Wrong or expired code. Try again or request a new one.';
+
+  @override
+  String get resendCode => 'Send a new code';
+
+  @override
+  String get continueWithoutAccount => 'Continue without an account';
+
+  @override
+  String get withoutAccountHint =>
+      'Points stay on this phone. No friends or leaderboard. You can sign in later under More.';
+
+  @override
+  String get signInLater => 'Sign in or create account';
+
+  @override
+  String get signInLaterHint =>
+      'Needed for friends and the weekly leaderboard. Sessions on this phone come along.';
 
   @override
   String get authError =>
@@ -350,11 +378,104 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only what is needed: when a session started and ended, which state the phone was in (sound, silent, airplane, off), whether it lay still, and whether the screen was on. The app does not see which apps you use, who you message, or where you are. Your friends can see your weekly points and total time without phone, not the individual sessions.';
 
   @override
+  String get flagUnverified => 'unverified';
+
+  @override
+  String get measureTitle => 'How we measure';
+
+  @override
+  String get measureIntro =>
+      'On iPhone you start and stop a session yourself. Apple does not let apps read the silent switch, airplane mode or the lock screen, so that part is yours to tell us. Two optional permissions make the rest more precise.';
+
+  @override
+  String get measureSessionTitle => 'You start and stop';
+
+  @override
+  String get measureSessionBody =>
+      'Tap \"Put the phone down\" when you put it down and \"Stop\" when you pick it up. That is the whole basis for your points.';
+
+  @override
+  String get measureFocusTitle => 'Focus';
+
+  @override
+  String get measureFocusBody =>
+      'Do Not Disturb gives 2.5× points. iOS only tells the app a single yes/no: is a Focus on. Not which one, not who is messaging you.';
+
+  @override
+  String get measureScreenTimeTitle => 'Screen Time';
+
+  @override
+  String get measureScreenTimeBody =>
+      'Makes your sessions verified. iOS notifies the app if the phone is used for more than a minute during a session. The app never sees which apps or for how long. Apple\'s own prompt mentions restricting apps – Free Time does not use that.';
+
+  @override
+  String get measurePrivacy =>
+      'Everything is read on the phone and stays there. The only thing sent to the server is a session\'s start, end, mode, number of pickups, and whether it was verified.';
+
+  @override
+  String get measureAllow => 'Allow';
+
+  @override
+  String get measureAllowed => 'Allowed';
+
+  @override
+  String get measureOptional => 'optional';
+
+  @override
+  String get measureContinue => 'Continue';
+
+  @override
+  String get measureSkip => 'Continue without';
+
+  @override
+  String get measurePermissions => 'Permissions';
+
+  @override
+  String get modeShortVibrate => 'Vibrate';
+
+  @override
+  String get factorTitle => 'Your factor right now';
+
+  @override
+  String factorPerMinute(String factor) {
+    return '$factor× points per minute';
+  }
+
+  @override
+  String get factorUnverified => 'unverified ×0.5';
+
+  @override
+  String get factorFocusOn => 'Focus is on';
+
+  @override
+  String get factorIosHint =>
+      'Pick how the phone is lying — iOS cannot read it.';
+
+  @override
+  String get radioWifiOff => 'Wi-Fi off';
+
+  @override
+  String get radioBluetoothOff => 'Bluetooth off';
+
+  @override
+  String get radioWifiOn => 'Wi-Fi on';
+
+  @override
+  String get radioBluetoothOn => 'Bluetooth on';
+
+  @override
+  String get airplaneRadiosHint =>
+      'In airplane mode: switch off Wi-Fi and Bluetooth too for the full factor.';
+
+  @override
+  String get diagnostics => 'Diagnostics';
+
+  @override
   String get faq9Q => 'Why does the app ask for permissions?';
 
   @override
   String get faq9A =>
-      'On Android: \"Run in background\" so the counter is not killed by battery optimisation, and \"Notifications\" because Android requires a visible notification for background services. On iPhone: \"Motion\" to see whether the phone lay still, \"Focus\" to give a bonus for Do Not Disturb, and \"Screen Time\" to detect whether the phone was used during a session.';
+      'On Android: \"Run in background\" so the counter is not killed by battery optimisation, and \"Notifications\" because Android requires a visible notification for background services. On iPhone both permissions are optional: \"Focus\" to give a bonus for Do Not Disturb, and \"Screen Time\" to verify that the phone was not used during a session. Everything is read on the phone and never shared. You can change your mind under More → Permissions.';
 
   @override
   String get faq10Q => 'Does it use a lot of battery?';

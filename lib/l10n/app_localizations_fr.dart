@@ -271,16 +271,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emailHint => 'vous@exemple.fr';
 
   @override
-  String get sendLoginLink => 'Envoyer le lien de connexion';
+  String get sendLoginLink => 'Envoyer le code';
 
   @override
   String get noPasswordHint =>
-      'Pas de mot de passe. Vous recevez un lien par e-mail.';
+      'Pas de mot de passe. Vous recevez un code à 6 chiffres par e-mail – lisez-le n\'importe où, saisissez-le ici.';
 
   @override
   String linkSent(String email) {
-    return 'Nous avons envoyé un lien à $email. Ouvrez-le sur votre téléphone pour vous connecter.';
+    return 'Nous avons envoyé un code à $email.';
   }
+
+  @override
+  String get codeHint => 'Code à 6 chiffres';
+
+  @override
+  String get verifyCode => 'Se connecter';
+
+  @override
+  String get codeError =>
+      'Code erroné ou expiré. Réessayez ou demandez-en un nouveau.';
+
+  @override
+  String get resendCode => 'Envoyer un nouveau code';
+
+  @override
+  String get continueWithoutAccount => 'Continuer sans compte';
+
+  @override
+  String get withoutAccountHint =>
+      'Les points restent sur ce téléphone. Pas d\'amis ni de classement. Vous pourrez vous connecter plus tard sous Plus.';
+
+  @override
+  String get signInLater => 'Se connecter ou créer un compte';
+
+  @override
+  String get signInLaterHint =>
+      'Nécessaire pour les amis et le classement hebdomadaire. Les sessions de ce téléphone sont conservées.';
 
   @override
   String get authError =>
@@ -353,12 +380,105 @@ class AppLocalizationsFr extends AppLocalizations {
       'Seulement le nécessaire : quand une session a commencé et fini, dans quel état était le téléphone (sonnerie, silencieux, avion, éteint), s\'il est resté immobile et si l\'écran était allumé. L\'application ne voit pas quelles applications vous utilisez, avec qui vous échangez ni où vous êtes. Vos amis voient vos points de la semaine et votre temps total sans téléphone, pas les sessions individuelles.';
 
   @override
+  String get flagUnverified => 'non vérifié';
+
+  @override
+  String get measureTitle => 'Comment nous mesurons';
+
+  @override
+  String get measureIntro =>
+      'Sur iPhone, vous démarrez et arrêtez vous-même une session. Apple ne laisse pas les apps lire l\'interrupteur silencieux, le mode avion ni l\'écran verrouillé, donc cette partie, c\'est vous qui nous la dites. Deux autorisations facultatives rendent le reste plus précis.';
+
+  @override
+  String get measureSessionTitle => 'Vous démarrez et arrêtez';
+
+  @override
+  String get measureSessionBody =>
+      'Touchez « Poser le téléphone » quand vous le posez et « Stop » quand vous le reprenez. C\'est toute la base de vos points.';
+
+  @override
+  String get measureFocusTitle => 'Concentration';
+
+  @override
+  String get measureFocusBody =>
+      'Ne pas déranger donne 2,5× points. iOS ne dit à l\'app qu\'un seul oui/non : un mode Concentration est-il actif. Pas lequel, pas qui vous écrit.';
+
+  @override
+  String get measureScreenTimeTitle => 'Temps d\'écran';
+
+  @override
+  String get measureScreenTimeBody =>
+      'Rend vos sessions vérifiées. iOS prévient l\'app si le téléphone est utilisé plus d\'une minute pendant une session. L\'app ne voit jamais quelles apps ni combien de temps. Le message d\'Apple parle de restreindre des apps – Free Time ne s\'en sert pas.';
+
+  @override
+  String get measurePrivacy =>
+      'Tout est lu sur le téléphone et y reste. La seule chose envoyée au serveur : le début, la fin, le mode, le nombre de fois où le téléphone a été pris, et si la session était vérifiée.';
+
+  @override
+  String get measureAllow => 'Autoriser';
+
+  @override
+  String get measureAllowed => 'Autorisé';
+
+  @override
+  String get measureOptional => 'facultatif';
+
+  @override
+  String get measureContinue => 'Continuer';
+
+  @override
+  String get measureSkip => 'Continuer sans';
+
+  @override
+  String get measurePermissions => 'Autorisations';
+
+  @override
+  String get modeShortVibrate => 'Vibreur';
+
+  @override
+  String get factorTitle => 'Votre facteur en ce moment';
+
+  @override
+  String factorPerMinute(String factor) {
+    return '$factor× points par minute';
+  }
+
+  @override
+  String get factorUnverified => 'non vérifié ×0,5';
+
+  @override
+  String get factorFocusOn => 'Concentration activée';
+
+  @override
+  String get factorIosHint =>
+      'Choisissez comment le téléphone est posé — iOS ne peut pas le lire.';
+
+  @override
+  String get radioWifiOff => 'Wi-Fi désactivé';
+
+  @override
+  String get radioBluetoothOff => 'Bluetooth désactivé';
+
+  @override
+  String get radioWifiOn => 'Wi-Fi activé';
+
+  @override
+  String get radioBluetoothOn => 'Bluetooth activé';
+
+  @override
+  String get airplaneRadiosHint =>
+      'En mode avion : désactivez aussi le Wi-Fi et le Bluetooth pour le facteur complet.';
+
+  @override
+  String get diagnostics => 'Diagnostic';
+
+  @override
   String get faq9Q =>
       'Pourquoi l\'application demande-t-elle des autorisations ?';
 
   @override
   String get faq9A =>
-      'Sur Android : « Exécuter en arrière-plan » pour que le compteur ne soit pas tué par l\'optimisation de la batterie, et « Notifications » car Android exige une notification visible pour les services en arrière-plan. Sur iPhone : « Mouvement » pour voir si le téléphone est resté immobile, « Concentration » pour le bonus Ne pas déranger, et « Temps d\'écran » pour détecter si le téléphone a été utilisé pendant une session.';
+      'Sur Android : « Exécuter en arrière-plan » pour que le compteur ne soit pas tué par l\'optimisation de la batterie, et « Notifications » car Android exige une notification visible pour les services en arrière-plan. Sur iPhone, les deux autorisations sont facultatives : « Concentration » pour le bonus Ne pas déranger, et « Temps d\'écran » pour vérifier que le téléphone n\'a pas été utilisé pendant une session. Tout est lu sur le téléphone et jamais partagé. Vous pouvez changer d\'avis sous Plus → Autorisations.';
 
   @override
   String get faq10Q => 'Consomme-t-elle beaucoup de batterie ?';

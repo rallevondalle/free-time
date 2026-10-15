@@ -271,16 +271,43 @@ class AppLocalizationsDe extends AppLocalizations {
   String get emailHint => 'du@beispiel.de';
 
   @override
-  String get sendLoginLink => 'Login-Link senden';
+  String get sendLoginLink => 'Code senden';
 
   @override
   String get noPasswordHint =>
-      'Kein Passwort. Du bekommst einen Link per E-Mail.';
+      'Kein Passwort. Du bekommst einen 6-stelligen Code per E-Mail – lies ihn irgendwo, tipp ihn hier ein.';
 
   @override
   String linkSent(String email) {
-    return 'Wir haben einen Link an $email gesendet. Öffne ihn auf deinem Handy, um dich anzumelden.';
+    return 'Wir haben einen Code an $email gesendet.';
   }
+
+  @override
+  String get codeHint => '6-stelliger Code';
+
+  @override
+  String get verifyCode => 'Anmelden';
+
+  @override
+  String get codeError =>
+      'Falscher oder abgelaufener Code. Versuch es noch einmal oder fordere einen neuen an.';
+
+  @override
+  String get resendCode => 'Neuen Code senden';
+
+  @override
+  String get continueWithoutAccount => 'Ohne Konto weiter';
+
+  @override
+  String get withoutAccountHint =>
+      'Punkte bleiben auf diesem Handy. Keine Freunde, keine Rangliste. Du kannst dich später unter Mehr anmelden.';
+
+  @override
+  String get signInLater => 'Anmelden oder Konto erstellen';
+
+  @override
+  String get signInLaterHint =>
+      'Nötig für Freunde und die Wochenrangliste. Die Sitzungen auf diesem Handy kommen mit.';
 
   @override
   String get authError =>
@@ -353,11 +380,104 @@ class AppLocalizationsDe extends AppLocalizations {
       'Nur das Nötige: wann eine Sitzung begann und endete, in welchem Zustand das Handy war (Ton, lautlos, Flugmodus, aus), ob es still lag und ob der Bildschirm an war. Die App sieht nicht, welche Apps du nutzt, mit wem du schreibst oder wo du bist. Deine Freunde sehen deine Wochenpunkte und deine Gesamtzeit ohne Handy, nicht die einzelnen Sitzungen.';
 
   @override
+  String get flagUnverified => 'nicht bestätigt';
+
+  @override
+  String get measureTitle => 'So messen wir';
+
+  @override
+  String get measureIntro =>
+      'Auf dem iPhone startest und stoppst du eine Sitzung selbst. Apple lässt Apps weder den Lautlos-Schalter noch den Flugmodus oder den Sperrbildschirm lesen, also sagst du uns diesen Teil. Zwei optionale Berechtigungen machen den Rest genauer.';
+
+  @override
+  String get measureSessionTitle => 'Du startest und stoppst';
+
+  @override
+  String get measureSessionBody =>
+      'Tipp auf „Handy weglegen“, wenn du es weglegst, und auf „Stopp“, wenn du es wieder nimmst. Das ist die ganze Grundlage für deine Punkte.';
+
+  @override
+  String get measureFocusTitle => 'Fokus';
+
+  @override
+  String get measureFocusBody =>
+      'Nicht stören gibt 2,5× Punkte. iOS sagt der App nur ein einziges Ja/Nein: ist ein Fokus an. Nicht welcher, nicht wer dir schreibt.';
+
+  @override
+  String get measureScreenTimeTitle => 'Bildschirmzeit';
+
+  @override
+  String get measureScreenTimeBody =>
+      'Macht deine Sitzungen bestätigt. iOS meldet der App, wenn das Handy während einer Sitzung länger als eine Minute benutzt wird. Die App sieht nie welche Apps oder wie lange. Apples eigener Hinweis erwähnt das Einschränken von Apps – das nutzt Free Time nicht.';
+
+  @override
+  String get measurePrivacy =>
+      'Alles wird auf dem Handy gelesen und bleibt dort. An den Server gehen nur Start, Ende, Modus, Anzahl der Griffe zum Handy und ob die Sitzung bestätigt war.';
+
+  @override
+  String get measureAllow => 'Erlauben';
+
+  @override
+  String get measureAllowed => 'Erlaubt';
+
+  @override
+  String get measureOptional => 'optional';
+
+  @override
+  String get measureContinue => 'Weiter';
+
+  @override
+  String get measureSkip => 'Ohne weiter';
+
+  @override
+  String get measurePermissions => 'Berechtigungen';
+
+  @override
+  String get modeShortVibrate => 'Vibration';
+
+  @override
+  String get factorTitle => 'Dein Faktor gerade jetzt';
+
+  @override
+  String factorPerMinute(String factor) {
+    return '$factor× Punkte pro Minute';
+  }
+
+  @override
+  String get factorUnverified => 'nicht bestätigt ×0,5';
+
+  @override
+  String get factorFocusOn => 'Fokus ist an';
+
+  @override
+  String get factorIosHint =>
+      'Wähle, wie das Handy liegt — iOS kann es nicht lesen.';
+
+  @override
+  String get radioWifiOff => 'WLAN aus';
+
+  @override
+  String get radioBluetoothOff => 'Bluetooth aus';
+
+  @override
+  String get radioWifiOn => 'WLAN an';
+
+  @override
+  String get radioBluetoothOn => 'Bluetooth an';
+
+  @override
+  String get airplaneRadiosHint =>
+      'Im Flugmodus: schalte auch WLAN und Bluetooth aus für den vollen Faktor.';
+
+  @override
+  String get diagnostics => 'Diagnose';
+
+  @override
   String get faq9Q => 'Warum fragt die App nach Berechtigungen?';
 
   @override
   String get faq9A =>
-      'Auf Android: „Im Hintergrund ausführen“, damit der Zähler nicht von der Akkuoptimierung beendet wird, und „Benachrichtigungen“, weil Android für Hintergrunddienste eine sichtbare Benachrichtigung verlangt. Auf dem iPhone: „Bewegung“, um zu sehen, ob das Handy still lag, „Fokus“ für den Bonus bei Nicht stören, und „Bildschirmzeit“, um zu erkennen, ob das Handy während einer Sitzung benutzt wurde.';
+      'Auf Android: „Im Hintergrund ausführen“, damit der Zähler nicht von der Akkuoptimierung beendet wird, und „Benachrichtigungen“, weil Android für Hintergrunddienste eine sichtbare Benachrichtigung verlangt. Auf dem iPhone sind beide Berechtigungen optional: „Fokus“ für den Bonus bei Nicht stören, und „Bildschirmzeit“, um zu bestätigen, dass das Handy während einer Sitzung nicht benutzt wurde. Alles wird auf dem Handy gelesen und nie weitergegeben. Du kannst es jederzeit unter Mehr → Berechtigungen ändern.';
 
   @override
   String get faq10Q => 'Verbraucht sie viel Akku?';

@@ -9,7 +9,7 @@ Android og iOS fra én Flutter-kodebase. Målelaget er native:
 
 | Signal                         | Android                   | iOS                                   |
 |--------------------------------|---------------------------|---------------------------------------|
-| Ligger stille / i bevægelse    | Live (accelerometer)      | Bagud via CoreMotion-historik         |
+| Ligger stille / i bevægelse    | Live (accelerometer)      | Nej (Bevægelse-tilladelsen droppet 14/10-2026) |
 | Lomme vs. bord                 | Nærhed + lys (fase 2)     | Nej                                   |
 | Telefonen blev brugt           | Live (skærm tændt/låst op)| Screen Time / DeviceActivity-events   |
 | Lyd / vibrer / lydløs          | AudioManager              | Nej → selvrapporteret i sessionen     |
@@ -41,7 +41,7 @@ Basis: 1 point pr. minut stille, ganget med faktor for tilstanden.
 | Slukket         | 6,0    | Begge: udledt af shutdown/boot         |
 | Genstart        | +50    | Begge                                  |
 | Skærm tændt, låst | ×0,5 | Android: målt                          |
-| I bevægelse / lomme | ×0,5 | Android: målt live. iOS: bagud         |
+| I bevægelse / lomme | ×0,5 | Android: målt live. iOS: nej           |
 
 Faktorerne ganges sammen: lydløs + skærm tændt + i bevægelse = 2,0 × 0,5 × 0,5.
 Uverificeret (bevægelse, eller iOS kunne ikke bekræfte) er den milde snyd-sikring.
@@ -58,8 +58,9 @@ Uverificeret (bevægelse, eller iOS kunne ikke bekræfte) er den milde snyd-sikr
 1. Flutter-app: login, start/stop session, "i dag"-skærm, venner, leaderboard.
 2. Android: foreground service der verificerer stilhed, lydprofil, fly, DND,
    shutdown/boot.
-3. iOS: verificering via CoreMotion-historik, DeviceActivity-events, Focus,
-   boot-tid. Selvrapportering af lydløs/fly.
+3. iOS: verificering via DeviceActivity-events (valgfri), Focus (valgfri),
+   boot-tid. Selvrapportering af lydløs/fly. Tilladelser bedes om fra
+   «Sådan måler vi»-skærmen før første session, aldrig ved start.
 4. Supabase: `supabase/migrations/0001_init.sql`.
 
 ## Fase 2

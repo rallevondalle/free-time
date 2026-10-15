@@ -5,111 +5,64 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 
 import '../core/session.dart';
 
+/// The phone is the source of truth. Every session is stored locally the
+/// moment the native layer hands it over, and every screen reads locally.
+/// Points are per phone. The cloud only gets a copy, when there is network,
+/// so friends and the weekly leaderboard can see them (Rasmus, 14/10-2026).
 abstract class SessionRepo {
   bool get isOffline;
+
+  /// Store locally. Never touches the network.
+  Future<void> enqueue(Iterable<Session> sessions);
+
+  /// [enqueue] + a best-effort [flush].
   Future<void> submit(Iterable<Session> sessions);
+
+  /// Push what the cloud has not seen yet. Bounded by a timeout, never throws.
   Future<void> flush();
+
   Future<List<Session>> today();
   Future<List<Session>> thisWeek();
   Future<List<Map<String, dynamic>>> leaderboard();
 }
 
-/// Uploads sessions to Supabase, with a local retry queue.
-class SupabaseSessionRepo implements SessionRepo {
-  SupabaseSessionRepo(this._client, this._prefs);
-
-  final SupabaseClient _client;
-  final SharedPreferences _prefs;
-  static const _queueKey = 'pending_upload';
-
-  @override
-  bool get isOffline => false;
-
-  String get _uid => _client.auth.currentUser!.id;
-
-  @override
-  Future<void> submit(Iterable<Session> sessions) async {
-    final queue = _loadQueue()..addAll(sessions);
-    await _saveQueue(queue);
-    await flush();
-  }
-
-  @override
-  Future<void> flush() async {
-    final queue = _loadQueue();
-    if (queue.isEmpty) return;
-    try {
-      await _client.from('sessions').upsert(
-            queue.map((s) => s.toRow(_uid)).toList(),
-            onConflict: 'user_id,client_id',
-            ignoreDuplicates: true,
-          );
-      await _saveQueue([]);
-    } catch (_) {
-      // Keep the queue; retry on next flush.
-    }
-  }
-
-  @override
-  Future<List<Session>> today() => _since(_startOfToday());
-
-  @override
-  Future<List<Session>> thisWeek() => _since(_startOfWeek());
-
-  Future<List<Session>> _since(DateTime start) async {
-    final rows = await _client
-        .from('sessions')
-        .select()
-        .eq('user_id', _uid)
-        .gte('started_at', start.toUtc().toIso8601String())
-        .order('started_at', ascending: false);
-    return rows.map(Session.fromRow).toList();
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> leaderboard() async {
-    final rows = await _client.rpc('friend_leaderboard');
-    return List<Map<String, dynamic>>.from(rows as List);
-  }
-
-  List<Session> _loadQueue() => _decode(_prefs.getString(_queueKey));
-
-  Future<void> _saveQueue(List<Session> q) =>
-      _prefs.setString(_queueKey, _encode(q));
-}
-
-/// Offline mode: everything stays on the device. Used when the app is built
-/// without a Supabase key, so the measurement layer can be tested alone.
+/// Local store. Used alone when there is no account (or no Supabase key).
 class LocalSessionRepo implements SessionRepo {
-  LocalSessionRepo(this._prefs);
+  LocalSessionRepo(this.prefs);
 
-  final SharedPreferences _prefs;
-  static const _key = 'local_sessions';
+  final SharedPreferences prefs;
+  static const key = 'local_sessions';
 
   @override
   bool get isOffline => true;
 
   @override
-  Future<void> submit(Iterable<Session> sessions) async {
+  Future<void> enqueue(Iterable<Session> sessions) async {
     final all = _all();
     final known = all.map((s) => s.clientId).toSet();
     for (final s in sessions) {
       if (known.add(s.clientId)) all.add(s);
     }
-    await _prefs.setString(_key, _encode(all));
+    await _saveAll(all);
   }
+
+  @override
+  Future<void> submit(Iterable<Session> sessions) => enqueue(sessions);
 
   @override
   Future<void> flush() async {}
 
   @override
-  Future<List<Session>> today() async => _since(_startOfToday());
+  Future<List<Session>> today() async => since(startOfToday());
 
   @override
-  Future<List<Session>> thisWeek() async => _since(_startOfWeek());
+  Future<List<Session>> thisWeek() async => since(startOfWeek());
 
-  List<Session> _since(DateTime start) => _all()
-      .where((s) => s.startedAt.isAfter(start))
+  /// Sessions that overlap the period: a night that started yesterday still
+  /// shows under today (seen 15/10 00:02 — the powered-off session vanished
+  /// from "today" at midnight).
+  List<Session> since(DateTime start) => _all()
+      .where((s) => s.endedAt.isAfter(start))
       .toList()
     ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
 
@@ -120,22 +73,96 @@ class LocalSessionRepo implements SessionRepo {
       {
         'username': '__me_offline__',
         'display_name': null,
-        'points': week.fold<int>(0, (a, s) => a + s.estimatedPoints),
+        'points': week.fold<int>(0, (a, s) => a + (s.points ?? s.estimatedPoints)),
         'minutes': week.fold<int>(0, (a, s) => a + s.duration.inMinutes),
       }
     ];
   }
 
-  List<Session> _all() => _decode(_prefs.getString(_key));
+  List<Session> _all() => _decode(prefs.getString(key));
+  Future<void> _saveAll(List<Session> all) => prefs.setString(key, _encode(all));
+
+  /// Replace sessions by clientId (after the server scored them).
+  Future<void> update(Iterable<Session> changed) async {
+    final byId = {for (final s in changed) s.clientId: s};
+    final all = _all().map((s) => byId[s.clientId] ?? s).toList();
+    await _saveAll(all);
+  }
 }
 
-DateTime _startOfToday() {
+/// Local store + a copy to Supabase. Reads never wait for the network.
+class SupabaseSessionRepo extends LocalSessionRepo {
+  SupabaseSessionRepo(this._client, SharedPreferences prefs) : super(prefs) {
+    _importLegacy();
+  }
+
+  final SupabaseClient _client;
+
+  // Pre-14/10 keys: an upload queue and a server cache. Folded into the
+  // local store once, so nothing collected earlier is lost.
+  static const _legacyQueueKey = 'pending_upload';
+  static const _legacyCacheKey = 'sessions_cache';
+
+  @override
+  bool get isOffline => false;
+
+  String get _uid => _client.auth.currentUser!.id;
+
+  void _importLegacy() {
+    final old = [
+      ..._decode(prefs.getString(_legacyCacheKey)).map((s) => s.copyWith(synced: true)),
+      ..._decode(prefs.getString(_legacyQueueKey)),
+    ];
+    if (old.isEmpty) return;
+    enqueue(old).then((_) {
+      prefs.remove(_legacyQueueKey);
+      prefs.remove(_legacyCacheKey);
+    });
+  }
+
+  @override
+  Future<void> submit(Iterable<Session> sessions) async {
+    await enqueue(sessions);
+    await flush();
+  }
+
+  /// Upload everything not yet synced, then take the server's points back.
+  /// Airplane mode is the normal case here: bounded, and silent on failure.
+  @override
+  Future<void> flush() async {
+    final unsynced = _all().where((s) => !s.synced).toList();
+    if (unsynced.isEmpty) return;
+    try {
+      final rows = await _client
+          .from('sessions')
+          .upsert(
+            unsynced.map((s) => s.toRow(_uid)).toList(),
+            onConflict: 'user_id,client_id',
+            ignoreDuplicates: false,
+          )
+          .select()
+          .timeout(const Duration(seconds: 10));
+      final scored = {for (final r in rows) r['client_id'] as String: r['points'] as int?};
+      await update(unsynced.map((s) => s.copyWith(synced: true, points: scored[s.clientId] ?? s.points)));
+    } catch (_) {
+      // Keep them unsynced; next flush retries.
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> leaderboard() async {
+    final rows = await _client.rpc('friend_leaderboard').timeout(const Duration(seconds: 8));
+    return List<Map<String, dynamic>>.from(rows as List);
+  }
+}
+
+DateTime startOfToday() {
   final n = DateTime.now();
   return DateTime(n.year, n.month, n.day);
 }
 
-DateTime _startOfWeek() {
-  final t = _startOfToday();
+DateTime startOfWeek() {
+  final t = startOfToday();
   return t.subtract(Duration(days: t.weekday - 1));
 }
 

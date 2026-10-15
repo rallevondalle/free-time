@@ -91,9 +91,9 @@ individual sessions.
 optimisation, and "Notifications" because Android requires a visible
 notification for background services.
 
-**iPhone:** "Motion" to see whether the phone lay still, "Focus" to give a bonus
-for Do Not Disturb, and "Screen Time" to detect whether the phone was used
-during a session.
+**iPhone:** both are optional. "Focus" to give a bonus for Do Not Disturb, and
+"Screen Time" to verify that the phone was not used during a session. Everything
+is read on the phone and never shared; change your mind under More → Permissions.
 
 ## Does it use a lot of battery?
 

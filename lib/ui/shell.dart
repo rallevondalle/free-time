@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../core/settings.dart';
+import '../main.dart' show offlineMode;
 import '../data/friends_repo.dart';
 import '../data/session_repo.dart';
 import 'friends_screen.dart';
@@ -30,10 +31,16 @@ class _ShellState extends State<Shell> {
   void initState() {
     super.initState();
     final f = widget.friends;
-    if (f == null) {
+    if (f == null || widget.settings.hasProfileCached) {
       _hasProfile = true;
     } else {
-      f.myProfile().then((p) => setState(() => _hasProfile = p != null));
+      // No network (airplane mode) must never leave the user on a spinner.
+      f.myProfile().timeout(const Duration(seconds: 5)).then((p) {
+        if (p != null) widget.settings.setHasProfileCached(true);
+        if (mounted) setState(() => _hasProfile = p != null);
+      }).catchError((_) {
+        if (mounted) setState(() => _hasProfile = true);
+      });
     }
   }
 
@@ -46,14 +53,17 @@ class _ShellState extends State<Shell> {
     if (_hasProfile == false) {
       return _CreateProfile(
         friends: widget.friends!,
-        onDone: () => setState(() => _hasProfile = true),
+        onDone: () {
+          widget.settings.setHasProfileCached(true);
+          setState(() => _hasProfile = true);
+        },
       );
     }
     final pages = [
       HomeScreen(repo: widget.sessions, settings: widget.settings),
       LeaderboardScreen(repo: widget.sessions),
       FriendsScreen(repo: widget.friends),
-      MoreScreen(settings: widget.settings, signedIn: widget.friends != null),
+      MoreScreen(settings: widget.settings, signedIn: widget.friends != null, canSignIn: widget.friends == null && !offlineMode),
     ];
     return Scaffold(
       body: pages[_tab],

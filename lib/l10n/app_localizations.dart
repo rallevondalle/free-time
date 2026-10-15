@@ -563,20 +563,68 @@ abstract class AppLocalizations {
   /// No description provided for @sendLoginLink.
   ///
   /// In en, this message translates to:
-  /// **'Send login link'**
+  /// **'Send code'**
   String get sendLoginLink;
 
   /// No description provided for @noPasswordHint.
   ///
   /// In en, this message translates to:
-  /// **'No password. You get a link by email.'**
+  /// **'No password. You get a 6-digit code by email – read it anywhere, type it here.'**
   String get noPasswordHint;
 
   /// No description provided for @linkSent.
   ///
   /// In en, this message translates to:
-  /// **'We sent a link to {email}. Open it on your phone to sign in.'**
+  /// **'We sent a code to {email}.'**
   String linkSent(String email);
+
+  /// No description provided for @codeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit code'**
+  String get codeHint;
+
+  /// No description provided for @verifyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get verifyCode;
+
+  /// No description provided for @codeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong or expired code. Try again or request a new one.'**
+  String get codeError;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a new code'**
+  String get resendCode;
+
+  /// No description provided for @continueWithoutAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without an account'**
+  String get continueWithoutAccount;
+
+  /// No description provided for @withoutAccountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Points stay on this phone. No friends or leaderboard. You can sign in later under More.'**
+  String get withoutAccountHint;
+
+  /// No description provided for @signInLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in or create account'**
+  String get signInLater;
+
+  /// No description provided for @signInLaterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Needed for friends and the weekly leaderboard. Sessions on this phone come along.'**
+  String get signInLaterHint;
 
   /// No description provided for @authError.
   ///
@@ -698,6 +746,174 @@ abstract class AppLocalizations {
   /// **'Only what is needed: when a session started and ended, which state the phone was in (sound, silent, airplane, off), whether it lay still, and whether the screen was on. The app does not see which apps you use, who you message, or where you are. Your friends can see your weekly points and total time without phone, not the individual sessions.'**
   String get faq8A;
 
+  /// No description provided for @flagUnverified.
+  ///
+  /// In en, this message translates to:
+  /// **'unverified'**
+  String get flagUnverified;
+
+  /// No description provided for @measureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How we measure'**
+  String get measureTitle;
+
+  /// No description provided for @measureIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'On iPhone you start and stop a session yourself. Apple does not let apps read the silent switch, airplane mode or the lock screen, so that part is yours to tell us. Two optional permissions make the rest more precise.'**
+  String get measureIntro;
+
+  /// No description provided for @measureSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You start and stop'**
+  String get measureSessionTitle;
+
+  /// No description provided for @measureSessionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Put the phone down\" when you put it down and \"Stop\" when you pick it up. That is the whole basis for your points.'**
+  String get measureSessionBody;
+
+  /// No description provided for @measureFocusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get measureFocusTitle;
+
+  /// No description provided for @measureFocusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb gives 2.5× points. iOS only tells the app a single yes/no: is a Focus on. Not which one, not who is messaging you.'**
+  String get measureFocusBody;
+
+  /// No description provided for @measureScreenTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen Time'**
+  String get measureScreenTimeTitle;
+
+  /// No description provided for @measureScreenTimeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Makes your sessions verified. iOS notifies the app if the phone is used for more than a minute during a session. The app never sees which apps or for how long. Apple\'s own prompt mentions restricting apps – Free Time does not use that.'**
+  String get measureScreenTimeBody;
+
+  /// No description provided for @measurePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is read on the phone and stays there. The only thing sent to the server is a session\'s start, end, mode, number of pickups, and whether it was verified.'**
+  String get measurePrivacy;
+
+  /// No description provided for @measureAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get measureAllow;
+
+  /// No description provided for @measureAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get measureAllowed;
+
+  /// No description provided for @measureOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get measureOptional;
+
+  /// No description provided for @measureContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get measureContinue;
+
+  /// No description provided for @measureSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without'**
+  String get measureSkip;
+
+  /// No description provided for @measurePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get measurePermissions;
+
+  /// No description provided for @modeShortVibrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate'**
+  String get modeShortVibrate;
+
+  /// No description provided for @factorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your factor right now'**
+  String get factorTitle;
+
+  /// No description provided for @factorPerMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'{factor}× points per minute'**
+  String factorPerMinute(String factor);
+
+  /// No description provided for @factorUnverified.
+  ///
+  /// In en, this message translates to:
+  /// **'unverified ×0.5'**
+  String get factorUnverified;
+
+  /// No description provided for @factorFocusOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus is on'**
+  String get factorFocusOn;
+
+  /// No description provided for @factorIosHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick how the phone is lying — iOS cannot read it.'**
+  String get factorIosHint;
+
+  /// No description provided for @radioWifiOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi off'**
+  String get radioWifiOff;
+
+  /// No description provided for @radioBluetoothOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth off'**
+  String get radioBluetoothOff;
+
+  /// No description provided for @radioWifiOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi on'**
+  String get radioWifiOn;
+
+  /// No description provided for @radioBluetoothOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth on'**
+  String get radioBluetoothOn;
+
+  /// No description provided for @airplaneRadiosHint.
+  ///
+  /// In en, this message translates to:
+  /// **'In airplane mode: switch off Wi-Fi and Bluetooth too for the full factor.'**
+  String get airplaneRadiosHint;
+
+  /// No description provided for @diagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics'**
+  String get diagnostics;
+
   /// No description provided for @faq9Q.
   ///
   /// In en, this message translates to:
@@ -707,7 +923,7 @@ abstract class AppLocalizations {
   /// No description provided for @faq9A.
   ///
   /// In en, this message translates to:
-  /// **'On Android: \"Run in background\" so the counter is not killed by battery optimisation, and \"Notifications\" because Android requires a visible notification for background services. On iPhone: \"Motion\" to see whether the phone lay still, \"Focus\" to give a bonus for Do Not Disturb, and \"Screen Time\" to detect whether the phone was used during a session.'**
+  /// **'On Android: \"Run in background\" so the counter is not killed by battery optimisation, and \"Notifications\" because Android requires a visible notification for background services. On iPhone both permissions are optional: \"Focus\" to give a bonus for Do Not Disturb, and \"Screen Time\" to verify that the phone was not used during a session. Everything is read on the phone and never shared. You can change your mind under More → Permissions.'**
   String get faq9A;
 
   /// No description provided for @faq10Q.

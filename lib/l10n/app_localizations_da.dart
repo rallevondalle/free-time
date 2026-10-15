@@ -270,15 +270,43 @@ class AppLocalizationsDa extends AppLocalizations {
   String get emailHint => 'din@mail.dk';
 
   @override
-  String get sendLoginLink => 'Send login-link';
+  String get sendLoginLink => 'Send kode';
 
   @override
-  String get noPasswordHint => 'Ingen adgangskode. Du får et link på mail.';
+  String get noPasswordHint =>
+      'Ingen adgangskode. Du får en 6-cifret kode på mail – læs den hvor som helst, tast den her.';
 
   @override
   String linkSent(String email) {
-    return 'Vi har sendt et link til $email. Åbn det på telefonen for at logge ind.';
+    return 'Vi har sendt en kode til $email.';
   }
+
+  @override
+  String get codeHint => '6-cifret kode';
+
+  @override
+  String get verifyCode => 'Log ind';
+
+  @override
+  String get codeError =>
+      'Forkert eller udløbet kode. Prøv igen eller bed om en ny.';
+
+  @override
+  String get resendCode => 'Send en ny kode';
+
+  @override
+  String get continueWithoutAccount => 'Fortsæt uden konto';
+
+  @override
+  String get withoutAccountHint =>
+      'Point bliver på denne telefon. Ingen venner eller leaderboard. Du kan logge ind senere under Mere.';
+
+  @override
+  String get signInLater => 'Log ind eller opret konto';
+
+  @override
+  String get signInLaterHint =>
+      'Kræves til venner og ugens leaderboard. Sessioner på denne telefon kommer med.';
 
   @override
   String get authError => 'Kunne ikke sende link. Tjek adressen og prøv igen.';
@@ -350,11 +378,104 @@ class AppLocalizationsDa extends AppLocalizations {
       'Kun det, der skal til: hvornår en session startede og sluttede, hvilken tilstand telefonen var i (lyd, lydløs, fly, slukket), om den lå stille, og om skærmen var tændt. Appen ser ikke, hvilke apps du bruger, hvem du skriver med, eller hvor du er. Dine venner kan se dine ugepoint og din samlede tid uden telefon, ikke de enkelte sessioner.';
 
   @override
+  String get flagUnverified => 'ikke verificeret';
+
+  @override
+  String get measureTitle => 'Sådan måler vi';
+
+  @override
+  String get measureIntro =>
+      'På iPhone starter og stopper du selv en session. Apple lader ikke apps læse lydløs-knappen, flytilstand eller låseskærmen, så den del fortæller du os. To valgfri tilladelser gør resten mere præcis.';
+
+  @override
+  String get measureSessionTitle => 'Du starter og stopper';
+
+  @override
+  String get measureSessionBody =>
+      'Tryk «Læg telefonen fra dig», når du lægger den, og «Stop», når du tager den igen. Det er hele grundlaget for dine point.';
+
+  @override
+  String get measureFocusTitle => 'Fokus';
+
+  @override
+  String get measureFocusBody =>
+      'Forstyr ikke giver 2,5× point. iOS fortæller kun appen ét ja/nej: er en fokusfunktion slået til. Ikke hvilken, ikke hvem der skriver til dig.';
+
+  @override
+  String get measureScreenTimeTitle => 'Skærmtid';
+
+  @override
+  String get measureScreenTimeBody =>
+      'Gør dine sessioner verificerede. iOS giver appen besked, hvis telefonen bliver brugt i mere end et minut under en session. Appen ser aldrig hvilke apps eller hvor længe. Apples egen tekst nævner begrænsning af apps – det bruger Free Time ikke.';
+
+  @override
+  String get measurePrivacy =>
+      'Alt aflæses på telefonen og bliver der. Det eneste, der sendes til serveren, er sessionens start, slut, tilstand, antal gange telefonen blev taget op, og om den var verificeret.';
+
+  @override
+  String get measureAllow => 'Tillad';
+
+  @override
+  String get measureAllowed => 'Tilladt';
+
+  @override
+  String get measureOptional => 'valgfri';
+
+  @override
+  String get measureContinue => 'Fortsæt';
+
+  @override
+  String get measureSkip => 'Fortsæt uden';
+
+  @override
+  String get measurePermissions => 'Tilladelser';
+
+  @override
+  String get modeShortVibrate => 'Vibrer';
+
+  @override
+  String get factorTitle => 'Din faktor lige nu';
+
+  @override
+  String factorPerMinute(String factor) {
+    return '$factor× point pr. minut';
+  }
+
+  @override
+  String get factorUnverified => 'ikke verificeret ×0,5';
+
+  @override
+  String get factorFocusOn => 'Fokus er slået til';
+
+  @override
+  String get factorIosHint =>
+      'Vælg hvordan telefonen ligger — iOS kan ikke aflæse det.';
+
+  @override
+  String get radioWifiOff => 'Wi-Fi fra';
+
+  @override
+  String get radioBluetoothOff => 'Bluetooth fra';
+
+  @override
+  String get radioWifiOn => 'Wi-Fi tændt';
+
+  @override
+  String get radioBluetoothOn => 'Bluetooth tændt';
+
+  @override
+  String get airplaneRadiosHint =>
+      'I flytilstand: sluk også Wi-Fi og Bluetooth for den fulde faktor.';
+
+  @override
+  String get diagnostics => 'Diagnostik';
+
+  @override
   String get faq9Q => 'Hvorfor beder appen om tilladelser?';
 
   @override
   String get faq9A =>
-      'På Android: \"Kør i baggrunden\" så tælleren ikke bliver slået ihjel af batterioptimering, og \"Notifikationer\" fordi Android kræver en synlig notifikation for baggrundstjenester. På iPhone: \"Bevægelse\" for at se om telefonen lå stille, \"Fokus\" for at give bonus for Forstyr ikke, og \"Skærmtid\" for at opdage om telefonen blev brugt under en session.';
+      'På Android: «Kør i baggrunden» så tælleren ikke bliver slået ihjel af batterioptimering, og «Notifikationer» fordi Android kræver en synlig notifikation for baggrundstjenester. På iPhone er begge tilladelser valgfri: «Fokus» for at give bonus for Forstyr ikke, og «Skærmtid» for at verificere, at telefonen ikke blev brugt under en session. Alt aflæses på telefonen og deles aldrig. Du kan skifte mening under Mere → Tilladelser.';
 
   @override
   String get faq10Q => 'Bruger den meget batteri?';

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,11 +7,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../config.dart';
 import '../core/settings.dart';
 import 'l10n_ext.dart';
+import 'measure_intro_screen.dart';
+import '../native/free_time_platform.dart';
 
 class MoreScreen extends StatelessWidget {
-  const MoreScreen({super.key, required this.settings, required this.signedIn});
+  const MoreScreen({super.key, required this.settings, required this.signedIn, this.canSignIn = false});
   final Settings settings;
   final bool signedIn;
+
+  /// Using the app without an account in an online build: offer to sign in.
+  final bool canSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,21 @@ class MoreScreen extends StatelessWidget {
             _LanguageCard(settings: settings),
             const SizedBox(height: 28),
 
+            if (Platform.isIOS) ...[
+              Text(t.measurePermissions, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 10),
+              Card(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  leading: Icon(Icons.lock_outline_rounded, color: scheme.primary),
+                  title: Text(t.measureTitle, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => MeasureIntroScreen.show(context, firstRun: false),
+                ),
+              ),
+              const SizedBox(height: 28),
+            ],
+
             Text(t.faqTitle, style: theme.textTheme.titleMedium),
             const SizedBox(height: 10),
             Card(
@@ -50,6 +72,13 @@ class MoreScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
+
+            if (Platform.isAndroid) ...[
+              Text(t.diagnostics, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 10),
+              const _DiagnosticsCard(),
+              const SizedBox(height: 28),
+            ],
 
             Text(t.contact, style: theme.textTheme.titleMedium),
             const SizedBox(height: 10),
@@ -67,9 +96,24 @@ class MoreScreen extends StatelessWidget {
             ),
             const SizedBox(height: 28),
 
+            if (canSignIn) ...[
+              Card(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  leading: Icon(Icons.person_add_alt_1_rounded, color: scheme.primary),
+                  title: Text(t.signInLater, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                  subtitle: Text(t.signInLaterHint, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+                  onTap: () => settings.setLocalOnly(false),
+                ),
+              ),
+              const SizedBox(height: 28),
+            ],
             if (signedIn)
               TextButton.icon(
-                onPressed: () => Supabase.instance.client.auth.signOut(),
+                onPressed: () async {
+                  await settings.setHasProfileCached(false);
+                  await Supabase.instance.client.auth.signOut();
+                },
                 icon: const Icon(Icons.logout_rounded, size: 18),
                 label: Text(t.signOut),
                 style: TextButton.styleFrom(foregroundColor: scheme.onSurfaceVariant),
@@ -244,6 +288,47 @@ class _FaqTile extends StatelessWidget {
         children: [
           Text(a, style: theme.textTheme.bodyMedium?.copyWith(height: 1.5, color: theme.colorScheme.onSurface)),
         ],
+      ),
+    );
+  }
+}
+
+
+/// Android: the counter's event log, so a night of testing can be read back
+/// without adb (logcat does not survive a reboot).
+class _DiagnosticsCard extends StatefulWidget {
+  const _DiagnosticsCard();
+  @override
+  State<_DiagnosticsCard> createState() => _DiagnosticsCardState();
+}
+
+class _DiagnosticsCardState extends State<_DiagnosticsCard> {
+  String _log = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final log = await FreeTimePlatform.instance.diagnosticLog();
+    if (mounted) setState(() => _log = log);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: InkWell(
+        onTap: _load,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SelectableText(
+            _log.isEmpty ? '–' : _log,
+            style: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace', fontSize: 11, height: 1.4),
+          ),
+        ),
       ),
     );
   }

@@ -245,11 +245,11 @@ admin_email = "freetime@rassta.dk"
 sender_name = "Free Time"
 
 [auth.email.template.magic_link]
-subject = "Dit login-link til Free Time"
+subject = "Din login-kode til Free Time"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.confirmation]
-subject = "Dit login-link til Free Time"
+subject = "Din login-kode til Free Time"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.sms]

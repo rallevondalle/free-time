@@ -100,7 +100,7 @@ Works on GrapheneOS and other de-Googled devices. No Play Services needed.
 
 ## iPhone
 
-The iOS version is in development. Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you tap **"Put the phone down"** when you put it down and **"Stop"** when you pick it up. The app then checks with the phone's motion history and Screen Time whether it actually lay still and went unused.
+The iOS version is in development. Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you tap **"Put the phone down"** when you put it down and **"Stop"** when you pick it up. With the optional Screen Time permission the app can verify that the phone went unused in the meantime.
 
 ## Questions
 
@@ -119,7 +119,7 @@ Free Time is a Flutter app with native measurement layers and a Supabase backend
 |---|---|---|
 | App UI | `lib/` | Flutter / Dart |
 | Android tracker | `android/app/src/main/kotlin/` | Always-on foreground service, shutdown/boot receivers |
-| iOS bridge | `ios/Runner/FreeTimeBridge.swift` | CoreMotion history, DeviceActivity, Focus, boot time |
+| iOS bridge | `ios/Runner/FreeTimeBridge.swift` | DeviceActivity, Focus, boot time |
 | Backend | `supabase/` | Postgres schema, server-side scoring, RLS, leaderboard |
 
 **Build (Android):** `mise install`, then `flutter run --dart-define-from-file=dart_defines.json` with `SUPABASE_URL` and `SUPABASE_KEY` in that file.

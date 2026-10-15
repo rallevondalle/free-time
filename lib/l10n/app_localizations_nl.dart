@@ -270,16 +270,43 @@ class AppLocalizationsNl extends AppLocalizations {
   String get emailHint => 'jij@voorbeeld.nl';
 
   @override
-  String get sendLoginLink => 'Inloglink versturen';
+  String get sendLoginLink => 'Code versturen';
 
   @override
   String get noPasswordHint =>
-      'Geen wachtwoord. Je krijgt een link per e-mail.';
+      'Geen wachtwoord. Je krijgt een 6-cijferige code per e-mail – lees hem waar je wilt, typ hem hier in.';
 
   @override
   String linkSent(String email) {
-    return 'We hebben een link gestuurd naar $email. Open hem op je telefoon om in te loggen.';
+    return 'We hebben een code gestuurd naar $email.';
   }
+
+  @override
+  String get codeHint => '6-cijferige code';
+
+  @override
+  String get verifyCode => 'Inloggen';
+
+  @override
+  String get codeError =>
+      'Verkeerde of verlopen code. Probeer opnieuw of vraag een nieuwe aan.';
+
+  @override
+  String get resendCode => 'Nieuwe code versturen';
+
+  @override
+  String get continueWithoutAccount => 'Doorgaan zonder account';
+
+  @override
+  String get withoutAccountHint =>
+      'Punten blijven op deze telefoon. Geen vrienden of ranglijst. Je kunt later inloggen onder Meer.';
+
+  @override
+  String get signInLater => 'Inloggen of account aanmaken';
+
+  @override
+  String get signInLaterHint =>
+      'Nodig voor vrienden en de weekranglijst. De sessies op deze telefoon gaan mee.';
 
   @override
   String get authError =>
@@ -352,11 +379,104 @@ class AppLocalizationsNl extends AppLocalizations {
       'Alleen wat nodig is: wanneer een sessie begon en eindigde, in welke stand de telefoon stond (geluid, stil, vliegtuig, uit), of hij stil lag en of het scherm aan was. De app ziet niet welke apps je gebruikt, met wie je berichten uitwisselt of waar je bent. Je vrienden zien je weekpunten en je totale tijd zonder telefoon, niet de afzonderlijke sessies.';
 
   @override
+  String get flagUnverified => 'niet geverifieerd';
+
+  @override
+  String get measureTitle => 'Zo meten we';
+
+  @override
+  String get measureIntro =>
+      'Op de iPhone start en stop je zelf een sessie. Apple laat apps de stille schakelaar, de vliegtuigmodus en het vergrendelscherm niet lezen, dus dat deel vertel jij ons. Twee optionele toestemmingen maken de rest preciezer.';
+
+  @override
+  String get measureSessionTitle => 'Jij start en stopt';
+
+  @override
+  String get measureSessionBody =>
+      'Tik op \"Telefoon wegleggen\" als je hem weglegt en op \"Stop\" als je hem weer pakt. Dat is de hele basis voor je punten.';
+
+  @override
+  String get measureFocusTitle => 'Focus';
+
+  @override
+  String get measureFocusBody =>
+      'Niet storen geeft 2,5× punten. iOS vertelt de app maar één ja/nee: staat er een Focus aan. Niet welke, niet wie je berichten stuurt.';
+
+  @override
+  String get measureScreenTimeTitle => 'Schermtijd';
+
+  @override
+  String get measureScreenTimeBody =>
+      'Maakt je sessies geverifieerd. iOS meldt de app als de telefoon tijdens een sessie langer dan een minuut gebruikt wordt. De app ziet nooit welke apps of hoe lang. Apples eigen melding noemt het beperken van apps – dat gebruikt Free Time niet.';
+
+  @override
+  String get measurePrivacy =>
+      'Alles wordt op de telefoon gelezen en blijft daar. Het enige dat naar de server gaat: begin, einde, modus, hoe vaak de telefoon is opgepakt, en of de sessie geverifieerd was.';
+
+  @override
+  String get measureAllow => 'Toestaan';
+
+  @override
+  String get measureAllowed => 'Toegestaan';
+
+  @override
+  String get measureOptional => 'optioneel';
+
+  @override
+  String get measureContinue => 'Doorgaan';
+
+  @override
+  String get measureSkip => 'Doorgaan zonder';
+
+  @override
+  String get measurePermissions => 'Toestemmingen';
+
+  @override
+  String get modeShortVibrate => 'Trillen';
+
+  @override
+  String get factorTitle => 'Je factor op dit moment';
+
+  @override
+  String factorPerMinute(String factor) {
+    return '$factor× punten per minuut';
+  }
+
+  @override
+  String get factorUnverified => 'niet geverifieerd ×0,5';
+
+  @override
+  String get factorFocusOn => 'Focus staat aan';
+
+  @override
+  String get factorIosHint =>
+      'Kies hoe de telefoon ligt — iOS kan het niet lezen.';
+
+  @override
+  String get radioWifiOff => 'Wi-Fi uit';
+
+  @override
+  String get radioBluetoothOff => 'Bluetooth uit';
+
+  @override
+  String get radioWifiOn => 'Wi-Fi aan';
+
+  @override
+  String get radioBluetoothOn => 'Bluetooth aan';
+
+  @override
+  String get airplaneRadiosHint =>
+      'In vliegtuigmodus: zet ook Wi-Fi en Bluetooth uit voor de volledige factor.';
+
+  @override
+  String get diagnostics => 'Diagnose';
+
+  @override
   String get faq9Q => 'Waarom vraagt de app om toestemmingen?';
 
   @override
   String get faq9A =>
-      'Op Android: \"Op de achtergrond uitvoeren\" zodat de teller niet door batterijoptimalisatie wordt gestopt, en \"Meldingen\" omdat Android een zichtbare melding vereist voor achtergronddiensten. Op de iPhone: \"Beweging\" om te zien of de telefoon stil lag, \"Focus\" voor de bonus bij Niet storen, en \"Schermtijd\" om te detecteren of de telefoon tijdens een sessie gebruikt is.';
+      'Op Android: \"Op de achtergrond uitvoeren\" zodat de teller niet door batterijoptimalisatie wordt gestopt, en \"Meldingen\" omdat Android een zichtbare melding vereist voor achtergronddiensten. Op de iPhone zijn beide toestemmingen optioneel: \"Focus\" voor de bonus bij Niet storen, en \"Schermtijd\" om te bevestigen dat de telefoon tijdens een sessie niet gebruikt is. Alles wordt op de telefoon gelezen en nooit gedeeld. Je kunt het altijd aanpassen onder Meer → Toestemmingen.';
 
   @override
   String get faq10Q => 'Gebruikt hij veel batterij?';

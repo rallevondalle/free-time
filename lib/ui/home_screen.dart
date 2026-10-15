@@ -9,6 +9,7 @@ import '../native/free_time_platform.dart';
 import 'l10n_ext.dart';
 import 'package:intl/intl.dart';
 
+import 'measure_intro_screen.dart';
 import 'points_ring.dart';
 import 'theme.dart';
 
@@ -30,21 +31,41 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   DateTime? _startedAt;
   List<Session> _today = const [];
   SessionMode _claimed = SessionMode.normal;
+  // iOS, airplane only: what the user says is still switched on.
+  bool _claimedWifiOn = false;
+  bool _claimedBtOn = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _sub = _platform.sessions.listen((s) => widget.repo.submit([s]).then((_) => _refresh()));
+    var ticks = 0;
     _tick = Timer.periodic(const Duration(seconds: 1), (_) {
       if (_running) setState(() {});
+      // Android: the mode can change under us (quick settings never pauses the
+      // activity), so poll it while the screen is visible.
+      if (_platform.isAndroid && ++ticks % 2 == 0) _pollState();
     });
-    _platform.requestPermissions();
+    // Android needs its permissions up front for the always-on counter.
+    // iOS asks from the "how we measure" screen before the first session.
+    if (_platform.isAndroid) _platform.requestPermissions();
     widget.settings.addListener(_onSettings);
     _refresh();
   }
 
   void _onSettings() => setState(() {});
+
+  Future<void> _pollState() async {
+    final state = await _platform.currentState();
+    if (!mounted) return;
+    if (state.mode != _state?.mode ||
+        state.serviceRunning != _state?.serviceRunning ||
+        state.wifiOn != _state?.wifiOn ||
+        state.bluetoothOn != _state?.bluetoothOn) {
+      setState(() => _state = state);
+    }
+  }
 
   @override
   void dispose() {
@@ -60,24 +81,47 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) _refresh();
   }
 
+  /// Draw first from what is on the phone (queue + cache), then try the
+  /// network. In airplane mode the first pass is all the user ever sees.
   Future<void> _refresh() async {
     final pending = await _platform.drainPendingSessions();
-    if (pending.isNotEmpty) await widget.repo.submit(pending);
-    await widget.repo.flush();
+    if (pending.isNotEmpty) await widget.repo.enqueue(pending);
     final state = await _platform.currentState();
     final running = await _platform.isSessionRunning();
-    final today = await widget.repo.today();
+    await _loadToday(state: state, running: running);
+    await widget.repo.flush();
+    await _loadToday();
+  }
+
+  Future<void> _loadToday({DeviceState? state, bool? running}) async {
+    List<Session> today;
+    try {
+      today = await widget.repo.today();
+    } catch (_) {
+      today = _today; // nothing cached yet: keep what we have
+    }
     if (!mounted) return;
     setState(() {
-      _state = state;
-      _running = running;
-      if (!running) _startedAt = null;
+      if (state != null) _state = state;
+      if (running != null) {
+        _running = running;
+        _startedAt = running ? (_startedAt ?? state?.sessionStartedAt ?? DateTime.now()) : null;
+      }
       _today = today;
     });
   }
 
   Future<void> _start() async {
-    await _platform.startSession(selfReportedMode: _platform.isIOS ? _claimed : null);
+    if (_platform.isIOS && !widget.settings.measureIntroSeen) {
+      final go = await MeasureIntroScreen.show(context, firstRun: true);
+      await widget.settings.setMeasureIntroSeen();
+      if (!go || !mounted) return;
+    }
+    await _platform.startSession(
+      selfReportedMode: _platform.isIOS ? _claimed : null,
+      wifiOn: _claimedWifiOn,
+      bluetoothOn: _claimedBtOn,
+    );
     setState(() {
       _running = true;
       _startedAt = DateTime.now();
@@ -90,15 +134,40 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await _refresh();
   }
 
-  int get _todayPoints => _today.fold(0, (sum, s) => sum + (s.points ?? s.estimatedPoints));
-  Duration get _todayTime => _today.fold(Duration.zero, (sum, s) => sum + s.duration);
+  Duration get _elapsed => _startedAt == null ? Duration.zero : DateTime.now().difference(_startedAt!);
+
+  /// The mode a session would get right now. Android: measured. iOS: the
+  /// self-reported mode, unless a measured Focus beats it (mirrors the bridge).
+  SessionMode get _effectiveMode {
+    final measured = _state?.mode ?? SessionMode.normal;
+    if (_platform.isAndroid) return measured;
+    if (measured == SessionMode.dnd && _claimed.multiplier < SessionMode.dnd.multiplier) return SessionMode.dnd;
+    return _claimed;
+  }
+
+  bool get _unverified => _platform.isIOS && !(_state?.screenTime ?? false);
+
+  bool get _wifiOn => _platform.isAndroid ? (_state?.wifiOn ?? false) : _claimedWifiOn;
+  bool get _bluetoothOn => _platform.isAndroid ? (_state?.bluetoothOn ?? false) : _claimedBtOn;
+
+  /// Points per minute right now, mirrors [Session.estimatedPoints].
+  double get _factor =>
+      _effectiveMode.multiplierWith(wifiOn: _wifiOn, bluetoothOn: _bluetoothOn) * (_unverified ? 0.5 : 1.0);
+
+  /// Live preview of the running session.
+  int get _livePoints => _running ? (_elapsed.inSeconds / 60.0 * _factor).floor() : 0;
+
+  int get _todayPoints =>
+      _today.fold(0, (sum, s) => sum + (s.points ?? s.estimatedPoints)) + _livePoints;
+  Duration get _todayTime =>
+      _today.fold(Duration.zero, (sum, s) => sum + s.duration) + (_running ? _elapsed : Duration.zero);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final t = context.l10n;
-    final elapsed = _startedAt == null ? Duration.zero : DateTime.now().difference(_startedAt!);
+    final elapsed = _elapsed;
     final goal = widget.settings.dailyGoal;
 
     return Scaffold(
@@ -143,6 +212,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               const SizedBox(height: 28),
 
+              // ---- factor ----
+              _factorCard(theme, t),
+              const SizedBox(height: 12),
+
               // ---- status / control ----
               if (_platform.isAndroid) _androidStatus(theme, t),
               if (_platform.isIOS) _iosControls(theme, t, elapsed),
@@ -173,6 +246,66 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  /// The multiplier, big and unmissable, with what makes it up.
+  Widget _factorCard(ThemeData theme, AppLocalizations t) {
+    final scheme = theme.colorScheme;
+    final mode = _effectiveMode;
+    final c = modeColor(mode, theme.brightness);
+    final locale = Localizations.localeOf(context).toString();
+    final factorText = NumberFormat('0.0#', locale).format(_factor);
+    final measuredFocus = _platform.isIOS && _state?.mode == SessionMode.dnd;
+    final chips = <Widget>[
+      Pill(label: mode.label(t), icon: modeIcon(mode), color: c),
+      if (mode == SessionMode.airplane) ...[
+        Pill(label: _wifiOn ? t.radioWifiOn : t.radioWifiOff, icon: _wifiOn ? Icons.wifi_rounded : Icons.wifi_off_rounded,
+            color: _wifiOn ? scheme.onSurfaceVariant : c),
+        Pill(label: _bluetoothOn ? t.radioBluetoothOn : t.radioBluetoothOff,
+            icon: _bluetoothOn ? Icons.bluetooth_rounded : Icons.bluetooth_disabled_rounded,
+            color: _bluetoothOn ? scheme.onSurfaceVariant : c),
+      ],
+      if (measuredFocus) Pill(label: t.factorFocusOn, icon: Icons.check_rounded, color: modeColor(SessionMode.dnd, theme.brightness)),
+      if (_unverified) Pill(label: t.factorUnverified, icon: Icons.help_outline_rounded, color: scheme.onSurfaceVariant),
+    ];
+    return Card(
+      color: c.withValues(alpha: 0.12),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(t.factorTitle.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant, letterSpacing: 1.2)),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('$factorText×',
+                    style: theme.textTheme.displayMedium?.copyWith(color: c, fontWeight: FontWeight.w800, height: 1.0)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Text(t.factorPerMinute(factorText),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(spacing: 8, runSpacing: 8, children: chips),
+            if (_platform.isIOS) ...[
+              const SizedBox(height: 8),
+              Text(t.factorIosHint, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+            ] else if (mode == SessionMode.airplane && (_wifiOn || _bluetoothOn)) ...[
+              const SizedBox(height: 8),
+              Text(t.airplaneRadiosHint, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+            ],
+          ],
         ),
       ),
     );
@@ -210,7 +343,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ),
             const SizedBox(width: 8),
-            Pill(label: '${mode.multiplier}×', icon: modeIcon(mode), color: modeColor(mode, theme.brightness)),
+            Pill(label: '${NumberFormat('0.0#', Localizations.localeOf(context).toString()).format(_factor)}×',
+                icon: modeIcon(mode), color: modeColor(mode, theme.brightness)),
           ],
         ),
       ),
@@ -228,12 +362,30 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             showSelectedIcon: false,
             segments: [
               ButtonSegment(value: SessionMode.normal, label: Text(t.modeShortNormal), icon: Icon(modeIcon(SessionMode.normal))),
+              ButtonSegment(value: SessionMode.vibrate, label: Text(t.modeShortVibrate), icon: Icon(modeIcon(SessionMode.vibrate))),
               ButtonSegment(value: SessionMode.silent, label: Text(t.modeShortSilent), icon: Icon(modeIcon(SessionMode.silent))),
               ButtonSegment(value: SessionMode.airplane, label: Text(t.modeShortAirplane), icon: Icon(modeIcon(SessionMode.airplane))),
             ],
             selected: {_claimed},
             onSelectionChanged: (s) => setState(() => _claimed = s.first),
           ),
+          if (_claimed == SessionMode.airplane) ...[
+            const SizedBox(height: 8),
+            SwitchListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: Text(t.radioWifiOff),
+              value: !_claimedWifiOn,
+              onChanged: (v) => setState(() => _claimedWifiOn = !v),
+            ),
+            SwitchListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: Text(t.radioBluetoothOff),
+              value: !_claimedBtOn,
+              onChanged: (v) => setState(() => _claimedBtOn = !v),
+            ),
+          ],
           const SizedBox(height: 16),
         ],
         _running
@@ -274,7 +426,9 @@ class _SessionTile extends StatelessWidget {
     final c = modeColor(s.mode, theme.brightness);
     final flags = <String>[
       if (s.screenOn) t.flagScreenOn,
-      if (!s.verified) t.flagMoving,
+      // Motion sensing is gone on both platforms; the only unverified Android
+      // sessions are reboots the service never saw coming (adb reboot, crash).
+      if (!s.verified) t.flagUnverified,
       if (s.source == SessionSource.reboot) t.flagReboot,
     ];
     return Padding(

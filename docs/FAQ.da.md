@@ -90,9 +90,9 @@ enkelte sessioner.
 batterioptimering, og "Notifikationer" fordi Android kræver en synlig
 notifikation for baggrundstjenester.
 
-**iPhone:** "Bevægelse" for at se om telefonen lå stille, "Fokus" for at give
-bonus for Forstyr ikke, og "Skærmtid" for at opdage om telefonen blev brugt
-under en session.
+**iPhone:** begge er valgfri. «Fokus» for at give bonus for Forstyr ikke, og
+«Skærmtid» for at verificere, at telefonen ikke blev brugt under en session. Alt
+aflæses på telefonen og deles aldrig; skift mening under Mere → Tilladelser.
 
 ## Bruger den meget batteri?
 
