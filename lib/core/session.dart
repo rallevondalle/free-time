@@ -19,8 +19,17 @@ extension SessionModeX on SessionMode {
         SessionMode.silent => 2.0,
         SessionMode.dnd => 2.5,
         SessionMode.airplane => 4.0,
-        SessionMode.poweredOff => 6.0,
+        SessionMode.poweredOff => 10.0,
       };
+
+  /// Airplane mode is graded by what is still switched on; the radios only
+  /// matter there. Mirrors `compute_points()` / `scoring_rules` in the DB.
+  double multiplierWith({required bool wifiOn, required bool bluetoothOn}) {
+    if (this != SessionMode.airplane) return multiplier;
+    if (wifiOn) return 3.0;
+    if (bluetoothOn) return 4.0;
+    return 5.0;
+  }
 
   static SessionMode fromWire(String s) =>
       SessionMode.values.firstWhere((m) => m.wire == s, orElse: () => SessionMode.normal);
@@ -43,7 +52,10 @@ class Session {
     this.selfReported = false,
     this.pickups = 0,
     this.screenOn = false,
+    this.wifiOn = false,
+    this.bluetoothOn = false,
     this.points,
+    this.synced = false,
   });
 
   final String clientId;
@@ -55,14 +67,33 @@ class Session {
   final bool selfReported;
   final int pickups;
   final bool screenOn; // lying still but screen on (locked): fewer points
+  final bool wifiOn; // radios: only graded inside airplane mode
+  final bool bluetoothOn;
   final int? points; // server-computed; null until uploaded
+  final bool synced; // the cloud has a copy (local bookkeeping only)
+
+  Session copyWith({bool? synced, int? points}) => Session(
+        clientId: clientId,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        mode: mode,
+        source: source,
+        verified: verified,
+        selfReported: selfReported,
+        pickups: pickups,
+        screenOn: screenOn,
+        wifiOn: wifiOn,
+        bluetoothOn: bluetoothOn,
+        points: points ?? this.points,
+        synced: synced ?? this.synced,
+      );
 
   Duration get duration => endedAt.difference(startedAt);
 
   /// Local preview of points, mirrors `compute_points()` in the DB.
   int get estimatedPoints {
     if (source == SessionSource.reboot) return 50;
-    var mult = mode.multiplier;
+    var mult = mode.multiplierWith(wifiOn: wifiOn, bluetoothOn: bluetoothOn);
     if (!verified) mult *= 0.5;
     if (screenOn) mult *= 0.5;
     return (duration.inSeconds / 60.0 * mult).floor();
@@ -79,6 +110,8 @@ class Session {
         'self_reported': selfReported,
         'pickups': pickups,
         'screen_on': screenOn,
+        'wifi_on': wifiOn,
+        'bluetooth_on': bluetoothOn,
       };
 
   factory Session.fromRow(Map<String, dynamic> r) => Session(
@@ -91,6 +124,8 @@ class Session {
         selfReported: r['self_reported'] as bool? ?? false,
         pickups: r['pickups'] as int? ?? 0,
         screenOn: r['screen_on'] as bool? ?? false,
+        wifiOn: r['wifi_on'] as bool? ?? false,
+        bluetoothOn: r['bluetooth_on'] as bool? ?? false,
         points: r['points'] as int?,
       );
 
@@ -105,6 +140,10 @@ class Session {
         selfReported: m['selfReported'] as bool? ?? false,
         pickups: m['pickups'] as int? ?? 0,
         screenOn: m['screenOn'] as bool? ?? false,
+        wifiOn: m['wifiOn'] as bool? ?? false,
+        bluetoothOn: m['bluetoothOn'] as bool? ?? false,
+        points: m['points'] as int?,
+        synced: m['synced'] as bool? ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,6 +156,10 @@ class Session {
         'selfReported': selfReported,
         'pickups': pickups,
         'screenOn': screenOn,
+        'wifiOn': wifiOn,
+        'bluetoothOn': bluetoothOn,
+        'points': points,
+        'synced': synced,
       };
 
   factory Session.fromJson(Map<String, dynamic> j) => Session.fromNative(j);

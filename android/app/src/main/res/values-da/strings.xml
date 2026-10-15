@@ -11,4 +11,6 @@
     <string name="mode_dnd">forstyr ikke</string>
     <string name="mode_airplane">flytilstand</string>
     <string name="mode_powered_off">slukket</string>
+    <string name="notif_wifi_on">, Wi-Fi tændt</string>
+    <string name="notif_bt_on">, Bluetooth tændt</string>
 </resources>

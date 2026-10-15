@@ -12,6 +12,10 @@ class DeviceState {
     required this.canMeasureAirplane,
     required this.canMeasureDnd,
     required this.serviceRunning,
+    this.sessionStartedAt,
+    this.screenTime = false,
+    this.wifiOn = false,
+    this.bluetoothOn = false,
   });
 
   final SessionMode mode;
@@ -20,12 +24,26 @@ class DeviceState {
   final bool canMeasureDnd;
   final bool serviceRunning;
 
+  /// iOS: start of the running manual session, if any.
+  final DateTime? sessionStartedAt;
+
+  /// iOS: Screen Time permission granted, so sessions can be verified.
+  final bool screenTime;
+
+  /// Android: measured radio state. iOS: not readable, self-reported instead.
+  final bool wifiOn;
+  final bool bluetoothOn;
+
   static DeviceState fromMap(Map<dynamic, dynamic> m) => DeviceState(
         mode: SessionModeX.fromWire(m['mode'] as String? ?? 'normal'),
         canMeasureRinger: m['canMeasureRinger'] as bool? ?? false,
         canMeasureAirplane: m['canMeasureAirplane'] as bool? ?? false,
         canMeasureDnd: m['canMeasureDnd'] as bool? ?? false,
         serviceRunning: m['serviceRunning'] as bool? ?? false,
+        sessionStartedAt: m['activeStartedAt'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(m['activeStartedAt'] as int)
+            : null,
+        screenTime: m['screenTime'] as bool? ?? false,
       );
 }
 
@@ -55,10 +73,13 @@ class FreeTimePlatform {
   }
 
   /// Start a session. On iOS [selfReportedMode] is the mode the user claims
-  /// (silent / airplane); on Android the argument is ignored and measured.
-  Future<void> startSession({SessionMode? selfReportedMode}) =>
+  /// (silent / airplane) and the radio flags what they say is still on; on
+  /// Android the arguments are ignored and everything is measured.
+  Future<void> startSession({SessionMode? selfReportedMode, bool wifiOn = false, bool bluetoothOn = false}) =>
       _methods.invokeMethod('startSession', {
         'selfReportedMode': selfReportedMode?.wire,
+        'wifiOn': wifiOn,
+        'bluetoothOn': bluetoothOn,
       });
 
   /// Stop the running session. Returns the finished session(s); the native
@@ -82,8 +103,35 @@ class FreeTimePlatform {
         .toList();
   }
 
-  /// Ask for the OS permissions the measurement layer needs.
-  /// Android: notifications + battery-optimisation exemption.
-  /// iOS: Motion & Fitness, Focus status, Screen Time (FamilyControls).
+  /// Android only: notifications + battery-optimisation exemption, asked for
+  /// at launch because the always-on counter cannot run without them.
   Future<void> requestPermissions() => _methods.invokeMethod('requestPermissions');
+
+  /// Android: the counter's own event log (boot, shutdown, segments).
+  Future<String> diagnosticLog() async =>
+      await _methods.invokeMethod<String>('diagnosticLog') ?? '';
+
+  /// iOS only. Both permissions are optional and asked for one at a time from
+  /// the "how we measure" screen, after the app's own explanation.
+  Future<IosPermissions> permissionStatus() async {
+    final m = await _methods.invokeMethod<Map<dynamic, dynamic>>('permissionStatus');
+    return IosPermissions.fromMap(m ?? const {});
+  }
+
+  /// [name] is `focus` or `screenTime`. Returns the status afterwards.
+  Future<IosPermissions> requestPermission(String name) async {
+    final m = await _methods.invokeMethod<Map<dynamic, dynamic>>('requestPermission', {'name': name});
+    return IosPermissions.fromMap(m ?? const {});
+  }
+}
+
+class IosPermissions {
+  const IosPermissions({required this.focus, required this.screenTime});
+  final bool focus;
+  final bool screenTime;
+
+  static IosPermissions fromMap(Map<dynamic, dynamic> m) => IosPermissions(
+        focus: m['focus'] as bool? ?? false,
+        screenTime: m['screenTime'] as bool? ?? false,
+      );
 }

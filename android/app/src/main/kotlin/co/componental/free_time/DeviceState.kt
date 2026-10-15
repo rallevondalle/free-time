@@ -1,6 +1,8 @@
 package co.componental.free_time
 
 import android.app.NotificationManager
+import android.bluetooth.BluetoothManager
+import android.net.wifi.WifiManager
 import android.content.Context
 import android.media.AudioManager
 import android.provider.Settings
@@ -34,8 +36,22 @@ object DeviceState {
         "airplane" -> R.string.mode_airplane; "powered_off" -> R.string.mode_powered_off; else -> R.string.mode_normal
     })
 
+    /** Wi-Fi radio switched on (airplane mode does not switch it off by itself). */
+    // Both reads are wrapped: a SecurityException here killed the whole counter
+    // on 14/10-2026. Unknown radio state must never cost the user their session.
+    fun wifiOn(context: Context): Boolean = try {
+        (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.isWifiEnabled ?: false
+    } catch (e: Exception) { false }
+
+    /** Bluetooth radio switched on. Reading the adapter state needs no runtime permission. */
+    fun bluetoothOn(context: Context): Boolean = try {
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter?.isEnabled ?: false
+    } catch (e: Exception) { false }
+
     fun snapshot(context: Context, serviceRunning: Boolean): Map<String, Any> = mapOf(
         "mode" to mode(context),
+        "wifiOn" to wifiOn(context),
+        "bluetoothOn" to bluetoothOn(context),
         "canMeasureRinger" to true,
         "canMeasureAirplane" to true,
         "canMeasureDnd" to true,

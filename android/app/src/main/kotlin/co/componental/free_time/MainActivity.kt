@@ -43,6 +43,7 @@ class MainActivity : FlutterActivity() {
                     "isSessionRunning" -> result.success(store.getActive() != null)
                     "drainPendingSessions" -> result.success(store.drainPending())
                     "requestPermissions" -> { requestPermissions(); result.success(null) }
+                    "diagnosticLog" -> result.success(store.logText())
                     else -> result.notImplemented()
                 }
             }

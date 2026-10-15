@@ -23,16 +23,20 @@ class SessionStore(context: Context) {
         val selfReported: Boolean = false,
         var pickups: Int = 0,
         val screenOn: Boolean = false,
+        val wifiOn: Boolean = false,
+        val bluetoothOn: Boolean = false,
     ) {
         fun toJson(): JSONObject = JSONObject().apply {
             put("clientId", clientId); put("startedAt", startedAt); put("endedAt", endedAt)
             put("mode", mode); put("source", source); put("verified", verified)
             put("selfReported", selfReported); put("pickups", pickups); put("screenOn", screenOn)
+            put("wifiOn", wifiOn); put("bluetoothOn", bluetoothOn)
         }
         fun toMap(): Map<String, Any> = mapOf(
             "clientId" to clientId, "startedAt" to startedAt, "endedAt" to endedAt,
             "mode" to mode, "source" to source, "verified" to verified,
             "selfReported" to selfReported, "pickups" to pickups, "screenOn" to screenOn,
+            "wifiOn" to wifiOn, "bluetoothOn" to bluetoothOn,
         )
         companion object {
             fun fromJson(o: JSONObject) = Segment(
@@ -41,6 +45,7 @@ class SessionStore(context: Context) {
                 source = o.getString("source"), verified = o.optBoolean("verified", true),
                 selfReported = o.optBoolean("selfReported", false), pickups = o.optInt("pickups"),
                 screenOn = o.optBoolean("screenOn", false),
+                wifiOn = o.optBoolean("wifiOn", false), bluetoothOn = o.optBoolean("bluetoothOn", false),
             )
         }
     }
@@ -74,6 +79,17 @@ class SessionStore(context: Context) {
     fun getActive(): Segment? =
         prefs.getString(KEY_ACTIVE, null)?.let { Segment.fromJson(JSONObject(it)) }
 
+    // ---- diagnostics ----
+    // logcat does not survive a reboot and release builds cannot be inspected,
+    // so the power/segment events are kept here and shown under More.
+    @Synchronized
+    fun log(msg: String) {
+        val stamp = java.text.SimpleDateFormat("dd/MM HH:mm:ss", java.util.Locale.ROOT).format(java.util.Date())
+        val lines = (prefs.getString(KEY_LOG, "") ?: "").split('\n').filter { it.isNotBlank() }.takeLast(39)
+        prefs.edit().putString(KEY_LOG, (lines + "$stamp $msg").joinToString("\n")).commit()
+    }
+    fun logText(): String = prefs.getString(KEY_LOG, "") ?: ""
+
     // ---- liveness / shutdown bookkeeping ----
     fun heartbeat() = prefs.edit().putLong(KEY_LAST_ALIVE, System.currentTimeMillis()).commit()
     fun lastAlive(): Long = prefs.getLong(KEY_LAST_ALIVE, 0L)
@@ -90,5 +106,6 @@ class SessionStore(context: Context) {
         private const val KEY_LAST_ALIVE = "last_alive"
         private const val KEY_SHUTDOWN_AT = "shutdown_at"
         private const val KEY_LAST_BOOT = "last_boot"
+        private const val KEY_LOG = "diag_log"
     }
 }

@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import android.hardware.SensorManager
 import android.hardware.TriggerEvent
 import android.hardware.TriggerEventListener
 import android.media.AudioManager
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -35,6 +37,7 @@ import kotlin.math.sqrt
  * A segment has exactly one (mode, screenOn, moving) state. Whenever any of
  * those change the current segment is closed and a new one opened:
  *  - ringer / DND / airplane change → mode
+ *  - Wi-Fi / Bluetooth radio toggled → wifiOn / bluetoothOn (graded inside airplane mode)
  *  - screen on/off               → screenOn (on-but-locked gives fewer points)
  *  - significant motion          → moving=true (unverified); stationary → moving=false
  */
@@ -56,7 +59,9 @@ class SessionService : Service() {
             when (intent.action) {
                 AudioManager.RINGER_MODE_CHANGED_ACTION,
                 NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED,
-                Intent.ACTION_AIRPLANE_MODE_CHANGED -> rotateIfChanged()
+                Intent.ACTION_AIRPLANE_MODE_CHANGED,
+                WifiManager.WIFI_STATE_CHANGED_ACTION,
+                BluetoothAdapter.ACTION_STATE_CHANGED -> rotateIfChanged()
 
                 Intent.ACTION_SCREEN_OFF -> { screenOn = false; if (active == null) open() else rotateIfChanged() }
                 Intent.ACTION_SCREEN_ON -> {
@@ -64,6 +69,15 @@ class SessionService : Service() {
                     if (keyguard.isKeyguardLocked) rotateIfChanged() else close()
                 }
                 Intent.ACTION_USER_PRESENT -> close()
+
+                // Manifest receivers no longer get ACTION_SHUTDOWN (Android 8+), but a
+                // running service does. Close the segment with an exact timestamp so
+                // the powered-off session that BOOT_COMPLETED creates is verified.
+                Intent.ACTION_SHUTDOWN, Intent.ACTION_REBOOT -> {
+                    store.log("service: ${intent.action?.substringAfterLast('.')}")
+                    close()
+                    store.setShutdownAt(System.currentTimeMillis())
+                }
             }
         }
     }
@@ -126,9 +140,13 @@ class SessionService : Service() {
             addAction(AudioManager.RINGER_MODE_CHANGED_ACTION)
             addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED)
             addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+            addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+            addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
             addAction(Intent.ACTION_SCREEN_ON)
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_USER_PRESENT)
+            addAction(Intent.ACTION_SHUTDOWN)
+            addAction(Intent.ACTION_REBOOT)
         })
         handler.post(heartbeat)
     }
@@ -136,6 +154,7 @@ class SessionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground()
         running = true
+        store.log("service start (interactive=${power.isInteractive})")
         // Reconcile with reality: a segment left in the store from a previous
         // process is resumed only if the phone is still "down".
         screenOn = power.isInteractive
@@ -153,8 +172,11 @@ class SessionService : Service() {
             source = "auto",
             screenOn = screenOn,
             verified = !moving,
+            wifiOn = DeviceState.wifiOn(this),
+            bluetoothOn = DeviceState.bluetoothOn(this),
         )
         store.setActive(active)
+        store.log("open: ${active!!.mode} wifi=${active!!.wifiOn} bt=${active!!.bluetoothOn} screen=$screenOn")
         armMotionSensors()
         updateNotification()
     }
@@ -163,12 +185,19 @@ class SessionService : Service() {
     private fun rotateIfChanged() {
         val seg = active ?: return
         val mode = DeviceState.mode(this)
-        if (mode == seg.mode && screenOn == seg.screenOn && !moving == seg.verified) return
+        val wifi = DeviceState.wifiOn(this)
+        val bt = DeviceState.bluetoothOn(this)
+        if (mode == seg.mode && screenOn == seg.screenOn && !moving == seg.verified &&
+            wifi == seg.wifiOn && bt == seg.bluetoothOn) return
         val t = System.currentTimeMillis()
         seg.endedAt = t
         store.addPending(seg)
-        active = SessionStore.Segment(startedAt = t, mode = mode, source = "auto", screenOn = screenOn, verified = !moving)
+        active = SessionStore.Segment(
+            startedAt = t, mode = mode, source = "auto", screenOn = screenOn, verified = !moving,
+            wifiOn = wifi, bluetoothOn = bt,
+        )
         store.setActive(active)
+        store.log("rotate: ${seg.mode}→$mode wifi=$wifi bt=$bt screen=$screenOn ${(t - seg.startedAt) / 1000}s")
         updateNotification()
         notifyFlutter()
     }
@@ -177,6 +206,7 @@ class SessionService : Service() {
         val seg = active ?: return
         seg.endedAt = System.currentTimeMillis()
         store.addPending(seg)
+        store.log("close: ${seg.mode} ${(seg.endedAt - seg.startedAt) / 1000}s")
         active = null
         store.setActive(null)
         disarmMotionSensors()
@@ -195,7 +225,9 @@ class SessionService : Service() {
             active == null -> getString(R.string.notif_in_use)
             else -> getString(R.string.notif_counting, DeviceState.label(this, active!!.mode)) +
                 (if (active!!.screenOn) getString(R.string.notif_screen_on) else "") +
-                (if (!active!!.verified) getString(R.string.notif_moving) else "")
+                (if (!active!!.verified) getString(R.string.notif_moving) else "") +
+                (if (active!!.mode == "airplane" && active!!.wifiOn) getString(R.string.notif_wifi_on) else "") +
+                (if (active!!.mode == "airplane" && active!!.bluetoothOn) getString(R.string.notif_bt_on) else "")
         }
         return Notification.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_lock_idle_lock)

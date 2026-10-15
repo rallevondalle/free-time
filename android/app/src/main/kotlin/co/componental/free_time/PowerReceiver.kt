@@ -18,6 +18,7 @@ class PowerReceiver : BroadcastReceiver() {
         when (intent.action) {
             Intent.ACTION_SHUTDOWN, Intent.ACTION_REBOOT -> {
                 val now = System.currentTimeMillis()
+                store.log("receiver: ${intent.action?.substringAfterLast('.')}")
                 store.getActive()?.let { seg ->
                     seg.endedAt = now
                     store.addPending(seg)
@@ -28,16 +29,18 @@ class PowerReceiver : BroadcastReceiver() {
             Intent.ACTION_BOOT_COMPLETED -> {
                 SessionService.ensureRunning(context)
                 val bootAt = System.currentTimeMillis() - SystemClock.elapsedRealtime()
-                if (bootAt <= store.lastBootAt()) return // already handled
+                if (bootAt <= store.lastBootAt()) { store.log("boot: already handled"); return }
                 store.setLastBootAt(bootAt)
 
                 val explicit = store.shutdownAt()
                 val shutdownAt = if (explicit > 0) explicit else store.lastAlive()
                 store.clearShutdown()
+                val gap = bootAt - shutdownAt
+                store.log("boot: gap=${gap / 1000}s explicit=${explicit > 0} shutdownAt=$shutdownAt")
                 if (shutdownAt <= 0 || bootAt <= shutdownAt) return
 
-                val gap = bootAt - shutdownAt
                 if (gap < REBOOT_MAX_GAP_MS) {
+                    store.log("boot: reboot session (+bonus)")
                     store.addPending(
                         SessionStore.Segment(
                             startedAt = shutdownAt, endedAt = bootAt,
@@ -46,6 +49,7 @@ class PowerReceiver : BroadcastReceiver() {
                         )
                     )
                 } else {
+                    store.log("boot: powered_off session ${gap / 60000} min")
                     store.addPending(
                         SessionStore.Segment(
                             startedAt = shutdownAt, endedAt = bootAt,
