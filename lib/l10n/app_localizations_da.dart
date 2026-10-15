@@ -347,14 +347,14 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 4×\n•  Slukket: 6×\n•  Genstart: 50 point oveni\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time i flytilstand giver 240. En nat slukket giver omkring 2.900.';
+      'Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 3× med wifi tændt, 4× med bluetooth tændt, 5× med alt slukket\n•  Slukket: 10×\n•  Genstart: 50 point oveni\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time i flytilstand med alt slukket giver 300. En nat slukket giver omkring 4.800.';
 
   @override
   String get faq5Q => 'Hvad er dagsmålet?';
 
   @override
   String get faq5A =>
-      'Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer lydløs eller to en halv time i flytilstand. Du kan ændre det under \"Mere\". Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.';
+      'Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer lydløs eller to timer i flytilstand. Du kan ændre det under \"Mere\". Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.';
 
   @override
   String get faq6Q => 'Kan man snyde?';

@@ -37,8 +37,10 @@ Basis: 1 point pr. minut stille, ganget med faktor for tilstanden.
 | Vibrer          | 1,5    | Android: målt. iOS: selvrapporteret    |
 | Lydløs          | 2,0    | Android: målt. iOS: selvrapporteret    |
 | Forstyr ikke    | 2,5    | Begge: målt                            |
-| Flytilstand     | 4,0    | Android: målt. iOS: selvrapporteret    |
-| Slukket         | 6,0    | Begge: udledt af shutdown/boot         |
+| Flytilstand, wifi tændt | 3,0 | Android: målt. iOS: selvrapporteret |
+| Flytilstand, bluetooth tændt | 4,0 | Android: målt. iOS: selvrapporteret |
+| Flytilstand, alt slukket | 5,0 | Android: målt. iOS: selvrapporteret |
+| Slukket         | 10,0   | Begge: udledt af shutdown/boot         |
 | Genstart        | +50    | Begge                                  |
 | Skærm tændt, låst | ×0,5 | Android: målt                          |
 | I bevægelse / lomme | ×0,5 | Android: målt live. iOS: nej           |

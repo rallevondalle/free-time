@@ -181,9 +181,9 @@
   "faq3Q": "How does it count?",
   "faq3A": "On Android a small counter runs in the background all the time. When the screen locks or turns off, a session starts. When you unlock, it ends. No tapping required.\n\nOn iPhone, Apple does not allow that kind of background measurement. There you tap \"Put the phone down\" when you put it down and \"Stop\" when you pick it up. The app then checks whether the phone actually lay still and whether it was used in the meantime.",
   "faq4Q": "How are points awarded?",
-  "faq4A": "You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 4×\n•  Turned off: 6×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode is 240. A night turned off is about 2,900.",
+  "faq4A": "You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.",
   "faq5Q": "What is the daily goal?",
-  "faq5A": "The daily goal is yours. The default is 600 points, which equals five hours on silent or two and a half hours in airplane mode. You can change it under \"More\". The goal only affects the ring on the front page, not the standings among friends.",
+  "faq5A": "The daily goal is yours. The default is 600 points, which equals five hours on silent or two hours in airplane mode. You can change it under \"More\". The goal only affects the ring on the front page, not the standings among friends.",
   "faq6Q": "Can you cheat?",
   "faq6A": "Yes, if you want to. You can leave the phone at home and go to work. But then you actually were without your phone, and that is the whole point. The app uses the phone's sensors to see whether it lay still and whether the screen was used, and gives fewer points when it cannot confirm it. But this is an app between friends, not a court.",
   "faq7Q": "Why is iPhone different from Android?",
@@ -212,7 +212,13 @@
   "factorUnverified": "unverified ×0.5",
   "factorFocusOn": "Focus is on",
   "factorIosHint": "Pick how the phone is lying — iOS cannot read it.",
-  "@factorPerMinute": {"placeholders": {"factor": {"type": "String"}}},
+  "@factorPerMinute": {
+    "placeholders": {
+      "factor": {
+        "type": "String"
+      }
+    }
+  },
   "radioWifiOff": "Wi-Fi off",
   "radioBluetoothOff": "Bluetooth off",
   "radioWifiOn": "Wi-Fi on",

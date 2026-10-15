@@ -695,7 +695,7 @@ abstract class AppLocalizations {
   /// No description provided for @faq4A.
   ///
   /// In en, this message translates to:
-  /// **'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 4×\n•  Turned off: 6×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode is 240. A night turned off is about 2,900.'**
+  /// **'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.'**
   String get faq4A;
 
   /// No description provided for @faq5Q.
@@ -707,7 +707,7 @@ abstract class AppLocalizations {
   /// No description provided for @faq5A.
   ///
   /// In en, this message translates to:
-  /// **'The daily goal is yours. The default is 600 points, which equals five hours on silent or two and a half hours in airplane mode. You can change it under \"More\". The goal only affects the ring on the front page, not the standings among friends.'**
+  /// **'The daily goal is yours. The default is 600 points, which equals five hours on silent or two hours in airplane mode. You can change it under \"More\". The goal only affects the ring on the front page, not the standings among friends.'**
   String get faq5A;
 
   /// No description provided for @faq6Q.

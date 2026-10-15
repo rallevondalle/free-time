@@ -348,14 +348,14 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Je krijgt 1 punt per minuut dat de telefoon ligt. Dat wordt vermenigvuldigd met een factor voor hoe \"weg\" hij is:\n\n•  Geluid aan: 1×\n•  Trillen: 1,5×\n•  Stil: 2×\n•  Niet storen / Focus: 2,5×\n•  Vliegtuigmodus: 4×\n•  Uitgeschakeld: 6×\n•  Herstart: 50 punten erbovenop\n\nLigt de telefoon met het scherm aan (maar vergrendeld), dan worden de punten gehalveerd. Draag je hem in je zak, dan ook. Factoren stapelen, dus stil in je zak is 2 × 0,5 = 1×.\n\nVoorbeeld: een uur stil op tafel is 120 punten. Een uur in vliegtuigmodus is 240. Een nacht uitgeschakeld is ongeveer 2.900.';
+      'Je krijgt 1 punt per minuut dat de telefoon ligt. Dat wordt vermenigvuldigd met een factor voor hoe \"weg\" hij is:\n\n•  Geluid aan: 1×\n•  Trillen: 1,5×\n•  Stil: 2×\n•  Niet storen / Focus: 2,5×\n•  Vliegtuigmodus: 3× met wifi aan, 4× met bluetooth aan, 5× met alles uit\n•  Uitgeschakeld: 10×\n•  Herstart: 50 punten erbovenop\n\nLigt de telefoon met het scherm aan (maar vergrendeld), dan worden de punten gehalveerd. Draag je hem in je zak, dan ook. Factoren stapelen, dus stil in je zak is 2 × 0,5 = 1×.\n\nVoorbeeld: een uur stil op tafel is 120 punten. Een uur in vliegtuigmodus met alles uit is 300. Een nacht uitgeschakeld is ongeveer 4.800.';
 
   @override
   String get faq5Q => 'Wat is het dagdoel?';
 
   @override
   String get faq5A =>
-      'Het dagdoel is van jou. Standaard is 600 punten, wat gelijkstaat aan vijf uur stil of tweeënhalf uur in vliegtuigmodus. Je kunt het wijzigen onder \"Meer\". Het doel beïnvloedt alleen de ring op de voorpagina, niet de stand onder vrienden.';
+      'Het dagdoel is van jou. Standaard is 600 punten, wat gelijkstaat aan vijf uur stil of twee uur in vliegtuigmodus. Je kunt het wijzigen onder \"Meer\". Het doel beïnvloedt alleen de ring op de voorpagina, niet de stand onder vrienden.';
 
   @override
   String get faq6Q => 'Kun je valsspelen?';

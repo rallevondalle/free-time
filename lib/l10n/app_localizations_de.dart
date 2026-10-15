@@ -349,14 +349,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Du bekommst 1 Punkt pro Minute, die das Handy liegt. Das wird mit einem Faktor dafür multipliziert, wie „weg“ es ist:\n\n•  Ton an: 1×\n•  Vibration: 1,5×\n•  Lautlos: 2×\n•  Nicht stören / Fokus: 2,5×\n•  Flugmodus: 4×\n•  Ausgeschaltet: 6×\n•  Neustart: 50 Punkte obendrauf\n\nLiegt das Handy mit eingeschaltetem (aber gesperrtem) Bildschirm, werden die Punkte halbiert. Trägst du es in der Tasche herum, ebenfalls. Faktoren multiplizieren sich, also ergibt lautlos in der Tasche 2 × 0,5 = 1×.\n\nBeispiel: eine Stunde lautlos auf dem Tisch sind 120 Punkte. Eine Stunde im Flugmodus sind 240. Eine Nacht ausgeschaltet sind etwa 2.900.';
+      'Du bekommst 1 Punkt pro Minute, die das Handy liegt. Das wird mit einem Faktor dafür multipliziert, wie „weg“ es ist:\n\n•  Ton an: 1×\n•  Vibration: 1,5×\n•  Lautlos: 2×\n•  Nicht stören / Fokus: 2,5×\n•  Flugmodus: 3× mit WLAN an, 4× mit Bluetooth an, 5× mit allem aus\n•  Ausgeschaltet: 10×\n•  Neustart: 50 Punkte obendrauf\n\nLiegt das Handy mit eingeschaltetem (aber gesperrtem) Bildschirm, werden die Punkte halbiert. Trägst du es in der Tasche herum, ebenfalls. Faktoren multiplizieren sich, also ergibt lautlos in der Tasche 2 × 0,5 = 1×.\n\nBeispiel: eine Stunde lautlos auf dem Tisch sind 120 Punkte. Eine Stunde im Flugmodus mit allem aus sind 300. Eine Nacht ausgeschaltet sind etwa 4.800.';
 
   @override
   String get faq5Q => 'Was ist das Tagesziel?';
 
   @override
   String get faq5A =>
-      'Das Tagesziel ist deins. Standard sind 600 Punkte, das entspricht fünf Stunden lautlos oder zweieinhalb Stunden im Flugmodus. Du kannst es unter „Mehr“ ändern. Das Ziel beeinflusst nur den Ring auf der Startseite, nicht die Rangliste unter Freunden.';
+      'Das Tagesziel ist deins. Standard sind 600 Punkte, das entspricht fünf Stunden lautlos oder zwei Stunden im Flugmodus. Du kannst es unter „Mehr“ ändern. Das Ziel beeinflusst nur den Ring auf der Startseite, nicht die Rangliste unter Freunden.';
 
   @override
   String get faq6Q => 'Kann man schummeln?';

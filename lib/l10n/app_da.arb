@@ -98,9 +98,9 @@
   "faq3Q": "Hvordan tæller den?",
   "faq3A": "På Android kører en lille tæller i baggrunden hele tiden. Når skærmen låses eller slukkes, starter en session. Når du låser op, slutter den. Det kræver ingen tryk.\n\nPå iPhone tillader Apple ikke den slags baggrundsmåling. Der trykker du \"Læg telefonen fra dig\", når du lægger den, og \"Stop\", når du tager den igen. Appen tjekker bagefter, om telefonen faktisk lå stille, og om den blev brugt imens.",
   "faq4Q": "Hvordan fordeles pointene?",
-  "faq4A": "Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 4×\n•  Slukket: 6×\n•  Genstart: 50 point oveni\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time i flytilstand giver 240. En nat slukket giver omkring 2.900.",
+  "faq4A": "Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 3× med wifi tændt, 4× med bluetooth tændt, 5× med alt slukket\n•  Slukket: 10×\n•  Genstart: 50 point oveni\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time i flytilstand med alt slukket giver 300. En nat slukket giver omkring 4.800.",
   "faq5Q": "Hvad er dagsmålet?",
-  "faq5A": "Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer lydløs eller to en halv time i flytilstand. Du kan ændre det under \"Mere\". Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.",
+  "faq5A": "Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer lydløs eller to timer i flytilstand. Du kan ændre det under \"Mere\". Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.",
   "faq6Q": "Kan man snyde?",
   "faq6A": "Ja, hvis man vil. Man kan lægge telefonen hjemme og gå på arbejde. Men så har man jo faktisk været uden telefon, og det er hele pointen. Appen bruger telefonens sensorer til at se, om den lå stille, og om skærmen blev brugt, og giver færre point, når den ikke kan bekræfte det. Men det er en app mellem venner, ikke en domstol.",
   "faq7Q": "Hvorfor er iPhone anderledes end Android?",
@@ -129,7 +129,13 @@
   "factorUnverified": "ikke verificeret ×0,5",
   "factorFocusOn": "Fokus er slået til",
   "factorIosHint": "Vælg hvordan telefonen ligger — iOS kan ikke aflæse det.",
-  "@factorPerMinute": {"placeholders": {"factor": {"type": "String"}}},
+  "@factorPerMinute": {
+    "placeholders": {
+      "factor": {
+        "type": "String"
+      }
+    }
+  },
   "radioWifiOff": "Wi-Fi fra",
   "radioBluetoothOff": "Bluetooth fra",
   "radioWifiOn": "Wi-Fi tændt",

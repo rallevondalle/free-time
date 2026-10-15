@@ -41,21 +41,23 @@ Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor
 | Vibrer                | 1,5×        |
 | Lydløs                | 2×          |
 | Forstyr ikke / Fokus  | 2,5×        |
-| Flytilstand           | 4×          |
-| Slukket               | 6×          |
+| Flytilstand, wifi tændt | 3×        |
+| Flytilstand, bluetooth tændt | 4×   |
+| Flytilstand, alt slukket | 5×       |
+| Slukket               | 10×         |
 | Genstart              | +50 point   |
 | Skærm tændt, men låst | ×0,5        |
 | I lommen / i bevægelse| ×0,5        |
 
 Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.
 
-Eksempler: en time lydløs på bordet giver 120 point. En time i flytilstand giver
-240. En nat slukket giver omkring 2.900.
+Eksempler: en time lydløs på bordet giver 120 point. En time i flytilstand med
+alt slukket giver 300. En nat slukket giver omkring 4.800.
 
 ## Hvad er dagsmålet?
 
 Dagsmålet er dit eget. Standard er 600 point, hvilket svarer til fem timer
-lydløs eller to en halv time i flytilstand. Du kan ændre det under "Mere" i
+lydløs eller to timer i flytilstand. Du kan ændre det under "Mere" i
 appen. Målet påvirker kun ringen på forsiden, ikke stillingen blandt venner.
 
 ## Kan man snyde?

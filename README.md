@@ -58,15 +58,17 @@ You get **1 point per minute** the phone lies still, multiplied by how "gone" it
 | On vibrate                  | 1.5×       |
 | On silent                   | 2×         |
 | In Do Not Disturb / Focus   | 2.5×       |
-| In airplane mode            | 4×         |
-| Turned off                  | 6×         |
+| In airplane mode, Wi-Fi on  | 3×         |
+| In airplane mode, Bluetooth on | 4×      |
+| In airplane mode, all radios off | 5×    |
+| Turned off                  | 10×        |
 | Restarted                   | +50 bonus  |
 
 Two things halve your points: lying with the **screen on** (but locked), and being **carried around** in a pocket instead of lying still. Multipliers stack, so silent in your pocket is 2 × 0.5 = 1×.
 
-**Examples.** An hour on silent on the table is 120 points. An hour in airplane mode is 240. A night turned off is roughly 2,900.
+**Examples.** An hour on silent on the table is 120 points. An hour in airplane mode with everything off is 300. A night turned off is roughly 4,800.
 
-Set your own daily goal in the app. The default is 600, about five hours on silent or two and a half in airplane mode.
+Set your own daily goal in the app. The default is 600, about five hours on silent or two in airplane mode.
 
 ## Friends
 

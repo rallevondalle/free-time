@@ -349,14 +349,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Vous gagnez 1 point par minute où le téléphone reste posé, multiplié par un facteur selon à quel point il est « absent » :\n\n•  Sonnerie : 1×\n•  Vibreur : 1,5×\n•  Silencieux : 2×\n•  Ne pas déranger / Concentration : 2,5×\n•  Mode avion : 4×\n•  Éteint : 6×\n•  Redémarrage : 50 points en plus\n\nSi le téléphone est posé écran allumé (mais verrouillé), les points sont divisés par deux. Si vous le portez dans une poche, aussi. Les facteurs se multiplient : silencieux dans la poche donne 2 × 0,5 = 1×.\n\nExemple : une heure en silencieux sur la table vaut 120 points. Une heure en mode avion vaut 240. Une nuit éteint, environ 2 900.';
+      'Vous gagnez 1 point par minute où le téléphone reste posé, multiplié par un facteur selon à quel point il est « absent » :\n\n•  Sonnerie : 1×\n•  Vibreur : 1,5×\n•  Silencieux : 2×\n•  Ne pas déranger / Concentration : 2,5×\n•  Mode avion : 3× avec le Wi-Fi, 4× avec le Bluetooth, 5× tout coupé\n•  Éteint : 10×\n•  Redémarrage : 50 points en plus\n\nSi le téléphone est posé écran allumé (mais verrouillé), les points sont divisés par deux. Si vous le portez dans une poche, aussi. Les facteurs se multiplient : silencieux dans la poche donne 2 × 0,5 = 1×.\n\nExemple : une heure en silencieux sur la table vaut 120 points. Une heure en mode avion tout coupé vaut 300. Une nuit éteint, environ 4 800.';
 
   @override
   String get faq5Q => 'Qu\'est-ce que l\'objectif du jour ?';
 
   @override
   String get faq5A =>
-      'L\'objectif du jour vous appartient. Par défaut, c\'est 600 points, soit cinq heures en silencieux ou deux heures et demie en mode avion. Vous pouvez le changer dans « Plus ». L\'objectif n\'influence que l\'anneau de la page d\'accueil, pas le classement entre amis.';
+      'L\'objectif du jour vous appartient. Par défaut, c\'est 600 points, soit cinq heures en silencieux ou deux heures en mode avion. Vous pouvez le changer dans « Plus ». L\'objectif n\'influence que l\'anneau de la page d\'accueil, pas le classement entre amis.';
 
   @override
   String get faq6Q => 'Peut-on tricher ?';
