@@ -36,8 +36,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Stats? _stats;
   SessionMode _claimed = SessionMode.normal;
   // iOS, airplane only: what the user says is still switched on.
-  bool _claimedWifiOn = false;
-  bool _claimedBtOn = false;
+  // iOS self-report. Defaults follow the claimed mode: airplane switches the
+  // radios off, everything else leaves them on (no bonus unless claimed).
+  bool _claimedWifiOn = true;
+  bool _claimedBtOn = true;
+  bool _claimedDataOn = true;
 
   @override
   void initState() {
@@ -66,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state.mode != _state?.mode ||
         state.serviceRunning != _state?.serviceRunning ||
         state.wifiOn != _state?.wifiOn ||
-        state.bluetoothOn != _state?.bluetoothOn) {
+        state.bluetoothOn != _state?.bluetoothOn ||
+        state.dataOn != _state?.dataOn) {
       setState(() => _state = state);
     }
   }
@@ -128,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       selfReportedMode: _platform.isIOS ? _claimed : null,
       wifiOn: _claimedWifiOn,
       bluetoothOn: _claimedBtOn,
+      dataOn: _claimed != SessionMode.airplane && _claimedDataOn,
     );
     setState(() {
       _running = true;
@@ -156,10 +161,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   bool get _wifiOn => _platform.isAndroid ? (_state?.wifiOn ?? false) : _claimedWifiOn;
   bool get _bluetoothOn => _platform.isAndroid ? (_state?.bluetoothOn ?? false) : _claimedBtOn;
+  bool get _dataOn => _effectiveMode == SessionMode.airplane
+      ? false
+      : (_platform.isAndroid ? (_state?.dataOn ?? true) : _claimedDataOn);
 
   /// Points per minute right now, mirrors [Session.estimatedPoints].
   double get _factor =>
-      _effectiveMode.multiplierWith(wifiOn: _wifiOn, bluetoothOn: _bluetoothOn) * (_unverified ? 0.5 : 1.0);
+      _effectiveMode.multiplierWith(wifiOn: _wifiOn, bluetoothOn: _bluetoothOn, dataOn: _dataOn) *
+      (_unverified ? 0.5 : 1.0);
 
   /// Live preview of the running session.
   int get _livePoints => _running ? (_elapsed.inSeconds / 60.0 * _factor).floor() : 0;
@@ -279,12 +288,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final measuredFocus = _platform.isIOS && _state?.mode == SessionMode.dnd;
     final chips = <Widget>[
       Pill(label: mode.label(t), icon: modeIcon(mode), color: c),
-      if (mode == SessionMode.airplane) ...[
+      if (mode != SessionMode.poweredOff) ...[
         Pill(label: _wifiOn ? t.radioWifiOn : t.radioWifiOff, icon: _wifiOn ? Icons.wifi_rounded : Icons.wifi_off_rounded,
             color: _wifiOn ? scheme.onSurfaceVariant : c),
         Pill(label: _bluetoothOn ? t.radioBluetoothOn : t.radioBluetoothOff,
             icon: _bluetoothOn ? Icons.bluetooth_rounded : Icons.bluetooth_disabled_rounded,
             color: _bluetoothOn ? scheme.onSurfaceVariant : c),
+        if (mode != SessionMode.airplane)
+          Pill(label: _dataOn ? t.radioDataOn : t.radioDataOff,
+              icon: _dataOn ? Icons.signal_cellular_alt_rounded : Icons.signal_cellular_off_rounded,
+              color: _dataOn ? scheme.onSurfaceVariant : c),
       ],
       if (measuredFocus) Pill(label: t.factorFocusOn, icon: Icons.check_rounded, color: modeColor(SessionMode.dnd, theme.brightness)),
       if (_unverified) Pill(label: t.factorUnverified, icon: Icons.help_outline_rounded, color: scheme.onSurfaceVariant),
@@ -322,6 +335,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ] else if (mode == SessionMode.airplane && (_wifiOn || _bluetoothOn)) ...[
               const SizedBox(height: 8),
               Text(t.airplaneRadiosHint, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+            ] else if (mode != SessionMode.airplane && (_wifiOn || _bluetoothOn || _dataOn)) ...[
+              const SizedBox(height: 8),
+              Text(t.radiosHint, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
             ],
           ],
         ),
@@ -385,25 +401,37 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ButtonSegment(value: SessionMode.airplane, label: Text(t.modeShortAirplane), icon: Icon(modeIcon(SessionMode.airplane))),
             ],
             selected: {_claimed},
-            onSelectionChanged: (s) => setState(() => _claimed = s.first),
+            onSelectionChanged: (s) => setState(() {
+              _claimed = s.first;
+              final airplane = _claimed == SessionMode.airplane;
+              _claimedWifiOn = !airplane;
+              _claimedBtOn = !airplane;
+              _claimedDataOn = !airplane;
+            }),
           ),
-          if (_claimed == SessionMode.airplane) ...[
-            const SizedBox(height: 8),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: Text(t.radioWifiOff),
+            value: !_claimedWifiOn,
+            onChanged: (v) => setState(() => _claimedWifiOn = !v),
+          ),
+          SwitchListTile(
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: Text(t.radioBluetoothOff),
+            value: !_claimedBtOn,
+            onChanged: (v) => setState(() => _claimedBtOn = !v),
+          ),
+          if (_claimed != SessionMode.airplane)
             SwitchListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: Text(t.radioWifiOff),
-              value: !_claimedWifiOn,
-              onChanged: (v) => setState(() => _claimedWifiOn = !v),
+              title: Text(t.radioDataOff),
+              value: !_claimedDataOn,
+              onChanged: (v) => setState(() => _claimedDataOn = !v),
             ),
-            SwitchListTile(
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: Text(t.radioBluetoothOff),
-              value: !_claimedBtOn,
-              onChanged: (v) => setState(() => _claimedBtOn = !v),
-            ),
-          ],
           const SizedBox(height: 16),
         ],
         _running

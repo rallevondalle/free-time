@@ -25,18 +25,19 @@ class SessionStore(context: Context) {
         val screenOn: Boolean = false,
         val wifiOn: Boolean = false,
         val bluetoothOn: Boolean = false,
+        val dataOn: Boolean = true,
     ) {
         fun toJson(): JSONObject = JSONObject().apply {
             put("clientId", clientId); put("startedAt", startedAt); put("endedAt", endedAt)
             put("mode", mode); put("source", source); put("verified", verified)
             put("selfReported", selfReported); put("pickups", pickups); put("screenOn", screenOn)
-            put("wifiOn", wifiOn); put("bluetoothOn", bluetoothOn)
+            put("wifiOn", wifiOn); put("bluetoothOn", bluetoothOn); put("dataOn", dataOn)
         }
         fun toMap(): Map<String, Any> = mapOf(
             "clientId" to clientId, "startedAt" to startedAt, "endedAt" to endedAt,
             "mode" to mode, "source" to source, "verified" to verified,
             "selfReported" to selfReported, "pickups" to pickups, "screenOn" to screenOn,
-            "wifiOn" to wifiOn, "bluetoothOn" to bluetoothOn,
+            "wifiOn" to wifiOn, "bluetoothOn" to bluetoothOn, "dataOn" to dataOn,
         )
         companion object {
             fun fromJson(o: JSONObject) = Segment(
@@ -46,6 +47,7 @@ class SessionStore(context: Context) {
                 selfReported = o.optBoolean("selfReported", false), pickups = o.optInt("pickups"),
                 screenOn = o.optBoolean("screenOn", false),
                 wifiOn = o.optBoolean("wifiOn", false), bluetoothOn = o.optBoolean("bluetoothOn", false),
+                dataOn = o.optBoolean("dataOn", true),
             )
         }
     }

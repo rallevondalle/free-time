@@ -12,6 +12,8 @@ Session _s(DateTime end, int minutes, {SessionMode mode = SessionMode.silent, in
       selfReported: false,
       pickups: 0,
       screenOn: false,
+      wifiOn: true, // radios on: the plain table
+      bluetoothOn: true,
       points: points,
     );
 

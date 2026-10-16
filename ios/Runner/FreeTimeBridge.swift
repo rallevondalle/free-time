@@ -67,7 +67,8 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
       let claimed = args?["selfReportedMode"] as? String ?? "normal"
       startSession(claimedMode: claimed,
                    wifiOn: args?["wifiOn"] as? Bool ?? false,
-                   bluetoothOn: args?["bluetoothOn"] as? Bool ?? false)
+                   bluetoothOn: args?["bluetoothOn"] as? Bool ?? false,
+                   dataOn: args?["dataOn"] as? Bool ?? true)
       result(nil)
 
     case "stopSession":
@@ -93,13 +94,14 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
 
   // MARK: session lifecycle
 
-  private func startSession(claimedMode: String, wifiOn: Bool, bluetoothOn: Bool) {
+  private func startSession(claimedMode: String, wifiOn: Bool, bluetoothOn: Bool, dataOn: Bool) {
     let now = Date()
     defaults.set(now.timeIntervalSince1970, forKey: "active_started")
     defaults.set(claimedMode, forKey: "active_claimed")
     // Radios are self-reported too (iOS cannot read Wi-Fi; Bluetooth needs a prompt).
     defaults.set(wifiOn, forKey: "active_wifi_on")
     defaults.set(bluetoothOn, forKey: "active_bt_on")
+    defaults.set(dataOn, forKey: "active_data_on")
     defaults.set(false, forKey: "active_interrupted")
     defaults.set(0, forKey: "active_pickups")
     startDeviceActivityMonitoring()
@@ -136,6 +138,7 @@ final class FreeTimeBridge: NSObject, FlutterStreamHandler {
       "pickups": pickups + (interrupted ? 1 : 0),
       "wifiOn": defaults.bool(forKey: "active_wifi_on"),
       "bluetoothOn": defaults.bool(forKey: "active_bt_on"),
+      "dataOn": defaults.object(forKey: "active_data_on") as? Bool ?? true,
     ]])
   }
 

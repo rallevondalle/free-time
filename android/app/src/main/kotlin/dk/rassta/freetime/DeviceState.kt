@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager
 import android.content.Context
 import android.media.AudioManager
 import android.provider.Settings
+import android.telephony.TelephonyManager
 
 /** Reads the device state that affects scoring and maps it to a session mode. */
 object DeviceState {
@@ -48,10 +49,19 @@ object DeviceState {
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter?.isEnabled ?: false
     } catch (e: Exception) { false }
 
+    /**
+     * Mobile data switch. Unknown counts as on: a radio that was never read
+     * earns no bonus. Needs only ACCESS_NETWORK_STATE (no prompt).
+     */
+    fun dataOn(context: Context): Boolean = try {
+        (context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager)?.isDataEnabled ?: true
+    } catch (e: Exception) { true }
+
     fun snapshot(context: Context, serviceRunning: Boolean): Map<String, Any> = mapOf(
         "mode" to mode(context),
         "wifiOn" to wifiOn(context),
         "bluetoothOn" to bluetoothOn(context),
+        "dataOn" to dataOn(context),
         "canMeasureRinger" to true,
         "canMeasureAirplane" to true,
         "canMeasureDnd" to true,

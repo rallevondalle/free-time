@@ -16,6 +16,7 @@ class DeviceState {
     this.screenTime = false,
     this.wifiOn = false,
     this.bluetoothOn = false,
+    this.dataOn = true,
   });
 
   final SessionMode mode;
@@ -33,6 +34,7 @@ class DeviceState {
   /// Android: measured radio state. iOS: not readable, self-reported instead.
   final bool wifiOn;
   final bool bluetoothOn;
+  final bool dataOn;
 
   static DeviceState fromMap(Map<dynamic, dynamic> m) => DeviceState(
         mode: SessionModeX.fromWire(m['mode'] as String? ?? 'normal'),
@@ -44,6 +46,9 @@ class DeviceState {
             ? DateTime.fromMillisecondsSinceEpoch(m['activeStartedAt'] as int)
             : null,
         screenTime: m['screenTime'] as bool? ?? false,
+        wifiOn: m['wifiOn'] as bool? ?? false,
+        bluetoothOn: m['bluetoothOn'] as bool? ?? false,
+        dataOn: m['dataOn'] as bool? ?? true,
       );
 }
 
@@ -75,11 +80,13 @@ class FreeTimePlatform {
   /// Start a session. On iOS [selfReportedMode] is the mode the user claims
   /// (silent / airplane) and the radio flags what they say is still on; on
   /// Android the arguments are ignored and everything is measured.
-  Future<void> startSession({SessionMode? selfReportedMode, bool wifiOn = false, bool bluetoothOn = false}) =>
+  Future<void> startSession(
+          {SessionMode? selfReportedMode, bool wifiOn = false, bool bluetoothOn = false, bool dataOn = true}) =>
       _methods.invokeMethod('startSession', {
         'selfReportedMode': selfReportedMode?.wire,
         'wifiOn': wifiOn,
         'bluetoothOn': bluetoothOn,
+        'dataOn': dataOn,
       });
 
   /// Stop the running session. Returns the finished session(s); the native

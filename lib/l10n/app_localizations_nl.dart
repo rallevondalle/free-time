@@ -348,7 +348,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Je krijgt 1 punt per minuut dat de telefoon ligt. Dat wordt vermenigvuldigd met een factor voor hoe \"weg\" hij is:\n\n•  Geluid aan: 1×\n•  Trillen: 1,5×\n•  Stil: 2×\n•  Niet storen / Focus: 2,5×\n•  Vliegtuigmodus: 3× met wifi aan, 4× met bluetooth aan, 5× met alles uit\n•  Uitgeschakeld: 10×\n•  Herstart: 50 punten erbovenop\n\nLigt de telefoon met het scherm aan (maar vergrendeld), dan worden de punten gehalveerd. Draag je hem in je zak, dan ook. Factoren stapelen, dus stil in je zak is 2 × 0,5 = 1×.\n\nVoorbeeld: een uur stil op tafel is 120 punten. Een uur in vliegtuigmodus met alles uit is 300. Een nacht uitgeschakeld is ongeveer 4.800.';
+      'Je krijgt 1 punt per minuut dat de telefoon ligt. Dat wordt vermenigvuldigd met een factor voor hoe \"weg\" hij is:\n\n•  Geluid aan: 1×\n•  Trillen: 1,5×\n•  Stil: 2×\n•  Niet storen / Focus: 2,5×\n•  Vliegtuigmodus: 3× met wifi aan, 4× met bluetooth aan, 5× met alles uit\n•  Uitgeschakeld: 10×\n•  Herstart: 50 punten erbovenop\n\nBuiten vliegtuigmodus geeft elke radio die je uitzet (wifi, bluetooth, mobiele data) ×1,1 erbovenop, dus alle drie uit is ×1,33. Vliegtuigmodus met alles uit blijft het hoogste voor een telefoon die aanstaat.\n\nLigt de telefoon met het scherm aan (maar vergrendeld), dan worden de punten gehalveerd. Draag je hem in je zak, dan ook. Factoren stapelen, dus stil in je zak is 2 × 0,5 = 1×.\n\nVoorbeeld: een uur stil op tafel is 120 punten. Een uur stil met alle radio\'s uit is 160. Een uur in vliegtuigmodus met alles uit is 300. Een nacht uitgeschakeld is ongeveer 4.800.';
 
   @override
   String get faq5Q => 'Wat is het dagdoel?';
@@ -467,6 +467,16 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get airplaneRadiosHint =>
       'In vliegtuigmodus: zet ook Wi-Fi en Bluetooth uit voor de volledige factor.';
+
+  @override
+  String get radioDataOff => 'Mobiele data uit';
+
+  @override
+  String get radioDataOn => 'Mobiele data aan';
+
+  @override
+  String get radiosHint =>
+      'Zet wifi, bluetooth en mobiele data uit: elk ×1,1, alle drie ×1,33.';
 
   @override
   String get diagnostics => 'Diagnose';

@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ServiceInfo
+import android.database.ContentObserver
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -25,6 +26,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
+import android.provider.Settings
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -37,7 +39,8 @@ import kotlin.math.sqrt
  * A segment has exactly one (mode, screenOn, moving) state. Whenever any of
  * those change the current segment is closed and a new one opened:
  *  - ringer / DND / airplane change → mode
- *  - Wi-Fi / Bluetooth radio toggled → wifiOn / bluetoothOn (graded inside airplane mode)
+ *  - Wi-Fi / Bluetooth / mobile data toggled → wifiOn / bluetoothOn / dataOn (×1.1 each when off;
+ *    airplane mode has its own table)
  *  - screen on/off               → screenOn (on-but-locked gives fewer points)
  *  - significant motion          → moving=true (unverified); stationary → moving=false
  */
@@ -80,6 +83,14 @@ class SessionService : Service() {
                 }
             }
         }
+    }
+
+    // Mobile data has no broadcast; the switch lands in Settings.Global under a
+    // per-SIM key (Pixel 10, Android 17: "mobile_data1", while "mobile_data"
+    // stays 1 — measured 16/10). Watch the whole table; rotateIfChanged() is a
+    // cheap compare and global settings rarely change.
+    private val dataObserver = object : ContentObserver(handler) {
+        override fun onChange(selfChange: Boolean) { rotateIfChanged() }
     }
 
     private val heartbeat = object : Runnable {
@@ -148,6 +159,7 @@ class SessionService : Service() {
             addAction(Intent.ACTION_SHUTDOWN)
             addAction(Intent.ACTION_REBOOT)
         })
+        contentResolver.registerContentObserver(Settings.Global.CONTENT_URI, true, dataObserver)
         handler.post(heartbeat)
     }
 
@@ -174,9 +186,10 @@ class SessionService : Service() {
             verified = !moving,
             wifiOn = DeviceState.wifiOn(this),
             bluetoothOn = DeviceState.bluetoothOn(this),
+            dataOn = DeviceState.dataOn(this),
         )
         store.setActive(active)
-        store.log("open: ${active!!.mode} wifi=${active!!.wifiOn} bt=${active!!.bluetoothOn} screen=$screenOn")
+        store.log("open: ${active!!.mode} wifi=${active!!.wifiOn} bt=${active!!.bluetoothOn} data=${active!!.dataOn} screen=$screenOn")
         armMotionSensors()
         updateNotification()
     }
@@ -187,17 +200,18 @@ class SessionService : Service() {
         val mode = DeviceState.mode(this)
         val wifi = DeviceState.wifiOn(this)
         val bt = DeviceState.bluetoothOn(this)
+        val data = DeviceState.dataOn(this)
         if (mode == seg.mode && screenOn == seg.screenOn && !moving == seg.verified &&
-            wifi == seg.wifiOn && bt == seg.bluetoothOn) return
+            wifi == seg.wifiOn && bt == seg.bluetoothOn && data == seg.dataOn) return
         val t = System.currentTimeMillis()
         seg.endedAt = t
         store.addPending(seg)
         active = SessionStore.Segment(
             startedAt = t, mode = mode, source = "auto", screenOn = screenOn, verified = !moving,
-            wifiOn = wifi, bluetoothOn = bt,
+            wifiOn = wifi, bluetoothOn = bt, dataOn = data,
         )
         store.setActive(active)
-        store.log("rotate: ${seg.mode}→$mode wifi=$wifi bt=$bt screen=$screenOn ${(t - seg.startedAt) / 1000}s")
+        store.log("rotate: ${seg.mode}→$mode wifi=$wifi bt=$bt data=$data screen=$screenOn ${(t - seg.startedAt) / 1000}s")
         updateNotification()
         notifyFlutter()
     }
@@ -263,6 +277,7 @@ class SessionService : Service() {
 
     override fun onDestroy() {
         unregisterReceiver(receiver)
+        contentResolver.unregisterContentObserver(dataObserver)
         disarmMotionSensors()
         handler.removeCallbacks(heartbeat)
         running = false

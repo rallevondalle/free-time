@@ -22,14 +22,33 @@ extension SessionModeX on SessionMode {
         SessionMode.poweredOff => 10.0,
       };
 
-  /// Airplane mode is graded by what is still switched on; the radios only
-  /// matter there. Mirrors `compute_points()` / `scoring_rules` in the DB.
-  double multiplierWith({required bool wifiOn, required bool bluetoothOn}) {
-    if (this != SessionMode.airplane) return multiplier;
-    if (wifiOn) return 3.0;
-    if (bluetoothOn) return 4.0;
-    return 5.0;
+  /// Radios. Airplane mode has its own table and stays the top of a powered-on
+  /// phone (5×). Everywhere else each radio that is off earns a little on top:
+  /// ×1.1 per radio, ×1.33 with all three, so DND with everything off (3.33×)
+  /// lands just above airplane mode with Wi-Fi still on (3×).
+  /// Mirrors `compute_points()` / `scoring_rules` in the DB.
+  double multiplierWith({required bool wifiOn, required bool bluetoothOn, bool dataOn = true}) {
+    switch (this) {
+      case SessionMode.airplane:
+        if (wifiOn) return 3.0;
+        if (bluetoothOn) return 4.0;
+        return 5.0;
+      case SessionMode.poweredOff:
+        return multiplier;
+      case SessionMode.normal:
+      case SessionMode.vibrate:
+      case SessionMode.silent:
+      case SessionMode.dnd:
+        var m = multiplier;
+        if (!wifiOn) m *= radioOffFactor;
+        if (!bluetoothOn) m *= radioOffFactor;
+        if (!dataOn) m *= radioOffFactor;
+        return m;
+    }
   }
+
+  /// `wifi_off` / `bluetooth_off` / `data_off` in `scoring_rules`.
+  static const radioOffFactor = 1.1;
 
   static SessionMode fromWire(String s) =>
       SessionMode.values.firstWhere((m) => m.wire == s, orElse: () => SessionMode.normal);
@@ -54,6 +73,7 @@ class Session {
     this.screenOn = false,
     this.wifiOn = false,
     this.bluetoothOn = false,
+    this.dataOn = true,
     this.points,
     this.synced = false,
   });
@@ -67,8 +87,9 @@ class Session {
   final bool selfReported;
   final int pickups;
   final bool screenOn; // lying still but screen on (locked): fewer points
-  final bool wifiOn; // radios: only graded inside airplane mode
+  final bool wifiOn; // radios: each one that is off earns ×1.1 (airplane: own table)
   final bool bluetoothOn;
+  final bool dataOn; // mobile data; unknown counts as on (no bonus)
   final int? points; // server-computed; null until uploaded
   final bool synced; // the cloud has a copy (local bookkeeping only)
 
@@ -84,6 +105,7 @@ class Session {
         screenOn: screenOn,
         wifiOn: wifiOn,
         bluetoothOn: bluetoothOn,
+        dataOn: dataOn,
         points: points ?? this.points,
         synced: synced ?? this.synced,
       );
@@ -93,7 +115,7 @@ class Session {
   /// Local preview of points, mirrors `compute_points()` in the DB.
   int get estimatedPoints {
     if (source == SessionSource.reboot) return 50;
-    var mult = mode.multiplierWith(wifiOn: wifiOn, bluetoothOn: bluetoothOn);
+    var mult = mode.multiplierWith(wifiOn: wifiOn, bluetoothOn: bluetoothOn, dataOn: dataOn);
     if (!verified) mult *= 0.5;
     if (screenOn) mult *= 0.5;
     return (duration.inSeconds / 60.0 * mult).floor();
@@ -112,6 +134,7 @@ class Session {
         'screen_on': screenOn,
         'wifi_on': wifiOn,
         'bluetooth_on': bluetoothOn,
+        'data_on': dataOn,
       };
 
   factory Session.fromRow(Map<String, dynamic> r) => Session(
@@ -126,6 +149,7 @@ class Session {
         screenOn: r['screen_on'] as bool? ?? false,
         wifiOn: r['wifi_on'] as bool? ?? false,
         bluetoothOn: r['bluetooth_on'] as bool? ?? false,
+        dataOn: r['data_on'] as bool? ?? true,
         points: r['points'] as int?,
       );
 
@@ -142,6 +166,7 @@ class Session {
         screenOn: m['screenOn'] as bool? ?? false,
         wifiOn: m['wifiOn'] as bool? ?? false,
         bluetoothOn: m['bluetoothOn'] as bool? ?? false,
+        dataOn: m['dataOn'] as bool? ?? true,
         points: m['points'] as int?,
         synced: m['synced'] as bool? ?? false,
       );
@@ -158,6 +183,7 @@ class Session {
         'screenOn': screenOn,
         'wifiOn': wifiOn,
         'bluetoothOn': bluetoothOn,
+        'dataOn': dataOn,
         'points': points,
         'synced': synced,
       };

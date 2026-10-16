@@ -64,9 +64,11 @@ You get **1 point per minute** the phone lies still, multiplied by how "gone" it
 | Turned off                  | 10×        |
 | Restarted                   | +50 bonus  |
 
+Outside airplane mode, every radio you switch off adds a little: **Wi-Fi off ×1.1, Bluetooth off ×1.1, mobile data off ×1.1**, so all three off is ×1.33. Do Not Disturb with everything off (3.33×) lands just above airplane mode with Wi-Fi still on (3×); airplane mode with all radios off stays the top for a phone that is on. Android measures the radios; on iPhone you tell the app.
+
 Two things halve your points: lying with the **screen on** (but locked), and being **carried around** in a pocket instead of lying still (Android measures this; on iPhone a session is halved instead when it could not be verified, see below). Multipliers stack, so silent in your pocket is 2 × 0.5 = 1×.
 
-**Examples.** An hour on silent on the table is 120 points. An hour in airplane mode with everything off is 300. A night turned off is roughly 4,800.
+**Examples.** An hour on silent on the table is 120 points, 160 with all radios off. An hour in airplane mode with everything off is 300. A night turned off is roughly 4,800.
 
 Set your own daily goal in the app. The default is 600, about five hours on silent or two in airplane mode.
 
@@ -128,7 +130,7 @@ Free Time is a Flutter app with native measurement layers and a Supabase backend
 | iOS bridge | `ios/Runner/FreeTimeBridge.swift` | DeviceActivity, Focus, boot time |
 | Backend | `supabase/` | Postgres schema, server-side scoring, RLS, leaderboard |
 
-**Build (Android):** `mise install`, then `flutter run --dart-define-from-file=dart_defines.json` with `SUPABASE_URL` and `SUPABASE_KEY` in that file.
+**Build (Android):** `mise install`, then `flutter run --dart-define-from-file=dart_defines.json` with `SUPABASE_URL` and `SUPABASE_KEY` in that file. The same flag goes on every `flutter build`; without it the app silently runs in offline mode (local storage, no login, an "offline" badge on the home screen).
 
 **Build (iOS):** see [docs/ios-setup.md](docs/ios-setup.md).
 

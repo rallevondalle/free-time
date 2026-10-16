@@ -347,7 +347,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.';
+      'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nOutside airplane mode, every radio you switch off (Wi-Fi, Bluetooth, mobile data) adds ×1.1, so all three off is ×1.33. Airplane mode with all radios off stays the top for a phone that is on.\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour on silent with all radios off is 160. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.';
 
   @override
   String get faq5Q => 'What is the daily goal?';
@@ -466,6 +466,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get airplaneRadiosHint =>
       'In airplane mode: switch off Wi-Fi and Bluetooth too for the full factor.';
+
+  @override
+  String get radioDataOff => 'Mobile data off';
+
+  @override
+  String get radioDataOn => 'Mobile data on';
+
+  @override
+  String get radiosHint =>
+      'Switch off Wi-Fi, Bluetooth and mobile data: ×1.1 each, ×1.33 with all three.';
 
   @override
   String get diagnostics => 'Diagnostics';

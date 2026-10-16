@@ -347,7 +347,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 3× med wifi tændt, 4× med bluetooth tændt, 5× med alt slukket\n•  Slukket: 10×\n•  Genstart: 50 point oveni\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time i flytilstand med alt slukket giver 300. En nat slukket giver omkring 4.800.';
+      'Du får 1 point pr. minut, telefonen ligger. Det ganges med en faktor for, hvor \"væk\" den er:\n\n•  Lyd på: 1×\n•  Vibrer: 1,5×\n•  Lydløs: 2×\n•  Forstyr ikke / Fokus: 2,5×\n•  Flytilstand: 3× med wifi tændt, 4× med bluetooth tændt, 5× med alt slukket\n•  Slukket: 10×\n•  Genstart: 50 point oveni\n\nUden for flytilstand giver hver radio du slukker (Wi-Fi, Bluetooth, mobildata) ×1,1 oveni, så alle tre slukket er ×1,33. Flytilstand med alt slukket er stadig det højeste for en tændt telefon.\n\nLigger telefonen med skærmen tændt (men låst), halveres pointene. Bærer du den rundt i lommen, halveres de også. Faktorerne ganges sammen, så lydløs i lommen giver 2 × 0,5 = 1×.\n\nEksempel: en time lydløs på bordet giver 120 point. En time lydløs med alle radioer slukket giver 160. En time i flytilstand med alt slukket giver 300. En nat slukket giver omkring 4.800.';
 
   @override
   String get faq5Q => 'Hvad er dagsmålet?';
@@ -466,6 +466,16 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get airplaneRadiosHint =>
       'I flytilstand: sluk også Wi-Fi og Bluetooth for den fulde faktor.';
+
+  @override
+  String get radioDataOff => 'Mobildata fra';
+
+  @override
+  String get radioDataOn => 'Mobildata tændt';
+
+  @override
+  String get radiosHint =>
+      'Sluk Wi-Fi, Bluetooth og mobildata: ×1,1 pr. stk., ×1,33 med alle tre.';
 
   @override
   String get diagnostics => 'Diagnostik';

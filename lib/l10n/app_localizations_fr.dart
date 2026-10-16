@@ -349,7 +349,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get faq4A =>
-      'Vous gagnez 1 point par minute où le téléphone reste posé, multiplié par un facteur selon à quel point il est « absent » :\n\n•  Sonnerie : 1×\n•  Vibreur : 1,5×\n•  Silencieux : 2×\n•  Ne pas déranger / Concentration : 2,5×\n•  Mode avion : 3× avec le Wi-Fi, 4× avec le Bluetooth, 5× tout coupé\n•  Éteint : 10×\n•  Redémarrage : 50 points en plus\n\nSi le téléphone est posé écran allumé (mais verrouillé), les points sont divisés par deux. Si vous le portez dans une poche, aussi. Les facteurs se multiplient : silencieux dans la poche donne 2 × 0,5 = 1×.\n\nExemple : une heure en silencieux sur la table vaut 120 points. Une heure en mode avion tout coupé vaut 300. Une nuit éteint, environ 4 800.';
+      'Vous gagnez 1 point par minute où le téléphone reste posé, multiplié par un facteur selon à quel point il est « absent » :\n\n•  Sonnerie : 1×\n•  Vibreur : 1,5×\n•  Silencieux : 2×\n•  Ne pas déranger / Concentration : 2,5×\n•  Mode avion : 3× avec le Wi-Fi, 4× avec le Bluetooth, 5× tout coupé\n•  Éteint : 10×\n•  Redémarrage : 50 points en plus\n\nHors mode avion, chaque radio coupée (Wi-Fi, Bluetooth, données mobiles) ajoute ×1,1, soit ×1,33 les trois. Le mode avion tout coupé reste le maximum pour un téléphone allumé.\n\nSi le téléphone est posé écran allumé (mais verrouillé), les points sont divisés par deux. Si vous le portez dans une poche, aussi. Les facteurs se multiplient : silencieux dans la poche donne 2 × 0,5 = 1×.\n\nExemple : une heure en silencieux sur la table vaut 120 points. Une heure en silencieux toutes radios coupées vaut 160. Une heure en mode avion tout coupé vaut 300. Une nuit éteint, environ 4 800.';
 
   @override
   String get faq5Q => 'Qu\'est-ce que l\'objectif du jour ?';
@@ -468,6 +468,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get airplaneRadiosHint =>
       'En mode avion : désactivez aussi le Wi-Fi et le Bluetooth pour le facteur complet.';
+
+  @override
+  String get radioDataOff => 'Données mobiles désactivées';
+
+  @override
+  String get radioDataOn => 'Données mobiles activées';
+
+  @override
+  String get radiosHint =>
+      'Coupez le Wi-Fi, le Bluetooth et les données mobiles : ×1,1 chacun, ×1,33 les trois.';
 
   @override
   String get diagnostics => 'Diagnostic';

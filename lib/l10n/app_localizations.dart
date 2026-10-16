@@ -695,7 +695,7 @@ abstract class AppLocalizations {
   /// No description provided for @faq4A.
   ///
   /// In en, this message translates to:
-  /// **'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.'**
+  /// **'You get 1 point per minute the phone lies there. That is multiplied by how \"gone\" it is:\n\n•  Sound on: 1×\n•  Vibrate: 1.5×\n•  Silent: 2×\n•  Do Not Disturb / Focus: 2.5×\n•  Airplane mode: 3× with Wi-Fi on, 4× with Bluetooth on, 5× with all radios off\n•  Turned off: 10×\n•  Restart: 50 points on top\n\nOutside airplane mode, every radio you switch off (Wi-Fi, Bluetooth, mobile data) adds ×1.1, so all three off is ×1.33. Airplane mode with all radios off stays the top for a phone that is on.\n\nIf the phone lies with the screen on (but locked), points are halved. If you carry it around in a pocket, they are halved too. Multipliers stack, so silent in a pocket is 2 × 0.5 = 1×.\n\nExample: an hour on silent on the table is 120 points. An hour on silent with all radios off is 160. An hour in airplane mode with all radios off is 300. A night turned off is about 4,800.'**
   String get faq4A;
 
   /// No description provided for @faq5Q.
@@ -907,6 +907,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In airplane mode: switch off Wi-Fi and Bluetooth too for the full factor.'**
   String get airplaneRadiosHint;
+
+  /// No description provided for @radioDataOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile data off'**
+  String get radioDataOff;
+
+  /// No description provided for @radioDataOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile data on'**
+  String get radioDataOn;
+
+  /// No description provided for @radiosHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch off Wi-Fi, Bluetooth and mobile data: ×1.1 each, ×1.33 with all three.'**
+  String get radiosHint;
 
   /// No description provided for @diagnostics.
   ///
