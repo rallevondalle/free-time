@@ -133,6 +133,10 @@ Free Time is a Flutter app with native measurement layers and a Supabase backend
 **Build (iOS):** see [docs/ios-setup.md](docs/ios-setup.md).
 
 **Backend:** `supabase link` and `supabase db push`. Scoring rules live in the `scoring_rules` table and can be tuned without an app release.
+`supabase config push` needs `SMTP_PASS` exported (`set -a; source .env; set +a`)
+or it writes an empty SMTP password to the project; after a few failed logins
+Mailcow bans Supabase's sender IP for 30 minutes and every login code fails
+with a 504 (16/10-2026).
 
 **Release:** push a tag like `v0.2.0`. GitHub Actions builds a signed APK and attaches it to a release.
 Bump `version:` in `pubspec.yaml` first; Android refuses to install a lower
