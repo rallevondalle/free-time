@@ -26,6 +26,13 @@ class PowerReceiver : BroadcastReceiver() {
                 }
                 store.setShutdownAt(now)
             }
+            // An app update (Obtainium, Play) kills the process, and nothing
+            // restarts a foreground service by itself. Without this the counter
+            // is dead from the update until the app is next opened.
+            Intent.ACTION_MY_PACKAGE_REPLACED -> {
+                store.log("receiver: package replaced → service start")
+                SessionService.ensureRunning(context)
+            }
             Intent.ACTION_BOOT_COMPLETED -> {
                 SessionService.ensureRunning(context)
                 val bootAt = System.currentTimeMillis() - SystemClock.elapsedRealtime()
