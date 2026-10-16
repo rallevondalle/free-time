@@ -498,4 +498,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String faq12A(String email) {
     return 'Free Time is a small, independent project with no ads and no selling of data. Write to $email with questions, bugs or ideas.';
   }
+
+  @override
+  String avg30Line(int points, int n) {
+    return 'Avg. $points/day, last $n days';
+  }
+
+  @override
+  String get statsTitle => 'Statistics';
+
+  @override
+  String statsSince(String date) {
+    return 'Since $date';
+  }
+
+  @override
+  String statsDaysTracked(int n) {
+    return '$n whole days';
+  }
+
+  @override
+  String get statsTotalPoints => 'Points, all time';
+
+  @override
+  String get statsAvgLifetime => 'Average per day, all time';
+
+  @override
+  String statsAvg30(int n) {
+    return 'Average per day, last $n days';
+  }
+
+  @override
+  String get statsBestDays => 'Best days';
+
+  @override
+  String get statsWorstDays => 'Worst days';
+
+  @override
+  String get statsEmpty =>
+      'Statistics start tomorrow, when there is a whole day to count.';
+
+  @override
+  String get statsToday => 'Today so far';
 }

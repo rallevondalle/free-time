@@ -63,7 +63,7 @@ class _ShellState extends State<Shell> {
       HomeScreen(repo: widget.sessions, settings: widget.settings),
       LeaderboardScreen(repo: widget.sessions),
       FriendsScreen(repo: widget.friends),
-      MoreScreen(settings: widget.settings, signedIn: widget.friends != null, canSignIn: widget.friends == null && !offlineMode),
+      MoreScreen(settings: widget.settings, signedIn: widget.friends != null, repo: widget.sessions, canSignIn: widget.friends == null && !offlineMode),
     ];
     return Scaffold(
       body: pages[_tab],

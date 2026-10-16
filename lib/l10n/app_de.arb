@@ -142,5 +142,16 @@
   "faq11Q": "Was ist der Plan für die Zukunft?",
   "faq11A": "Gruppen und Challenges („kein Bildschirm vor 9“), Serien, ein Widget für den Startbildschirm und eine Web-Version der Rangliste. Vorschläge sind willkommen.",
   "faq12Q": "Wer steckt dahinter, und wie erreiche ich euch?",
-  "faq12A": "Free Time ist ein kleines, unabhängiges Projekt ohne Werbung und ohne Datenverkauf. Schreib an {email} mit Fragen, Fehlern oder Ideen."
+  "faq12A": "Free Time ist ein kleines, unabhängiges Projekt ohne Werbung und ohne Datenverkauf. Schreib an {email} mit Fragen, Fehlern oder Ideen.",
+  "avg30Line": "Ø {points}/Tag, letzte {n} Tage",
+  "statsTitle": "Statistik",
+  "statsSince": "Seit {date}",
+  "statsDaysTracked": "{n} ganze Tage",
+  "statsTotalPoints": "Punkte insgesamt",
+  "statsAvgLifetime": "Schnitt pro Tag, gesamt",
+  "statsAvg30": "Schnitt pro Tag, letzte {n} Tage",
+  "statsBestDays": "Beste Tage",
+  "statsWorstDays": "Schlechteste Tage",
+  "statsEmpty": "Die Statistik beginnt morgen, wenn ein ganzer Tag zum Rechnen da ist.",
+  "statsToday": "Heute bisher"
 }

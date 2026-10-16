@@ -961,6 +961,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Free Time is a small, independent project with no ads and no selling of data. Write to {email} with questions, bugs or ideas.'**
   String faq12A(String email);
+
+  /// No description provided for @avg30Line.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. {points}/day, last {n} days'**
+  String avg30Line(int points, int n);
+
+  /// No description provided for @statsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statsTitle;
+
+  /// No description provided for @statsSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Since {date}'**
+  String statsSince(String date);
+
+  /// No description provided for @statsDaysTracked.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} whole days'**
+  String statsDaysTracked(int n);
+
+  /// No description provided for @statsTotalPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Points, all time'**
+  String get statsTotalPoints;
+
+  /// No description provided for @statsAvgLifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Average per day, all time'**
+  String get statsAvgLifetime;
+
+  /// No description provided for @statsAvg30.
+  ///
+  /// In en, this message translates to:
+  /// **'Average per day, last {n} days'**
+  String statsAvg30(int n);
+
+  /// No description provided for @statsBestDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Best days'**
+  String get statsBestDays;
+
+  /// No description provided for @statsWorstDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Worst days'**
+  String get statsWorstDays;
+
+  /// No description provided for @statsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics start tomorrow, when there is a whole day to count.'**
+  String get statsEmpty;
+
+  /// No description provided for @statsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today so far'**
+  String get statsToday;
 }
 
 class _AppLocalizationsDelegate

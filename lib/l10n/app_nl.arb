@@ -142,5 +142,16 @@
   "faq11Q": "Wat is het plan voor de toekomst?",
   "faq11A": "Groepen en uitdagingen (\"geen scherm voor 9 uur\"), reeksen, een widget voor het startscherm en een webversie van de stand. Suggesties zijn welkom.",
   "faq12Q": "Wie zit erachter, en hoe neem ik contact op?",
-  "faq12A": "Free Time is een klein, onafhankelijk project zonder advertenties en zonder dataverkoop. Schrijf naar {email} met vragen, fouten of ideeën."
+  "faq12A": "Free Time is een klein, onafhankelijk project zonder advertenties en zonder dataverkoop. Schrijf naar {email} met vragen, fouten of ideeën.",
+  "avg30Line": "Gem. {points}/dag, laatste {n} dagen",
+  "statsTitle": "Statistieken",
+  "statsSince": "Sinds {date}",
+  "statsDaysTracked": "{n} hele dagen",
+  "statsTotalPoints": "Punten in totaal",
+  "statsAvgLifetime": "Gemiddelde per dag, totaal",
+  "statsAvg30": "Gemiddelde per dag, laatste {n} dagen",
+  "statsBestDays": "Beste dagen",
+  "statsWorstDays": "Slechtste dagen",
+  "statsEmpty": "Statistieken beginnen morgen, als er een hele dag is om mee te rekenen.",
+  "statsToday": "Vandaag tot nu toe"
 }

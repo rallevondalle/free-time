@@ -142,5 +142,16 @@
   "faq11Q": "Quelle est la suite ?",
   "faq11A": "Des groupes et des défis (« pas d'écran avant 9 h »), des séries, un widget pour l'écran d'accueil et une version web du classement. Les suggestions sont les bienvenues.",
   "faq12Q": "Qui est derrière, et comment vous contacter ?",
-  "faq12A": "Free Time est un petit projet indépendant, sans publicité et sans vente de données. Écrivez à {email} pour vos questions, bugs ou idées."
+  "faq12A": "Free Time est un petit projet indépendant, sans publicité et sans vente de données. Écrivez à {email} pour vos questions, bugs ou idées.",
+  "avg30Line": "Moy. {points}/jour, {n} derniers jours",
+  "statsTitle": "Statistiques",
+  "statsSince": "Depuis le {date}",
+  "statsDaysTracked": "{n} jours entiers",
+  "statsTotalPoints": "Points au total",
+  "statsAvgLifetime": "Moyenne par jour, depuis le début",
+  "statsAvg30": "Moyenne par jour, {n} derniers jours",
+  "statsBestDays": "Meilleurs jours",
+  "statsWorstDays": "Pires jours",
+  "statsEmpty": "Les statistiques commencent demain, quand il y aura une journée entière à compter.",
+  "statsToday": "Aujourd'hui pour l'instant"
 }

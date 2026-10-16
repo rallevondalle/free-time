@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 
 import 'measure_intro_screen.dart';
 import 'points_ring.dart';
+import 'stats_screen.dart';
+import '../core/stats.dart';
 import 'theme.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   bool _running = false;
   DateTime? _startedAt;
   List<Session> _today = const [];
+  Stats? _stats;
   SessionMode _claimed = SessionMode.normal;
   // iOS, airplane only: what the user says is still switched on.
   bool _claimedWifiOn = false;
@@ -96,13 +99,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Future<void> _loadToday({DeviceState? state, bool? running}) async {
     List<Session> today;
+    Stats? stats;
     try {
       today = await widget.repo.today();
+      stats = Stats.of(await widget.repo.history());
     } catch (_) {
       today = _today; // nothing cached yet: keep what we have
     }
     if (!mounted) return;
     setState(() {
+      if (stats != null) _stats = stats;
       if (state != null) _state = state;
       if (running != null) {
         _running = running;
@@ -211,7 +217,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   style: theme.textTheme.labelLarge?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ),
-              const SizedBox(height: 28),
+              if (_stats case final st? when !st.isEmpty) ...[
+                const SizedBox(height: 6),
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () => StatsScreen.show(context, repo: widget.repo, todayPoints: _todayPoints),
+                    icon: const Icon(Icons.insights_rounded, size: 18),
+                    label: Text(t.avg30Line(st.averageRecent ?? 0, st.recent.length)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ] else
+                const SizedBox(height: 28),
 
               // ---- factor ----
               _factorCard(theme, t),

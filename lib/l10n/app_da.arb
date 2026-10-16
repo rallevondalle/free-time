@@ -149,5 +149,16 @@
   "faq11Q": "Hvad er planen fremad?",
   "faq11A": "Grupper og udfordringer (\"ingen skærm før kl. 9\"), streaks, en widget til hjemmeskærmen, og en web-version af stillingen. Forslag er velkomne.",
   "faq12Q": "Hvem står bag, og hvordan kontakter jeg jer?",
-  "faq12A": "Free Time er et lille, uafhængigt projekt uden reklamer og uden salg af data. Skriv til {email} med spørgsmål, fejl eller idéer."
+  "faq12A": "Free Time er et lille, uafhængigt projekt uden reklamer og uden salg af data. Skriv til {email} med spørgsmål, fejl eller idéer.",
+  "avg30Line": "Snit {points} pr. dag, seneste {n} dage",
+  "statsTitle": "Statistik",
+  "statsSince": "Siden {date}",
+  "statsDaysTracked": "{n} hele dage",
+  "statsTotalPoints": "Point i alt",
+  "statsAvgLifetime": "Snit pr. dag, livstid",
+  "statsAvg30": "Snit pr. dag, seneste {n} dage",
+  "statsBestDays": "Bedste dage",
+  "statsWorstDays": "Dårligste dage",
+  "statsEmpty": "Statistik starter i morgen, når der er en hel dag at regne på.",
+  "statsToday": "I dag indtil nu"
 }

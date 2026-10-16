@@ -239,5 +239,47 @@
         "type": "String"
       }
     }
-  }
+  },
+  "avg30Line": "Avg. {points}/day, last {n} days",
+  "@avg30Line": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "statsTitle": "Statistics",
+  "statsSince": "Since {date}",
+  "@statsSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statsDaysTracked": "{n} whole days",
+  "@statsDaysTracked": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "statsTotalPoints": "Points, all time",
+  "statsAvgLifetime": "Average per day, all time",
+  "statsAvg30": "Average per day, last {n} days",
+  "@statsAvg30": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "statsBestDays": "Best days",
+  "statsWorstDays": "Worst days",
+  "statsEmpty": "Statistics start tomorrow, when there is a whole day to count.",
+  "statsToday": "Today so far"
 }

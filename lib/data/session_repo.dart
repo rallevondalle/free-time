@@ -23,6 +23,9 @@ abstract class SessionRepo {
 
   Future<List<Session>> today();
   Future<List<Session>> thisWeek();
+
+  /// Everything on the phone, oldest first. Statistics are computed from it.
+  Future<List<Session>> history();
   Future<List<Map<String, dynamic>>> leaderboard();
 }
 
@@ -57,6 +60,10 @@ class LocalSessionRepo implements SessionRepo {
 
   @override
   Future<List<Session>> thisWeek() async => since(startOfWeek());
+
+  @override
+  Future<List<Session>> history() async =>
+      _all()..sort((a, b) => a.startedAt.compareTo(b.startedAt));
 
   /// Sessions that overlap the period: a night that started yesterday still
   /// shows under today (seen 15/10 00:02 — the powered-off session vanished

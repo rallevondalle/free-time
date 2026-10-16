@@ -8,11 +8,14 @@ import '../config.dart';
 import '../core/settings.dart';
 import 'l10n_ext.dart';
 import 'measure_intro_screen.dart';
+import 'stats_screen.dart';
+import '../data/session_repo.dart';
 import '../native/free_time_platform.dart';
 
 class MoreScreen extends StatelessWidget {
-  const MoreScreen({super.key, required this.settings, required this.signedIn, this.canSignIn = false});
+  const MoreScreen({super.key, required this.settings, required this.signedIn, required this.repo, this.canSignIn = false});
   final Settings settings;
+  final SessionRepo repo;
   final bool signedIn;
 
   /// Using the app without an account in an online build: offer to sign in.
@@ -35,6 +38,20 @@ class MoreScreen extends StatelessWidget {
 
             Text(t.dailyGoal, style: theme.textTheme.titleMedium),
             const SizedBox(height: 10),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.insights_rounded),
+                title: Text(t.statsTitle),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () async {
+                  final today = await repo.today();
+                  if (!context.mounted) return;
+                  StatsScreen.show(context, repo: repo,
+                      todayPoints: today.fold(0, (a, s) => a + (s.points ?? s.estimatedPoints)));
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
             _GoalCard(settings: settings),
             const SizedBox(height: 28),
 
