@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -426,9 +427,11 @@ class _SessionTile extends StatelessWidget {
     final c = modeColor(s.mode, theme.brightness);
     final flags = <String>[
       if (s.screenOn) t.flagScreenOn,
-      // Motion sensing is gone on both platforms; the only unverified Android
-      // sessions are reboots the service never saw coming (adb reboot, crash).
-      if (!s.verified) t.flagUnverified,
+      // Android measures motion (trigger sensor), so an unverified auto
+      // session there means "moving". Reboots the service never saw coming,
+      // and iOS sessions without Screen Time, are just unverified.
+      if (!s.verified)
+        (!Platform.isIOS && s.source == SessionSource.auto ? t.flagMoving : t.flagUnverified),
       if (s.source == SessionSource.reboot) t.flagReboot,
     ];
     return Padding(

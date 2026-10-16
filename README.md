@@ -17,7 +17,7 @@ An anti-screen-time game for you and your friends.
 [![iPhone](https://img.shields.io/badge/%20iPhone-coming%20soon-17201C?style=for-the-badge&logo=apple&logoColor=white)](#iphone)
 
 [![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-1F5F4A?style=flat-square&logo=android&logoColor=white)](#install-on-android)
-[![Languages](https://img.shields.io/badge/languages-English%20·%20Dansk-1F5F4A?style=flat-square)](#install-on-android)
+[![Languages](https://img.shields.io/badge/languages-English%20·%20Dansk%20·%20Deutsch%20·%20Français%20·%20Nederlands-1F5F4A?style=flat-square)](#install-on-android)
 [![GrapheneOS](https://img.shields.io/badge/GrapheneOS-ready-17201C?style=flat-square)](#install-on-android)
 [![No ads](https://img.shields.io/badge/ads-none-E8A33D?style=flat-square)](#privacy)
 [![No tracking](https://img.shields.io/badge/tracking-none-E8A33D?style=flat-square)](#privacy)
@@ -64,7 +64,7 @@ You get **1 point per minute** the phone lies still, multiplied by how "gone" it
 | Turned off                  | 10×        |
 | Restarted                   | +50 bonus  |
 
-Two things halve your points: lying with the **screen on** (but locked), and being **carried around** in a pocket instead of lying still. Multipliers stack, so silent in your pocket is 2 × 0.5 = 1×.
+Two things halve your points: lying with the **screen on** (but locked), and being **carried around** in a pocket instead of lying still (Android measures this; on iPhone a session is halved instead when it could not be verified, see below). Multipliers stack, so silent in your pocket is 2 × 0.5 = 1×.
 
 **Examples.** An hour on silent on the table is 120 points. An hour in airplane mode with everything off is 300. A night turned off is roughly 4,800.
 
@@ -84,7 +84,9 @@ Free Time stores the minimum needed to compute a score:
 
 It does **not** see which apps you use, who you talk to, or where you are. There are no ads, no analytics SDKs, and nothing is sold. The code is open, so you can check.
 
-Your account is just an email address. You log in with a link, there is no password.
+Your points live on your phone. The server only gets a copy, so friends can see the week, and so a reinstall or a new phone gets everything back when you log in.
+
+An account is optional. Without one the app works the same, just without friends and the leaderboard; sign in later under More and the sessions on the phone come along. An account is just an email address: you get a 6-digit code by email and type it in, there is no password.
 
 ## Install on Android
 
@@ -102,7 +104,7 @@ Works on GrapheneOS and other de-Googled devices. No Play Services needed.
 
 ## iPhone
 
-The iOS version is in development. Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you tap **"Put the phone down"** when you put it down and **"Stop"** when you pick it up. With the optional Screen Time permission the app can verify that the phone went unused in the meantime.
+The iOS version is in development. Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you tap **"Put the phone down"** when you put it down and **"Stop"** when you pick it up. Two optional permissions make it more precise: Focus gives the Do Not Disturb bonus, and Screen Time lets the app verify that the phone went unused in the meantime. The app asks for them one at a time, from a screen that explains each first, and both can be declined.
 
 ## Questions
 
