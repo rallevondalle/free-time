@@ -229,14 +229,20 @@ class SessionService : Service() {
                 (if (active!!.mode == "airplane" && active!!.wifiOn) getString(R.string.notif_wifi_on) else "") +
                 (if (active!!.mode == "airplane" && active!!.bluetoothOn) getString(R.string.notif_bt_on) else "")
         }
-        return Notification.Builder(this, CHANNEL)
+        val b = Notification.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_lock_idle_lock)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
-            .build()
+        // Android 12+ otherwise holds a new foreground notification back for up
+        // to 10 s, which reads as "the counter is not running" right after a
+        // boot, an update or opening the app (measured 16/10).
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            b.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
+        }
+        return b.build()
     }
 
     private fun startForeground() {

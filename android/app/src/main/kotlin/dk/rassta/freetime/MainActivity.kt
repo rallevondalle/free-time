@@ -57,6 +57,12 @@ class MainActivity : FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Re-posts the foreground notification. Android drops it silently when
+        // the service started before notification permission was granted
+        // (fresh install: measured 16/10, numBlocked=5) and lets the user
+        // swipe it away on 14+; either way it is back the next time the app
+        // is opened, not at the next mode change.
+        SessionService.ensureRunning(this)
         ContextCompat.registerReceiver(
             this, updates, IntentFilter(SessionService.ACTION_SESSIONS_UPDATED),
             ContextCompat.RECEIVER_NOT_EXPORTED
