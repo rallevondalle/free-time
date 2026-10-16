@@ -7,7 +7,7 @@ import Foundation
 ///
 /// Target setup is described in docs/ios-setup.md.
 class DeviceActivityMonitorExtension: DeviceActivityMonitor {
-  private let defaults = UserDefaults(suiteName: "group.co.componental.freetime")
+  private let defaults = UserDefaults(suiteName: "group.dk.rassta.freetime")
 
   override func eventDidReachThreshold(_ event: DeviceActivityEvent.Name, activity: DeviceActivityName) {
     super.eventDidReachThreshold(event, activity: activity)

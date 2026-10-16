@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.co.componental.freetime</string>
+		<string>group.dk.rassta.freetime</string>
 	</array>
 </dict>
 </plist>

@@ -35,7 +35,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="co.componental.freetime" android:host="login"/>
+                <data android:scheme="dk.rassta.freetime" android:host="login"/>
             </intent-filter>
         </activity>
 

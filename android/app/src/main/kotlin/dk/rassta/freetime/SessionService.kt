@@ -1,4 +1,4 @@
-package co.componental.free_time
+package dk.rassta.freetime
 
 import android.app.KeyguardManager
 import android.app.Notification
@@ -266,7 +266,7 @@ class SessionService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        const val ACTION_SESSIONS_UPDATED = "co.componental.free_time.SESSIONS_UPDATED"
+        const val ACTION_SESSIONS_UPDATED = "dk.rassta.freetime.SESSIONS_UPDATED"
         private const val CHANNEL = "tracker"
         private const val NOTIF_ID = 1
         private const val HEARTBEAT_MS = 60_000L

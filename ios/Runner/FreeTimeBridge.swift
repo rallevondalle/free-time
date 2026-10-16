@@ -22,7 +22,7 @@ import DeviceActivity
 /// screen, never at launch.
 final class FreeTimeBridge: NSObject, FlutterStreamHandler {
 
-  static let appGroup = "group.co.componental.freetime"
+  static let appGroup = "group.dk.rassta.freetime"
   static let activityName = "freetime.session"
 
   private let defaults = UserDefaults(suiteName: FreeTimeBridge.appGroup) ?? .standard

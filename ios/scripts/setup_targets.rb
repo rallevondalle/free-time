@@ -16,9 +16,9 @@ require 'xcodeproj'
 
 IOS = File.expand_path('..', __dir__)
 TEAM = 'XFQR9ZD5A3'
-APP_GROUP = 'group.co.componental.freetime'
+APP_GROUP = 'group.dk.rassta.freetime'
 EXT_NAME = 'FreeTimeMonitor'
-EXT_BUNDLE_ID = 'co.componental.freeTime.FreeTimeMonitor'
+EXT_BUNDLE_ID = 'dk.rassta.freetime.FreeTimeMonitor'
 DEPLOYMENT_TARGET = '16.0'
 
 ENTITLEMENTS = <<~PLIST

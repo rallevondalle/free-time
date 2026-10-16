@@ -102,6 +102,8 @@ On first launch, allow the app to run in the background. Android would otherwise
 
 Works on GrapheneOS and other de-Googled devices. No Play Services needed.
 
+**Updating from 0.2.x:** the app id changed to `dk.rassta.freetime` in 0.3.0, which Android treats as a different app. Uninstall the old one, remove it from Obtainium, and add the repo again. Your points come back from the cloud when you log in.
+
 ## iPhone
 
 The iOS version is in development. Apple does not let apps read the silent switch, airplane mode, or whether the phone is locked, and apps may not run in the background for hours. So on iPhone you tap **"Put the phone down"** when you put it down and **"Stop"** when you pick it up. Two optional permissions make it more precise: Focus gives the Do Not Disturb bonus, and Screen Time lets the app verify that the phone went unused in the meantime. The app asks for them one at a time, from a screen that explains each first, and both can be declined.

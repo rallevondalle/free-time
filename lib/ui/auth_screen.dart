@@ -31,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       await Supabase.instance.client.auth.signInWithOtp(
         email: _email.text.trim(),
-        emailRedirectTo: 'co.componental.freetime://login',
+        emailRedirectTo: 'dk.rassta.freetime://login',
       );
       setState(() { _sent = true; _code.clear(); });
     } catch (e) {

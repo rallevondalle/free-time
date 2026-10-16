@@ -1,4 +1,4 @@
-package co.componental.free_time
+package dk.rassta.freetime
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -20,9 +20,9 @@ retter `Runner.xcodeproj` og kan køres igen uden at lave dubletter:
 
 - `Runner/FreeTimeBridge.swift` kompileres med i Runner.
 - `Runner/Runner.entitlements` og `FreeTimeMonitor/FreeTimeMonitor.entitlements`
-  med App Group `group.co.componental.freetime` og Family Controls.
+  med App Group `group.dk.rassta.freetime` og Family Controls.
 - Target `FreeTimeMonitor` (Device Activity Monitor-extension, bundle id
-  `co.componental.freeTime.FreeTimeMonitor`) med samme Flutter-xcconfigs som
+  `dk.rassta.freetime.FreeTimeMonitor`) med samme Flutter-xcconfigs som
   Runner, så version/build-nummer følger appen. Indlejres i Runner.app/PlugIns.
 - Team `XFQR9ZD5A3` og automatic signing på alle targets.
 
@@ -68,7 +68,7 @@ ikke ændres.
 
 ## Magic link
 
-URL-scheme `co.componental.freetime://login` er sat i `Info.plist`.
+URL-scheme `dk.rassta.freetime://login` er sat i `Info.plist`.
 Tilføj samme URL under Supabase → Authentication → URL Configuration →
 Redirect URLs.
 

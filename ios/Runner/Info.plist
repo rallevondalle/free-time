@@ -29,7 +29,7 @@
 			<string>login</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>co.componental.freetime</string>
+				<string>dk.rassta.freetime</string>
 			</array>
 		</dict>
 	</array>

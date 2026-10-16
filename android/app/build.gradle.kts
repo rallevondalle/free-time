@@ -18,7 +18,7 @@ val ksKeyPassword = keyProps.getProperty("keyPassword") ?: System.getenv("KEY_PA
 val hasReleaseKey = ksFile != null && rootProject.file(ksFile).exists()
 
 android {
-    namespace = "co.componental.free_time"
+    namespace = "dk.rassta.freetime"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "co.componental.free_time"
+        applicationId = "dk.rassta.freetime"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26 // startForegroundService; README says Android 8.0+
