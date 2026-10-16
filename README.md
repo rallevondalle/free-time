@@ -131,6 +131,11 @@ Free Time is a Flutter app with native measurement layers and a Supabase backend
 **Backend:** `supabase link` and `supabase db push`. Scoring rules live in the `scoring_rules` table and can be tuned without an app release.
 
 **Release:** push a tag like `v0.2.0`. GitHub Actions builds a signed APK and attaches it to a release.
+Bump `version:` in `pubspec.yaml` first; Android refuses to install a lower
+`versionCode`. Never put a `--split-per-abi` build on a phone that updates
+through Obtainium: Flutter gives those APKs `versionCode` 1000×ABI + n (2003
+for arm64), so the universal release APK (4) is a downgrade and the only way
+out is uninstalling. Use the release APK from GitHub for device testing.
 
 More: [scope and design decisions](docs/scope.md), [brand](docs/brand.md).
 
