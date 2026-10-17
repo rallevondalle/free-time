@@ -452,6 +452,24 @@ class AppLocalizationsDa extends AppLocalizations {
       'Vælg hvordan telefonen ligger — iOS kan ikke aflæse det.';
 
   @override
+  String get factorVerified => 'verificeret';
+
+  @override
+  String get factorTapHint => 'Tryk på en radio for at ændre den.';
+
+  @override
+  String get permHintTitle => 'Mere præcise point';
+
+  @override
+  String get permHintScreenTime => 'Skærmtid mangler: alle sessioner halveres.';
+
+  @override
+  String get permHintFocus => 'Fokus mangler: Forstyr ikke tæller ikke 2,5×.';
+
+  @override
+  String get permHintDismiss => 'Skjul';
+
+  @override
   String get radioWifiOff => 'Wi-Fi fra';
 
   @override

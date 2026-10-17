@@ -212,6 +212,12 @@
   "factorUnverified": "unverified ×0.5",
   "factorFocusOn": "Focus is on",
   "factorIosHint": "Pick how the phone is lying — iOS cannot read it.",
+  "factorVerified": "verified",
+  "factorTapHint": "Tap a radio to change it.",
+  "permHintTitle": "More precise points",
+  "permHintScreenTime": "Screen Time is off: every session is halved.",
+  "permHintFocus": "Focus is off: Do Not Disturb does not count 2.5×.",
+  "permHintDismiss": "Hide",
   "@factorPerMinute": {
     "placeholders": {
       "factor": {

@@ -452,6 +452,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick how the phone is lying — iOS cannot read it.';
 
   @override
+  String get factorVerified => 'verified';
+
+  @override
+  String get factorTapHint => 'Tap a radio to change it.';
+
+  @override
+  String get permHintTitle => 'More precise points';
+
+  @override
+  String get permHintScreenTime =>
+      'Screen Time is off: every session is halved.';
+
+  @override
+  String get permHintFocus =>
+      'Focus is off: Do Not Disturb does not count 2.5×.';
+
+  @override
+  String get permHintDismiss => 'Hide';
+
+  @override
   String get radioWifiOff => 'Wi-Fi off';
 
   @override

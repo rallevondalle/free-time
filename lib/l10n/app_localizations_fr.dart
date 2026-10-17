@@ -454,6 +454,26 @@ class AppLocalizationsFr extends AppLocalizations {
       'Choisissez comment le téléphone est posé — iOS ne peut pas le lire.';
 
   @override
+  String get factorVerified => 'vérifié';
+
+  @override
+  String get factorTapHint => 'Touchez une radio pour la modifier.';
+
+  @override
+  String get permHintTitle => 'Des points plus précis';
+
+  @override
+  String get permHintScreenTime =>
+      'Temps d\'écran désactivé : chaque session est divisée par deux.';
+
+  @override
+  String get permHintFocus =>
+      'Concentration désactivée : Ne pas déranger ne compte pas 2,5×.';
+
+  @override
+  String get permHintDismiss => 'Masquer';
+
+  @override
   String get radioWifiOff => 'Wi-Fi désactivé';
 
   @override

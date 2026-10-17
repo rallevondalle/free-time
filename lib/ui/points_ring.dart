@@ -10,20 +10,22 @@ class PointsRing extends StatelessWidget {
     required this.goal,
     required this.subtitle,
     required this.label,
+    this.size = 240,
   });
 
   final int points;
   final int goal;
   final String subtitle;
   final String label;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final progress = (points / goal).clamp(0.0, 1.0);
     return SizedBox(
-      width: 240,
-      height: 240,
+      width: size,
+      height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -32,7 +34,7 @@ class PointsRing extends StatelessWidget {
             duration: const Duration(milliseconds: 900),
             curve: Curves.easeOutCubic,
             builder: (context, v, _) => CustomPaint(
-              size: const Size.square(240),
+              size: Size.square(size),
               painter: _RingPainter(
                 progress: v,
                 track: theme.colorScheme.surfaceContainerHigh,
@@ -44,7 +46,7 @@ class PointsRing extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('$points', style: theme.textTheme.displayLarge?.copyWith(fontSize: 64, height: 1)),
+              Text('$points', style: theme.textTheme.displayLarge?.copyWith(fontSize: 64 * size / 240, height: 1)),
               const SizedBox(height: 4),
               Text(label, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
               const SizedBox(height: 10),

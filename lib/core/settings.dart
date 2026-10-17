@@ -34,6 +34,15 @@ class Settings extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// iOS: the home-screen card that points to missing permissions was closed
+  /// with its ×. The permissions stay reachable under More → How we measure.
+  bool get permissionHintDismissed => _prefs.getBool('permission_hint_dismissed') ?? false;
+
+  Future<void> setPermissionHintDismissed() async {
+    await _prefs.setBool('permission_hint_dismissed', true);
+    notifyListeners();
+  }
+
   Future<void> setDailyGoal(int v) async {
     await _prefs.setInt('daily_goal', v.clamp(60, 10000));
     notifyListeners();

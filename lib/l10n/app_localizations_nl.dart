@@ -453,6 +453,25 @@ class AppLocalizationsNl extends AppLocalizations {
       'Kies hoe de telefoon ligt — iOS kan het niet lezen.';
 
   @override
+  String get factorVerified => 'geverifieerd';
+
+  @override
+  String get factorTapHint => 'Tik op een radio om die te wijzigen.';
+
+  @override
+  String get permHintTitle => 'Preciezere punten';
+
+  @override
+  String get permHintScreenTime =>
+      'Schermtijd ontbreekt: elke sessie wordt gehalveerd.';
+
+  @override
+  String get permHintFocus => 'Focus ontbreekt: Niet storen telt niet 2,5×.';
+
+  @override
+  String get permHintDismiss => 'Verbergen';
+
+  @override
   String get radioWifiOff => 'Wi-Fi uit';
 
   @override

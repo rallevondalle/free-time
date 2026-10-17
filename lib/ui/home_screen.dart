@@ -213,6 +213,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               // ---- hero ----
               Center(
                 child: PointsRing(
+                  size: _platform.isIOS ? 200 : 240,
                   points: _todayPoints,
                   goal: goal,
                   subtitle: t.timeWithoutPhone(_fmt(_todayTime)),
@@ -239,13 +240,30 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ] else
                 const SizedBox(height: 28),
 
-              // ---- factor ----
-              _factorCard(theme, t),
-              const SizedBox(height: 12),
+              // ---- missing permissions (iOS) ----
+              if (_permissionHint) ...[
+                _permissionCard(theme, t),
+                const SizedBox(height: 12),
+              ],
 
-              // ---- status / control ----
-              if (_platform.isAndroid) _androidStatus(theme, t),
-              if (_platform.isIOS) _iosControls(theme, t, elapsed),
+              // ---- factor / control ----
+              // Android: measured, so the factor card is a readout and the
+              // status card sits under it. iOS: the claim is the input, so the
+              // mode picker comes first, the factor card holds the radio
+              // toggles, and nothing in it changes size (Rasmus, 17/10).
+              if (_platform.isAndroid) ...[
+                _factorCard(theme, t),
+                const SizedBox(height: 12),
+                _androidStatus(theme, t),
+              ] else ...[
+                _iosModePicker(theme, t),
+                const SizedBox(height: 12),
+                _iosFactorCard(theme, t),
+                const SizedBox(height: 12),
+                _running
+                    ? FilledButton.tonal(onPressed: _stop, child: Text(t.stopWithTime(_fmt(elapsed))))
+                    : FilledButton(onPressed: _start, child: Text(t.putPhoneDown)),
+              ],
               const SizedBox(height: 32),
 
               // ---- timeline ----
@@ -271,6 +289,57 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool get _missingScreenTime => _platform.isIOS && !(_state?.screenTime ?? false);
+  bool get _missingFocus => _platform.isIOS && !(_state?.canMeasureDnd ?? false);
+
+  /// iOS: both permissions are optional, but without them the points are
+  /// halved or Focus is invisible. One tap to the screen that asks for them,
+  /// and a × to put it away for good (Rasmus, 17/10).
+  bool get _permissionHint =>
+      _state != null && (_missingScreenTime || _missingFocus) && !widget.settings.permissionHintDismissed;
+
+  Widget _permissionCard(ThemeData theme, AppLocalizations t) {
+    final scheme = theme.colorScheme;
+    final lines = [
+      if (_missingScreenTime) t.permHintScreenTime,
+      if (_missingFocus) t.permHintFocus,
+    ];
+    return Card(
+      color: scheme.tertiaryContainer.withValues(alpha: 0.5),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () async {
+          await MeasureIntroScreen.show(context, firstRun: false);
+          await _pollState();
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 10, 4, 10),
+          child: Row(
+            children: [
+              Icon(Icons.tune_rounded, color: scheme.onTertiaryContainer),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(t.permHintTitle, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                    for (final l in lines)
+                      Text(l, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: t.permHintDismiss,
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => widget.settings.setPermissionHintDismissed(),
+              ),
             ],
           ),
         ),
@@ -385,59 +454,147 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _iosControls(ThemeData theme, AppLocalizations t, Duration elapsed) {
+  /// iOS: what the user claims. Locked while a session runs; the claim was
+  /// sent at start and the card above keeps showing it.
+  Widget _iosModePicker(ThemeData theme, AppLocalizations t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (!_running) ...[
-          Text(t.howIsPhoneLying, style: theme.textTheme.titleMedium),
-          const SizedBox(height: 10),
-          SegmentedButton<SessionMode>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(value: SessionMode.normal, label: Text(t.modeShortNormal), icon: Icon(modeIcon(SessionMode.normal))),
-              ButtonSegment(value: SessionMode.vibrate, label: Text(t.modeShortVibrate), icon: Icon(modeIcon(SessionMode.vibrate))),
-              ButtonSegment(value: SessionMode.silent, label: Text(t.modeShortSilent), icon: Icon(modeIcon(SessionMode.silent))),
-              ButtonSegment(value: SessionMode.airplane, label: Text(t.modeShortAirplane), icon: Icon(modeIcon(SessionMode.airplane))),
-            ],
-            selected: {_claimed},
-            onSelectionChanged: (s) => setState(() {
-              _claimed = s.first;
-              final airplane = _claimed == SessionMode.airplane;
-              _claimedWifiOn = !airplane;
-              _claimedBtOn = !airplane;
-              _claimedDataOn = !airplane;
-            }),
-          ),
-          const SizedBox(height: 8),
-          SwitchListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            title: Text(t.radioWifiOff),
-            value: !_claimedWifiOn,
-            onChanged: (v) => setState(() => _claimedWifiOn = !v),
-          ),
-          SwitchListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            title: Text(t.radioBluetoothOff),
-            value: !_claimedBtOn,
-            onChanged: (v) => setState(() => _claimedBtOn = !v),
-          ),
-          if (_claimed != SessionMode.airplane)
-            SwitchListTile(
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: Text(t.radioDataOff),
-              value: !_claimedDataOn,
-              onChanged: (v) => setState(() => _claimedDataOn = !v),
-            ),
-          const SizedBox(height: 16),
-        ],
-        _running
-            ? FilledButton.tonal(onPressed: _stop, child: Text(t.stopWithTime(_fmt(elapsed))))
-            : FilledButton(onPressed: _start, child: Text(t.putPhoneDown)),
+        Text(t.howIsPhoneLying, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 10),
+        SegmentedButton<SessionMode>(
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(value: SessionMode.normal, label: Text(t.modeShortNormal), icon: Icon(modeIcon(SessionMode.normal))),
+            ButtonSegment(value: SessionMode.vibrate, label: Text(t.modeShortVibrate), icon: Icon(modeIcon(SessionMode.vibrate))),
+            ButtonSegment(value: SessionMode.silent, label: Text(t.modeShortSilent), icon: Icon(modeIcon(SessionMode.silent))),
+            ButtonSegment(value: SessionMode.airplane, label: Text(t.modeShortAirplane), icon: Icon(modeIcon(SessionMode.airplane))),
+          ],
+          selected: {_claimed},
+          onSelectionChanged: _running
+              ? null
+              : (s) => setState(() {
+                    _claimed = s.first;
+                    final airplane = _claimed == SessionMode.airplane;
+                    _claimedWifiOn = !airplane;
+                    _claimedBtOn = !airplane;
+                    _claimedDataOn = !airplane;
+                  }),
+        ),
       ],
+    );
+  }
+
+  /// iOS factor card. Every slot is always there, so the card never changes
+  /// height: factor row, a 2×2 grid (verification + the three radios, which
+  /// are the toggles), and one status line.
+  Widget _iosFactorCard(ThemeData theme, AppLocalizations t) {
+    final scheme = theme.colorScheme;
+    final mode = _effectiveMode;
+    final c = modeColor(mode, theme.brightness);
+    final locale = Localizations.localeOf(context).toString();
+    final factorText = NumberFormat('0.0#', locale).format(_factor);
+    final measuredFocus = _state?.mode == SessionMode.dnd;
+    final airplane = _claimed == SessionMode.airplane;
+    final editable = !_running;
+
+    Widget radio({required String onLabel, required String offLabel, required IconData onIcon, required IconData offIcon,
+        required bool on, required bool enabled, required void Function(bool) set}) =>
+        _FixedChip(
+          label: on ? onLabel : offLabel,
+          icon: on ? onIcon : offIcon,
+          color: c,
+          active: !on, // switched off = the claim that earns: solid fill
+          enabled: enabled,
+          onTap: enabled ? () => setState(() => set(!on)) : null,
+        );
+
+    return Card(
+      color: c.withValues(alpha: 0.12),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(t.factorTitle.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant, letterSpacing: 1.2)),
+            const SizedBox(height: 4),
+            SizedBox(
+              height: 52,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('$factorText×',
+                      style: theme.textTheme.displayMedium?.copyWith(color: c, fontWeight: FontWeight.w800, height: 1.0)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(t.factorPerMinute(factorText), maxLines: 1, overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(children: [
+              Expanded(
+                child: radio(
+                  onLabel: t.radioWifiOn, offLabel: t.radioWifiOff, onIcon: Icons.wifi_rounded, offIcon: Icons.wifi_off_rounded,
+                  on: _claimedWifiOn, enabled: editable, set: (v) => _claimedWifiOn = v),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: radio(
+                  onLabel: t.radioBluetoothOn, offLabel: t.radioBluetoothOff,
+                  onIcon: Icons.bluetooth_rounded, offIcon: Icons.bluetooth_disabled_rounded,
+                  on: _claimedBtOn, enabled: editable, set: (v) => _claimedBtOn = v),
+              ),
+            ]),
+            const SizedBox(height: 8),
+            Row(children: [
+              Expanded(
+                // Airplane mode implies no data: shown off, not tappable.
+                child: radio(
+                  onLabel: t.radioDataOn, offLabel: t.radioDataOff,
+                  onIcon: Icons.signal_cellular_alt_rounded, offIcon: Icons.signal_cellular_off_rounded,
+                  on: !airplane && _claimedDataOn, enabled: editable && !airplane, set: (v) => _claimedDataOn = v),
+              ),
+              const SizedBox(width: 8),
+              // Verified says nothing worth a pill; the slot stays so nothing
+              // moves. Unverified = Screen Time missing: straight to the
+              // screen that asks for it.
+              Expanded(
+                child: _unverified
+                    ? _FixedChip(
+                        label: t.factorUnverified,
+                        icon: Icons.warning_amber_rounded,
+                        color: scheme.error,
+                        active: true,
+                        enabled: true,
+                        onTap: () async {
+                          await MeasureIntroScreen.show(context, firstRun: false);
+                          await _pollState();
+                        },
+                      )
+                    : const SizedBox(),
+              ),
+            ]),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 18,
+              child: Text(
+                measuredFocus ? t.factorFocusOn : t.factorTapHint,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                    color: measuredFocus ? modeColor(SessionMode.dnd, theme.brightness) : scheme.onSurfaceVariant),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -543,6 +700,63 @@ class _EmptyState extends StatelessWidget {
               style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A toggle that fills its slot and keeps one height whatever its label
+/// says. Two states that cannot be confused: active = solid fill with a
+/// check mark, inactive = outline only. Looks like a button because it is one.
+class _FixedChip extends StatelessWidget {
+  const _FixedChip({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.active,
+    required this.enabled,
+    this.onTap,
+  });
+  final String label;
+  final IconData icon;
+  final Color color;
+  final bool active;
+  final bool enabled;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final onFill = ThemeData.estimateBrightnessForColor(color) == Brightness.dark ? Colors.white : Colors.black;
+    final fg = active ? onFill : theme.colorScheme.onSurfaceVariant;
+    return Opacity(
+      opacity: enabled ? 1 : 0.55,
+      child: Material(
+        color: active ? color : Colors.transparent,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Container(
+            height: 44,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: active ? color : color.withValues(alpha: 0.55), width: 1.5),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(active ? Icons.check_circle_rounded : icon, size: 18, color: fg),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelLarge?.copyWith(color: fg, fontWeight: FontWeight.w800)),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

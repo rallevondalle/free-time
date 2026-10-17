@@ -129,6 +129,12 @@
   "factorUnverified": "ikke verificeret ×0,5",
   "factorFocusOn": "Fokus er slået til",
   "factorIosHint": "Vælg hvordan telefonen ligger — iOS kan ikke aflæse det.",
+  "factorVerified": "verificeret",
+  "factorTapHint": "Tryk på en radio for at ændre den.",
+  "permHintTitle": "Mere præcise point",
+  "permHintScreenTime": "Skærmtid mangler: alle sessioner halveres.",
+  "permHintFocus": "Fokus mangler: Forstyr ikke tæller ikke 2,5×.",
+  "permHintDismiss": "Skjul",
   "@factorPerMinute": {
     "placeholders": {
       "factor": {

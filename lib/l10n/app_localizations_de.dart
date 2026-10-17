@@ -454,6 +454,25 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wähle, wie das Handy liegt — iOS kann es nicht lesen.';
 
   @override
+  String get factorVerified => 'verifiziert';
+
+  @override
+  String get factorTapHint => 'Tippe auf ein Funkmodul, um es zu ändern.';
+
+  @override
+  String get permHintTitle => 'Genauere Punkte';
+
+  @override
+  String get permHintScreenTime =>
+      'Bildschirmzeit fehlt: jede Sitzung wird halbiert.';
+
+  @override
+  String get permHintFocus => 'Fokus fehlt: Nicht stören zählt nicht 2,5×.';
+
+  @override
+  String get permHintDismiss => 'Ausblenden';
+
+  @override
   String get radioWifiOff => 'WLAN aus';
 
   @override

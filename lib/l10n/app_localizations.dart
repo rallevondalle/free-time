@@ -878,6 +878,42 @@ abstract class AppLocalizations {
   /// **'Pick how the phone is lying — iOS cannot read it.'**
   String get factorIosHint;
 
+  /// No description provided for @factorVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'verified'**
+  String get factorVerified;
+
+  /// No description provided for @factorTapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a radio to change it.'**
+  String get factorTapHint;
+
+  /// No description provided for @permHintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'More precise points'**
+  String get permHintTitle;
+
+  /// No description provided for @permHintScreenTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen Time is off: every session is halved.'**
+  String get permHintScreenTime;
+
+  /// No description provided for @permHintFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus is off: Do Not Disturb does not count 2.5×.'**
+  String get permHintFocus;
+
+  /// No description provided for @permHintDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get permHintDismiss;
+
   /// No description provided for @radioWifiOff.
   ///
   /// In en, this message translates to:
